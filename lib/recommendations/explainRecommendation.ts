@@ -13,8 +13,10 @@ import type { GeneratedArchitecture, RefinementContext } from './generateArchite
 
 export interface ToolExplanation {
   tool_id: string
-  capability_id: string
-  capability_name: string
+  /** Every detected capability this tool serves in the stack. */
+  capability_ids: string[]
+  /** Human-readable label for those capabilities, e.g. "Retrieval and Document Parsing". */
+  capability_label: string
   github_url: string
   /** Non-technical one-liner. */
   simple: string
@@ -30,30 +32,42 @@ export interface ToolExplanation {
 
 // Deterministic explanation layer (Phase 1 baseline). Builds advisor-style,
 // per-tool explanations from seed metadata + the relationship graph. No LLM.
+// One explanation per unique tool; a multi-capability tool lists all of them.
 
 export function explainRecommendation(architecture: GeneratedArchitecture): ToolExplanation[] {
   const selectedIds = architecture.selected_tools.map((t) => t.tool_id)
 
   return architecture.selected_tools.map((selected) => {
     const tool = getToolById(selected.tool_id)
-    const capName = capabilityName(selected.capability_id)
+    const label = joinList(selected.capability_ids.map((id) => capabilityName(id)))
+    const labelLower = label.toLowerCase()
 
     return {
       tool_id: selected.tool_id,
-      capability_id: selected.capability_id,
-      capability_name: capName,
+      capability_ids: selected.capability_ids,
+      capability_label: label,
       github_url: tool?.github_url ?? `https://github.com/search?q=${selected.tool_id}`,
       simple: tool
-        ? simpleLine(tool, capName)
-        : `${selected.tool_id} handles ${capName.toLowerCase()}.`,
-      why: tool ? whyThisTool(tool, capName) : `Recommended for ${capName.toLowerCase()}.`,
+        ? simpleLine(tool, label)
+        : `${selected.tool_id} handles ${labelLower}.`,
+      why: tool ? whyThisTool(tool, label) : `Recommended for ${labelLower}.`,
       fits_with: fitsWith(selected.tool_id, selectedIds),
       tradeoff: tool
         ? tradeoff(tool)
         : 'Review the alternatives for this capability to compare tradeoffs.',
-      consider_alternative: considerAlternative(selected.tool_id, selected.capability_id),
+      consider_alternative: firstConsiderAlternative(selected.tool_id, selected.capability_ids),
     }
   })
+}
+
+// A tool may serve several capabilities; surface the first capability that has a
+// concrete alternative worth calling out.
+function firstConsiderAlternative(toolId: string, capabilityIds: string[]): string | null {
+  for (const capabilityId of capabilityIds) {
+    const hint = considerAlternative(toolId, capabilityId)
+    if (hint) return hint
+  }
+  return null
 }
 
 // Architecture-level summary: what the stack is and why the pieces cohere.
@@ -67,7 +81,8 @@ export function summarizeArchitecture(
   }
 
   const pieces = tools.map(
-    (t) => `${t.tool_id} for ${capabilityName(t.capability_id).toLowerCase()}`
+    (t) =>
+      `${t.tool_id} for ${joinList(t.capability_ids.map((id) => capabilityName(id))).toLowerCase()}`
   )
   const count = tools.length
   let summary = `This architecture brings together ${count} ${count === 1 ? 'tool' : 'tools'}: ${joinList(pieces)}.`

@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const selectedToolSchema = z.object({
   tool_id: z.string(),
-  capability_id: z.string(),
+  capability_ids: z.array(z.string()).min(1),
   rationale: z.string().min(1, 'Rationale is required for every tool recommendation.'),
 })
 

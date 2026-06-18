@@ -15,20 +15,41 @@ describe('recommendArchitecture (end-to-end, deterministic)', () => {
     expect(capabilityIds).toContain('document-parsing')
     expect(capabilityIds).toContain('llm-api')
 
-    // One selected tool per capability that has corpus coverage.
-    const selectedCapabilityIds = result.architecture.selected_tools.map((t) => t.capability_id)
+    // Every covered capability is assigned to a selected tool. One tool may
+    // fulfill several capabilities, so capability ids are grouped per tool.
+    const selectedCapabilityIds = result.architecture.selected_tools.flatMap(
+      (t) => t.capability_ids
+    )
     for (const capabilityId of capabilityIds) {
       expect(selectedCapabilityIds).toContain(capabilityId)
     }
 
     // Every selected tool is real (exists in the corpus) and capability-first:
-    // its capability_id is one that was actually detected.
+    // all of its capability_ids were actually detected.
     const toolIds = new Set(tools.map((t) => t.tool_id))
     for (const selected of result.architecture.selected_tools) {
       expect(toolIds.has(selected.tool_id)).toBe(true)
-      expect(capabilityIds).toContain(selected.capability_id)
+      expect(selected.capability_ids.length).toBeGreaterThan(0)
+      for (const capabilityId of selected.capability_ids) {
+        expect(capabilityIds).toContain(capabilityId)
+      }
       expect(selected.rationale.length).toBeGreaterThan(0)
     }
+  })
+
+  it('returns unique tools and groups the capabilities served by a multi-capability tool', async () => {
+    const result = await recommendArchitecture(PDF_CHATBOT_PROMPT)
+    const selectedToolIds = result.architecture.selected_tools.map((t) => t.tool_id)
+
+    expect(new Set(selectedToolIds).size).toBe(selectedToolIds.length)
+
+    const llamaindexSelections = result.architecture.selected_tools.filter(
+      (t) => t.tool_id === 'llamaindex'
+    )
+    expect(llamaindexSelections).toHaveLength(1)
+    expect(llamaindexSelections[0].capability_ids).toEqual(
+      expect.arrayContaining(['retrieval', 'document-parsing'])
+    )
   })
 
   it('returns one rich explanation per selected tool', async () => {
@@ -38,7 +59,8 @@ describe('recommendArchitecture (end-to-end, deterministic)', () => {
       expect(explanation.simple.length).toBeGreaterThan(0)
       expect(explanation.why.length).toBeGreaterThan(0)
       expect(explanation.tradeoff.length).toBeGreaterThan(0)
-      expect(explanation.capability_name.length).toBeGreaterThan(0)
+      expect(explanation.capability_ids.length).toBeGreaterThan(0)
+      expect(explanation.capability_label.length).toBeGreaterThan(0)
     }
   })
 

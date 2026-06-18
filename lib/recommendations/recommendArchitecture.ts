@@ -55,7 +55,7 @@ export async function recommendArchitecture(
   for (const capability of capabilities) {
     const scored = scoreTools(tools, capability.capability_id, context, selectedSoFar)
     availableTools[capability.capability_id] = scored.map((s) => s.tool_id)
-    if (scored.length > 0) {
+    if (scored.length > 0 && !selectedSoFar.includes(scored[0].tool_id)) {
       selectedSoFar.push(scored[0].tool_id)
     }
   }
@@ -75,16 +75,19 @@ export async function recommendArchitecture(
   // 5. Advisor-style explanation for each selected tool.
   const explanations = explainRecommendation(architecture)
 
-  // 6. Alternatives per selected tool — restricted to the same capability.
+  // 6. Alternatives per (tool, capability) — restricted to the same capability,
+  //    one group per capability so a multi-capability tool yields one group each.
   const alternatives: CapabilityAlternatives[] = []
   for (const selected of architecture.selected_tools) {
-    const alts = getAlternativesForCapability(selected.tool_id, selected.capability_id)
-    if (alts.length > 0) {
-      alternatives.push({
-        capability_id: selected.capability_id,
-        primary_tool_id: selected.tool_id,
-        alternatives: alts,
-      })
+    for (const capabilityId of selected.capability_ids) {
+      const alts = getAlternativesForCapability(selected.tool_id, capabilityId)
+      if (alts.length > 0) {
+        alternatives.push({
+          capability_id: capabilityId,
+          primary_tool_id: selected.tool_id,
+          alternatives: alts,
+        })
+      }
     }
   }
 

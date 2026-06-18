@@ -10,7 +10,8 @@ export interface RefinementContext {
 
 export interface SelectedTool {
   tool_id: string
-  capability_id: string
+  /** All detected capabilities this single tool was selected to serve. */
+  capability_ids: string[]
   rationale: string
 }
 
@@ -24,11 +25,11 @@ export interface GeneratedArchitecture {
 
 // Deterministic architecture assembly (Phase 1 baseline).
 //
-// This intentionally does NOT call an LLM. It takes the score-ordered tool
-// lists produced upstream (one list per capability, best first) and selects the
-// top tool for each capability, with builder-facing rationale. A richer,
-// LLM-authored rationale will replace the template later. Keep this a pure
-// function — corpus is passed in, never imported, so it stays testable.
+// Takes the score-ordered tool lists produced upstream (one list per capability,
+// best first) and selects the top tool for each capability. A single tool can be
+// the best fit for more than one detected capability; when that happens it is
+// recorded ONCE with all the capabilities it serves (no duplicate entries), so
+// the stack shows one card per tool. No LLM — pure function, corpus passed in.
 
 export function generateArchitecture(
   projectDescription: string,
@@ -36,17 +37,35 @@ export function generateArchitecture(
   availableTools: Record<string, string[]>,
   context: RefinementContext = {}
 ): GeneratedArchitecture {
-  const selected_tools: SelectedTool[] = capabilities
-    .map((capability): SelectedTool | null => {
-      const tool_id = (availableTools[capability.capability_id] ?? [])[0]
-      if (!tool_id) return null
-      return {
-        tool_id,
-        capability_id: capability.capability_id,
-        rationale: `${tool_id} is recommended for ${capability.name} — a strong fit for a project like yours in StackScout's curated corpus.`,
+  const byTool = new Map<string, SelectedTool>()
+  const order: string[] = []
+
+  for (const capability of capabilities) {
+    const tool_id = (availableTools[capability.capability_id] ?? [])[0]
+    if (!tool_id) continue
+
+    const existing = byTool.get(tool_id)
+    if (existing) {
+      if (!existing.capability_ids.includes(capability.capability_id)) {
+        existing.capability_ids.push(capability.capability_id)
       }
-    })
-    .filter((t): t is SelectedTool => t !== null)
+    } else {
+      byTool.set(tool_id, { tool_id, capability_ids: [capability.capability_id], rationale: '' })
+      order.push(tool_id)
+    }
+  }
+
+  const nameById = new Map(capabilities.map((c) => [c.capability_id, c.name]))
+  const selected_tools: SelectedTool[] = order.map((tool_id) => {
+    const tool = byTool.get(tool_id)!
+    const label = joinNames(
+      tool.capability_ids.map((id) => (nameById.get(id) ?? id).toLowerCase())
+    )
+    return {
+      ...tool,
+      rationale: `${tool_id} is recommended for ${label} — a strong fit for a project like yours in StackScout's curated corpus.`,
+    }
+  })
 
   const contextNote = Object.entries(context)
     .filter(([, v]) => v !== undefined)
@@ -65,4 +84,10 @@ export function generateArchitecture(
     architecture_rationale,
     created_at: new Date().toISOString(),
   }
+}
+
+function joinNames(names: string[]): string {
+  if (names.length <= 1) return names[0] ?? ''
+  if (names.length === 2) return `${names[0]} and ${names[1]}`
+  return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`
 }

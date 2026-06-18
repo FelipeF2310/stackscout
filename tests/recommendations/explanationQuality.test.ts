@@ -34,7 +34,8 @@ describe('per-tool explanation quality', () => {
     expect(explanations.length).toBeGreaterThan(0)
 
     for (const e of explanations) {
-      expect(e.capability_name.length).toBeGreaterThan(0)
+      expect(e.capability_ids.length).toBeGreaterThan(0)
+      expect(e.capability_label.length).toBeGreaterThan(0)
       expect(e.simple).toContain(e.tool_id)
       expect(e.why.length).toBeGreaterThan(0)
       expect(e.tradeoff.length).toBeGreaterThan(0)
@@ -58,11 +59,27 @@ describe('per-tool explanation quality', () => {
     const capsWithAlternatives = new Set(alternatives.map((a) => a.capability_id))
 
     for (const e of explanations) {
-      if (capsWithAlternatives.has(e.capability_id)) {
+      if (e.capability_ids.some((id) => capsWithAlternatives.has(id))) {
         expect(e.consider_alternative).toBeTruthy()
         expect(e.consider_alternative).toMatch(/try \w|alternative/i)
       }
     }
+  })
+
+  it('keeps useful context for every capability served by one tool', async () => {
+    const { explanations } = await recommendArchitecture(
+      'Build a PDF chatbot for internal company documents'
+    )
+    const llamaindex = explanations.find((e) => e.tool_id === 'llamaindex')
+
+    expect(llamaindex).toBeDefined()
+    expect(llamaindex?.capability_ids).toEqual(
+      expect.arrayContaining(['retrieval', 'document-parsing'])
+    )
+    expect(llamaindex?.capability_label).toMatch(/Retrieval/)
+    expect(llamaindex?.capability_label).toMatch(/Document Parsing/)
+    expect(llamaindex?.simple).toMatch(/retrieval/)
+    expect(llamaindex?.simple).toMatch(/document parsing/)
   })
 })
 

@@ -13,7 +13,7 @@ export default function ToolRecommendationCard({ tool }: Props) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="font-semibold">{tool.tool_id}</h3>
-          <p className="text-xs text-muted-foreground">{tool.capability_name}</p>
+          <p className="text-xs text-muted-foreground">{tool.capability_label}</p>
         </div>
         <a
           href={tool.github_url}
