@@ -1,0 +1,55 @@
+[
+  {
+    "id": "pdf-chatbot-typescript-beginner",
+    "project_description": "Build a PDF chatbot for internal company documents",
+    "context": {
+      "skillLevel": "beginner",
+      "projectStage": "prototype",
+      "hostingPreference": "managed",
+      "ecosystem": "typescript"
+    },
+    "selected_tools": [
+      {
+        "tool_id": "clerk",
+        "capability_id": "auth",
+        "rationale": "Clerk provides hosted authentication with prebuilt UI components, so you don't need to implement login flows yourself. Tradeoff: vendor dependency and cost considerations once you scale past the free tier."
+      },
+      {
+        "tool_id": "supabase",
+        "capability_id": "database",
+        "rationale": "Supabase gives you a managed PostgreSQL database with a generous free tier and simple client SDK. Tradeoff: less control over database configuration than a dedicated Postgres provider."
+      },
+      {
+        "tool_id": "pinecone",
+        "capability_id": "vector-storage",
+        "rationale": "Pinecone is a managed vector database purpose-built for semantic search, requiring minimal infrastructure knowledge. Tradeoff: managed cost at scale; consider Qdrant self-hosted if you expect high query volume."
+      },
+      {
+        "tool_id": "llamaparse",
+        "capability_id": "document-parsing",
+        "rationale": "LlamaParse handles PDF extraction reliably including tables and figures, with a simple API. Tradeoff: per-page pricing model; for high document volumes consider Unstructured self-hosted."
+      },
+      {
+        "tool_id": "vercel-ai-sdk",
+        "capability_id": "agent-framework",
+        "rationale": "Vercel AI SDK simplifies streaming responses and tool calling in Next.js with minimal boilerplate. Tradeoff: TypeScript/Node.js only; use LangChain if you need Python."
+      },
+      {
+        "tool_id": "anthropic-sdk",
+        "capability_id": "llm-api",
+        "rationale": "Anthropic's Claude models perform well on document understanding and citation tasks. Tradeoff: API cost per token; consider caching frequent queries."
+      },
+      {
+        "tool_id": "nextjs",
+        "capability_id": "frontend-framework",
+        "rationale": "Next.js handles both frontend and API routes in a single project, reducing complexity for prototypes. Tradeoff: more opinionated than a standalone backend + frontend setup."
+      },
+      {
+        "tool_id": "vercel",
+        "capability_id": "deployment",
+        "rationale": "Vercel's zero-config deployment integrates natively with Next.js and handles scaling automatically. Tradeoff: vendor lock-in with Next.js features; Railway or Fly.io offer more portability."
+      }
+    ],
+    "architecture_rationale": "This stack minimizes infrastructure decisions for a TypeScript beginner building a prototype. Clerk + Supabase + Vercel form a managed trifecta that handles auth, data, and deployment without DevOps. Pinecone + LlamaParse + Vercel AI SDK create a coherent RAG pipeline that integrates naturally with Next.js. The main risk is managed service costs at scale — this architecture is optimized for getting to a working prototype quickly, not for cost efficiency at volume."
+  }
+]

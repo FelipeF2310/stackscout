@@ -1,0 +1,27 @@
+[
+  {
+    "id": "pdf-chatbot",
+    "prompt": "Build a PDF chatbot for internal company documents",
+    "expected_capabilities": ["document-parsing", "vector-storage", "llm-api", "retrieval", "auth", "database", "frontend-framework", "deployment"]
+  },
+  {
+    "id": "ai-support-agent",
+    "prompt": "AI customer support agent that handles ticket routing and auto-responses",
+    "expected_capabilities": ["agent-framework", "llm-api", "database", "email", "scheduling", "auth", "deployment"]
+  },
+  {
+    "id": "saas-app",
+    "prompt": "SaaS application with user accounts, subscriptions, and a dashboard",
+    "expected_capabilities": ["auth", "database", "payments", "email", "frontend-framework", "deployment", "monitoring"]
+  },
+  {
+    "id": "internal-dashboard",
+    "prompt": "Internal analytics dashboard for a small team to track business metrics",
+    "expected_capabilities": ["auth", "database", "frontend-framework", "deployment"]
+  },
+  {
+    "id": "research-assistant",
+    "prompt": "Research assistant that searches academic papers and summarizes findings",
+    "expected_capabilities": ["llm-api", "retrieval", "vector-storage", "document-parsing", "frontend-framework", "deployment"]
+  }
+]

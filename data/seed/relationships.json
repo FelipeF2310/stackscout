@@ -1,0 +1,258 @@
+[
+  {
+    "relationship_id": "rel-001",
+    "source_tool_id": "clerk",
+    "target_tool_id": "authjs",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.95,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-002",
+    "source_tool_id": "clerk",
+    "target_tool_id": "supabase-auth",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-003",
+    "source_tool_id": "clerk",
+    "target_tool_id": "nextjs",
+    "relationship_type": "compatible-with",
+    "confidence_score": 0.95,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-004",
+    "source_tool_id": "clerk",
+    "target_tool_id": "vercel",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-005",
+    "source_tool_id": "clerk",
+    "target_tool_id": "authjs",
+    "relationship_type": "better-for-beginners",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-006",
+    "source_tool_id": "supabase",
+    "target_tool_id": "neon",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.8,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-007",
+    "source_tool_id": "supabase",
+    "target_tool_id": "nextjs",
+    "relationship_type": "compatible-with",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-008",
+    "source_tool_id": "neon",
+    "target_tool_id": "vercel",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-009",
+    "source_tool_id": "pinecone",
+    "target_tool_id": "weaviate",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-010",
+    "source_tool_id": "pinecone",
+    "target_tool_id": "qdrant",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-011",
+    "source_tool_id": "pinecone",
+    "target_tool_id": "weaviate",
+    "relationship_type": "managed-alternative",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-012",
+    "source_tool_id": "chroma",
+    "target_tool_id": "pinecone",
+    "relationship_type": "better-for-beginners",
+    "confidence_score": 0.8,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-013",
+    "source_tool_id": "pinecone",
+    "target_tool_id": "chroma",
+    "relationship_type": "better-for-production",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-014",
+    "source_tool_id": "vercel-ai-sdk",
+    "target_tool_id": "nextjs",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.95,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-015",
+    "source_tool_id": "vercel-ai-sdk",
+    "target_tool_id": "anthropic-sdk",
+    "relationship_type": "compatible-with",
+    "confidence_score": 0.95,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-016",
+    "source_tool_id": "vercel-ai-sdk",
+    "target_tool_id": "openai-sdk",
+    "relationship_type": "compatible-with",
+    "confidence_score": 0.95,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-017",
+    "source_tool_id": "vercel-ai-sdk",
+    "target_tool_id": "langchain",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.75,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-018",
+    "source_tool_id": "langchain",
+    "target_tool_id": "llamaindex",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-019",
+    "source_tool_id": "llamaindex",
+    "target_tool_id": "llamaparse",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-020",
+    "source_tool_id": "inngest",
+    "target_tool_id": "trigger-dev",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-021",
+    "source_tool_id": "inngest",
+    "target_tool_id": "nextjs",
+    "relationship_type": "compatible-with",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-022",
+    "source_tool_id": "nextjs",
+    "target_tool_id": "vercel",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.95,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-023",
+    "source_tool_id": "trpc",
+    "target_tool_id": "hono",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.7,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-024",
+    "source_tool_id": "trpc",
+    "target_tool_id": "nextjs",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-025",
+    "source_tool_id": "resend",
+    "target_tool_id": "nextjs",
+    "relationship_type": "compatible-with",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-026",
+    "source_tool_id": "stripe",
+    "target_tool_id": "lemonsqueezy",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-027",
+    "source_tool_id": "lemonsqueezy",
+    "target_tool_id": "stripe",
+    "relationship_type": "better-for-beginners",
+    "confidence_score": 0.8,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-028",
+    "source_tool_id": "sentry",
+    "target_tool_id": "posthog",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.6,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-029",
+    "source_tool_id": "algolia",
+    "target_tool_id": "typesense",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-030",
+    "source_tool_id": "typesense",
+    "target_tool_id": "algolia",
+    "relationship_type": "self-hosted-alternative",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-031",
+    "source_tool_id": "uploadthing",
+    "target_tool_id": "supabase",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.7,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-032",
+    "source_tool_id": "vercel-ai-sdk",
+    "target_tool_id": "pinecone",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  }
+]
