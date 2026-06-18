@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const EXAMPLES = [
   'AI customer support agent',
@@ -10,23 +11,27 @@ const EXAMPLES = [
   'Research assistant',
 ]
 
-// Phase 1 baseline: this form does not call any API. Architecture generation
-// is not wired yet — the deterministic engine lives in lib/ and will be
-// connected in the next slice. Submitting shows a status notice only.
+interface Props {
+  initialValue?: string
+}
 
-export default function ProjectPrompt() {
-  const [description, setDescription] = useState('')
-  const [notice, setNotice] = useState<string | null>(null)
+// Phase 1 baseline: submitting navigates to /?q=<description>. The homepage
+// (a server component) runs the deterministic recommendation pipeline from the
+// query and renders the result. No API route, no client-side fetch.
+
+export default function ProjectPrompt({ initialValue = '' }: Props) {
+  const router = useRouter()
+  const [description, setDescription] = useState(initialValue)
+  const [error, setError] = useState<string | null>(null)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (description.trim().length < 10) {
-      setNotice('Please describe your project in at least 10 characters.')
+      setError('Please describe your project in at least 10 characters.')
       return
     }
-    setNotice(
-      'Architecture generation is not wired up in this Phase 1 baseline. The capability and recommendation logic runs deterministically in lib/ and will be connected to this form in the next slice.'
-    )
+    setError(null)
+    router.push(`/?q=${encodeURIComponent(description.trim())}`)
   }
 
   return (
@@ -39,7 +44,7 @@ export default function ProjectPrompt() {
         maxLength={2000}
         className="w-full rounded-lg border p-4 text-base resize-none focus:outline-none focus:ring-2"
       />
-      {notice && <p className="text-sm text-muted-foreground">{notice}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
       <div className="flex items-center justify-between gap-4">
         <div className="flex gap-2 flex-wrap">
           {EXAMPLES.map((ex) => (
