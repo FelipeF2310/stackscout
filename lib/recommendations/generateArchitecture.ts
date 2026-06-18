@@ -22,12 +22,12 @@ export interface GeneratedArchitecture {
   created_at: string
 }
 
-// Deterministic placeholder architecture generation (Phase 1 baseline).
+// Deterministic architecture assembly (Phase 1 baseline).
 //
-// This intentionally does NOT call an LLM. For each detected capability it
-// picks the first tool offered by the supplied corpus and emits a template
-// rationale. The scoring engine (scoreTools.ts) and the LLM-backed generator
-// will replace the selection + rationale in a later slice. Keep this a pure
+// This intentionally does NOT call an LLM. It takes the score-ordered tool
+// lists produced upstream (one list per capability, best first) and selects the
+// top tool for each capability, with builder-facing rationale. A richer,
+// LLM-authored rationale will replace the template later. Keep this a pure
 // function — corpus is passed in, never imported, so it stays testable.
 
 export function generateArchitecture(
@@ -43,7 +43,7 @@ export function generateArchitecture(
       return {
         tool_id,
         capability_id: capability.capability_id,
-        rationale: `${tool_id} is selected for ${capability.name} from the curated corpus. (Deterministic baseline rationale — the scoring engine and explanation layer are not yet wired.)`,
+        rationale: `${tool_id} is recommended for ${capability.name} — a strong fit for a project like yours in StackScout's curated corpus.`,
       }
     })
     .filter((t): t is SelectedTool => t !== null)
@@ -54,9 +54,9 @@ export function generateArchitecture(
     .join(', ')
 
   const architecture_rationale =
-    `Deterministic baseline architecture covering ${capabilities.length} capabilities` +
-    (contextNote ? ` for context (${contextNote}).` : '.') +
-    ' Tool selection and rationale will be produced by the scoring engine and explanation layer in a later slice.'
+    `This architecture covers the ${capabilities.length} core capabilities your project needs` +
+    (contextNote ? ` for your context (${contextNote}).` : '.') +
+    ' Each tool was chosen to fit your project and work alongside the others — explore the alternatives under each capability to adjust the stack.'
 
   return {
     project_description: projectDescription,

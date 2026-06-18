@@ -48,4 +48,35 @@ describe('recommendArchitecture (end-to-end, deterministic)', () => {
     )
     expect(totalAlternatives).toBeGreaterThan(0)
   })
+
+  it('builds a multi-tool architecture for an internal dashboard (not just Next.js)', async () => {
+    const result = await recommendArchitecture(
+      'Build an internal dashboard for tracking city service requests'
+    )
+
+    const capabilityIds = result.architecture.capabilities.map((c) => c.capability_id)
+    expect(capabilityIds).toContain('database')
+    expect(capabilityIds).toContain('auth')
+
+    const toolIds = result.architecture.selected_tools.map((t) => t.tool_id)
+    expect(toolIds.length).toBeGreaterThanOrEqual(3)
+    expect(toolIds.some((id) => id !== 'nextjs')).toBe(true)
+  })
+
+  it('uses builder-facing copy with no stale "not wired"/"pending" text', async () => {
+    const result = await recommendArchitecture(
+      'Build an internal dashboard for tracking city service requests'
+    )
+
+    expect(result.architecture.architecture_rationale).not.toMatch(
+      /not yet wired|pending|deterministic baseline/i
+    )
+    for (const tool of result.architecture.selected_tools) {
+      expect(tool.rationale).not.toMatch(/not yet wired|pending/i)
+    }
+    for (const explanation of result.explanations) {
+      expect(explanation.tradeoffs).not.toMatch(/not yet wired|pending/i)
+      expect(explanation.technical).not.toMatch(/not yet wired|pending/i)
+    }
+  })
 })

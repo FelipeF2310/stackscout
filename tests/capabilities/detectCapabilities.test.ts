@@ -16,6 +16,29 @@ describe('detectCapabilities (deterministic baseline)', () => {
     expect(ids).toContain('llm-api')
   })
 
+  it('detects a multi-capability stack for an internal dashboard prompt', () => {
+    const ids = detectCapabilities(
+      'Build an internal dashboard for tracking city service requests'
+    ).map((c) => c.capability_id)
+
+    // Should be more than just a generic web-app suggestion.
+    expect(ids).toContain('frontend-framework')
+    expect(ids).toContain('database')
+    expect(ids).toContain('auth')
+    expect(ids.length).toBeGreaterThanOrEqual(3)
+  })
+
+  it('detects a RAG-style stack for a document chatbot prompt', () => {
+    const ids = detectCapabilities(
+      'Build a PDF chatbot for internal company documents'
+    ).map((c) => c.capability_id)
+
+    expect(ids).toContain('document-parsing')
+    expect(ids).toContain('llm-api')
+    expect(ids).toContain('retrieval')
+    expect(ids).toContain('vector-storage')
+  })
+
   it('returns valid taxonomy capabilities and does not fall back to the default floor', () => {
     const result = detectCapabilities(PDF_CHATBOT_PROMPT)
 
