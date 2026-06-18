@@ -1,32 +1,116 @@
-import type { GeneratedArchitecture } from './generateArchitecture'
+import { getToolById } from '../seed/loadSeed'
+import { getRelationshipsBetween } from '../relationships/relationshipGraph'
+import {
+  capabilityName,
+  simpleLine,
+  whyThisTool,
+  fitsWith,
+  tradeoff,
+  considerAlternative,
+  joinList,
+} from './explanationCopy'
+import type { GeneratedArchitecture, RefinementContext } from './generateArchitecture'
 
 export interface ToolExplanation {
   tool_id: string
+  capability_id: string
+  capability_name: string
+  github_url: string
+  /** Non-technical one-liner. */
   simple: string
-  technical: string
-  tradeoffs: string
-  why_not_alternatives: string
+  /** Why this tool was chosen. */
+  why: string
+  /** How it fits with the rest of the stack (null when no known relationship). */
+  fits_with: string | null
+  /** A concrete tradeoff being accepted. */
+  tradeoff: string
+  /** When to consider an alternative, naming one (null when none exist). */
+  consider_alternative: string | null
 }
 
-// Deterministic explanation generation (Phase 1 baseline).
-//
-// This intentionally does NOT call an LLM. It returns builder-facing template
-// explanations derived from the selected tools and their capabilities. A
-// richer, LLM-authored explanation will replace the body later; the copy here
-// is written to read as finished guidance, not as a stub.
+// Deterministic explanation layer (Phase 1 baseline). Builds advisor-style,
+// per-tool explanations from seed metadata + the relationship graph. No LLM.
 
-export function explainRecommendation(
-  architecture: GeneratedArchitecture,
-  _projectDescription: string
-): ToolExplanation[] {
-  return architecture.selected_tools.map((tool) => {
-    const capabilityLabel = tool.capability_id.replace(/-/g, ' ')
+export function explainRecommendation(architecture: GeneratedArchitecture): ToolExplanation[] {
+  const selectedIds = architecture.selected_tools.map((t) => t.tool_id)
+
+  return architecture.selected_tools.map((selected) => {
+    const tool = getToolById(selected.tool_id)
+    const capName = capabilityName(selected.capability_id)
+
     return {
-      tool_id: tool.tool_id,
-      simple: `${tool.tool_id} handles ${capabilityLabel} so you don't have to build it from scratch.`,
-      technical: `${tool.tool_id} covers ${capabilityLabel} in this stack. Compare it with the alternatives for this capability to weigh the tradeoffs for your context.`,
-      tradeoffs: 'Every tool involves tradeoffs — review the alternatives for this capability to see when a different choice would fit better.',
-      why_not_alternatives: 'See the alternatives listed for this capability for other options worth considering.',
+      tool_id: selected.tool_id,
+      capability_id: selected.capability_id,
+      capability_name: capName,
+      github_url: tool?.github_url ?? `https://github.com/search?q=${selected.tool_id}`,
+      simple: tool
+        ? simpleLine(tool, capName)
+        : `${selected.tool_id} handles ${capName.toLowerCase()}.`,
+      why: tool ? whyThisTool(tool, capName) : `Recommended for ${capName.toLowerCase()}.`,
+      fits_with: fitsWith(selected.tool_id, selectedIds),
+      tradeoff: tool
+        ? tradeoff(tool)
+        : 'Review the alternatives for this capability to compare tradeoffs.',
+      consider_alternative: considerAlternative(selected.tool_id, selected.capability_id),
     }
   })
+}
+
+// Architecture-level summary: what the stack is and why the pieces cohere.
+export function summarizeArchitecture(
+  architecture: GeneratedArchitecture,
+  context: RefinementContext = {}
+): string {
+  const tools = architecture.selected_tools
+  if (tools.length === 0) {
+    return 'No matching tools were found in the curated corpus for this idea yet.'
+  }
+
+  const pieces = tools.map(
+    (t) => `${t.tool_id} for ${capabilityName(t.capability_id).toLowerCase()}`
+  )
+  const count = tools.length
+  let summary = `This architecture brings together ${count} ${count === 1 ? 'tool' : 'tools'}: ${joinList(pieces)}.`
+
+  const pair = strongestPair(tools.map((t) => t.tool_id))
+  if (pair) {
+    summary += ` ${pair.a} and ${pair.b} are ${pair.kind}, so the core pieces fit together cleanly.`
+  }
+
+  const ctx = contextClause(context)
+  if (ctx) summary += ` ${ctx}`
+
+  return summary
+}
+
+function strongestPair(
+  toolIds: string[]
+): { a: string; b: string; kind: string } | null {
+  let best: { a: string; b: string; kind: string; conf: number } | null = null
+
+  for (let i = 0; i < toolIds.length; i++) {
+    for (let j = i + 1; j < toolIds.length; j++) {
+      for (const edge of getRelationshipsBetween(toolIds[i], toolIds[j])) {
+        let kind: string | null = null
+        if (edge.relationship_type === 'commonly-used-with') kind = 'commonly used together'
+        else if (edge.relationship_type === 'compatible-with') kind = 'designed to work together'
+        if (kind && (!best || edge.confidence_score > best.conf)) {
+          best = { a: toolIds[i], b: toolIds[j], kind, conf: edge.confidence_score }
+        }
+      }
+    }
+  }
+
+  return best ? { a: best.a, b: best.b, kind: best.kind } : null
+}
+
+function contextClause(context: RefinementContext): string | null {
+  const parts: string[] = []
+  if (context.skillLevel === 'beginner') parts.push('it leans toward approachable, low-setup choices')
+  if (context.projectStage === 'production') parts.push('it favors production-ready tools')
+  if (context.hostingPreference === 'managed') parts.push('it prefers managed services')
+  if (context.hostingPreference === 'self-hosted') parts.push('it prefers self-hosted tools')
+  if (context.ecosystem) parts.push(`it targets a ${context.ecosystem} stack`)
+  if (parts.length === 0) return null
+  return `Based on your preferences, ${joinList(parts)}.`
 }

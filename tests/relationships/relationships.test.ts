@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { getSeed } from '../../lib/seed/loadSeed'
 import { getAlternatives, getRelationshipsBetween } from '../../lib/relationships/relationshipGraph'
 import { checkCompatibility } from '../../lib/relationships/compatibility'
-import { getAlternativesForTool } from '../../lib/recommendations/alternatives'
+import { getAlternativesForCapability } from '../../lib/recommendations/alternatives'
+import { getToolById } from '../../lib/seed/loadSeed'
 
 // Relationship and alternative lookups against the seeded graph.
 
@@ -29,17 +30,26 @@ describe('relationship graph (seeded)', () => {
     expect(between.some((r) => r.relationship_type === 'alternative-to')).toBe(true)
   })
 
-  it('getAlternativesForTool excludes the selected tool and caps the list', async () => {
-    const alts = await getAlternativesForTool('pinecone', 'pinecone')
+  it('getAlternativesForCapability excludes the selected tool and caps the list', () => {
+    const alts = getAlternativesForCapability('pinecone', 'vector-storage')
     expect(alts.length).toBeGreaterThan(0)
     expect(alts.length).toBeLessThanOrEqual(3)
     expect(alts.map((a) => a.tool_id)).not.toContain('pinecone')
   })
 
-  it('gives every alternative a non-empty reason (no bare tool names)', async () => {
-    const alts = await getAlternativesForTool('pinecone', 'pinecone')
+  it('only returns alternatives that serve the same capability', () => {
+    const alts = getAlternativesForCapability('pinecone', 'vector-storage')
+    for (const alt of alts) {
+      expect(getToolById(alt.tool_id)?.capability_ids).toContain('vector-storage')
+    }
+  })
+
+  it('gives every alternative a specific, non-generic reason', () => {
+    const alts = getAlternativesForCapability('pinecone', 'vector-storage')
     for (const alt of alts) {
       expect(alt.reason_not_selected.trim().length).toBeGreaterThan(0)
+      // No leftover placeholder phrasing.
+      expect(alt.reason_not_selected).not.toMatch(/pending|not yet wired/i)
     }
   })
 })

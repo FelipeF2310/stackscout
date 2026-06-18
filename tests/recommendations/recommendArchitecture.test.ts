@@ -31,12 +31,14 @@ describe('recommendArchitecture (end-to-end, deterministic)', () => {
     }
   })
 
-  it('returns one explanation per selected tool', async () => {
+  it('returns one rich explanation per selected tool', async () => {
     const result = await recommendArchitecture(PDF_CHATBOT_PROMPT)
     expect(result.explanations).toHaveLength(result.architecture.selected_tools.length)
     for (const explanation of result.explanations) {
       expect(explanation.simple.length).toBeGreaterThan(0)
-      expect(explanation.technical.length).toBeGreaterThan(0)
+      expect(explanation.why.length).toBeGreaterThan(0)
+      expect(explanation.tradeoff.length).toBeGreaterThan(0)
+      expect(explanation.capability_name.length).toBeGreaterThan(0)
     }
   })
 
@@ -75,8 +77,23 @@ describe('recommendArchitecture (end-to-end, deterministic)', () => {
       expect(tool.rationale).not.toMatch(/not yet wired|pending/i)
     }
     for (const explanation of result.explanations) {
-      expect(explanation.tradeoffs).not.toMatch(/not yet wired|pending/i)
-      expect(explanation.technical).not.toMatch(/not yet wired|pending/i)
+      expect(explanation.tradeoff).not.toMatch(/not yet wired|pending/i)
+      expect(explanation.why).not.toMatch(/not yet wired|pending/i)
+    }
+  })
+
+  it('keeps alternatives within the same capability as the tool they replace', async () => {
+    const { tools } = getSeed()
+    const byId = new Map(tools.map((t) => [t.tool_id, t]))
+    const result = await recommendArchitecture(
+      'Build a SaaS app with authentication, billing, database, and deployment'
+    )
+
+    for (const group of result.alternatives) {
+      for (const alt of group.alternatives) {
+        // The alternative must actually implement the capability it's offered for.
+        expect(byId.get(alt.tool_id)?.capability_ids).toContain(group.capability_id)
+      }
     }
   })
 })

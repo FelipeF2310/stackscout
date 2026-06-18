@@ -17,21 +17,23 @@ export default function AlternativeTools({ alternatives }: Props) {
   return (
     <div className="space-y-4">
       <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-        Alternatives
+        Alternatives to consider
       </h2>
       <div className="space-y-4">
         {alternatives.map((alt) => (
-          <div key={alt.capability_id} className="space-y-2">
+          <div key={alt.capability_id} className="space-y-1">
             <p className="text-sm font-medium capitalize">
               {alt.capability_id.replace(/-/g, ' ')}
             </p>
-            <ul className="space-y-1">
+            <p className="text-xs text-muted-foreground">
+              Instead of <span className="font-medium">{alt.primary_tool_id}</span>, you could
+              use:
+            </p>
+            <ul className="space-y-1 pt-1">
               {alt.alternatives.map((a) => (
-                <li key={a.tool_id} className="text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">{a.tool_id}</span>
-                  {a.reason_not_selected && (
-                    <span> — {a.reason_not_selected}</span>
-                  )}
+                <li key={a.tool_id} className="text-sm">
+                  <span className="font-medium">{a.tool_id}</span>
+                  <span className="text-muted-foreground"> — {a.reason_not_selected}</span>
                 </li>
               ))}
             </ul>

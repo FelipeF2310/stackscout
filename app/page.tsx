@@ -16,16 +16,6 @@ export default async function HomePage({ searchParams }: Props) {
 
   const result = hasQuery ? await recommendArchitecture(projectDescription) : null
 
-  // RecommendedStack reads explanations from a flat key map (tool_id:field).
-  const rationaleMap: Record<string, string> = {}
-  if (result) {
-    for (const e of result.explanations) {
-      rationaleMap[`${e.tool_id}:simple`] = e.simple
-      rationaleMap[`${e.tool_id}:technical`] = e.technical
-      rationaleMap[`${e.tool_id}:tradeoffs`] = e.tradeoffs
-    }
-  }
-
   return (
     <main className="max-w-3xl mx-auto px-4 py-12 space-y-12">
       <div className="space-y-6">
@@ -47,11 +37,7 @@ export default async function HomePage({ searchParams }: Props) {
           <CapabilityList
             capabilityIds={result.architecture.capabilities.map((c) => c.capability_id)}
           />
-          <RecommendedStack
-            selectedTools={result.architecture.selected_tools}
-            rationale={rationaleMap}
-            architectureId="preview"
-          />
+          <RecommendedStack explanations={result.explanations} />
           <AlternativeTools alternatives={result.alternatives} />
         </div>
       )}

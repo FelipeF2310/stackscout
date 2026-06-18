@@ -5,8 +5,12 @@ import {
   type RefinementContext,
   type GeneratedArchitecture,
 } from './generateArchitecture'
-import { explainRecommendation, type ToolExplanation } from './explainRecommendation'
-import { getAlternativesForTool, type AlternativeTool } from './alternatives'
+import {
+  explainRecommendation,
+  summarizeArchitecture,
+  type ToolExplanation,
+} from './explainRecommendation'
+import { getAlternativesForCapability, type AlternativeTool } from './alternatives'
 import { getSeed } from '../seed/loadSeed'
 
 export interface CapabilityAlternatives {
@@ -64,13 +68,17 @@ export async function recommendArchitecture(
     context
   )
 
-  // 4. Explanations for each selected tool.
-  const explanations = explainRecommendation(architecture, projectDescription)
+  // 4. Replace the generic per-architecture rationale with a stack-aware summary
+  //    that explains how the chosen tools fit together.
+  architecture.architecture_rationale = summarizeArchitecture(architecture, context)
 
-  // 5. Alternatives per selected tool, from the relationship graph.
+  // 5. Advisor-style explanation for each selected tool.
+  const explanations = explainRecommendation(architecture)
+
+  // 6. Alternatives per selected tool — restricted to the same capability.
   const alternatives: CapabilityAlternatives[] = []
   for (const selected of architecture.selected_tools) {
-    const alts = await getAlternativesForTool(selected.tool_id, selected.tool_id)
+    const alts = getAlternativesForCapability(selected.tool_id, selected.capability_id)
     if (alts.length > 0) {
       alternatives.push({
         capability_id: selected.capability_id,
