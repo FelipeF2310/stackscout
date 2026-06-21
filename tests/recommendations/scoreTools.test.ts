@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { scoreTools } from '../../lib/recommendations/scoreTools'
-import { getSeed } from '../../lib/seed/loadSeed'
+import { getCorpus } from '../../lib/corpus/corpus'
 
-// Tool scoring runs against the real seed corpus (no mocks). getSeed() also
-// loads the relationship graph that compatibility scoring depends on.
+// Tool scoring runs against the real curated corpus (no mocks). getCorpus()
+// also loads the relationship graph that compatibility scoring depends on.
 
 describe('scoreTools (deterministic baseline)', () => {
-  const { tools } = getSeed()
+  const { tools } = getCorpus()
 
   it('only scores tools that fulfill the required capability', () => {
     const scored = scoreTools(tools, 'auth', {}, [])

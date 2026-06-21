@@ -1,5 +1,4 @@
-import { getToolById } from '../seed/loadSeed'
-import { getRelationshipsBetween } from '../relationships/relationshipGraph'
+import { getToolById, getRelationshipsBetween } from '../corpus/corpus'
 import {
   capabilityName,
   simpleLine,

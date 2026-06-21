@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { recommendArchitecture } from '../../lib/recommendations/recommendArchitecture'
-import { getSeed } from '../../lib/seed/loadSeed'
+import { getCorpus } from '../../lib/corpus/corpus'
 
 // End-to-end test of the deterministic pipeline against the seed corpus.
 
@@ -8,7 +8,7 @@ describe('recommendArchitecture (end-to-end, deterministic)', () => {
   const PDF_CHATBOT_PROMPT = 'Build a PDF chatbot for internal company documents'
 
   it('produces an architecture covering the detected capabilities', async () => {
-    const { tools } = getSeed()
+    const { tools } = getCorpus()
     const result = await recommendArchitecture(PDF_CHATBOT_PROMPT)
 
     const capabilityIds = result.architecture.capabilities.map((c) => c.capability_id)
@@ -105,7 +105,7 @@ describe('recommendArchitecture (end-to-end, deterministic)', () => {
   })
 
   it('keeps alternatives within the same capability as the tool they replace', async () => {
-    const { tools } = getSeed()
+    const { tools } = getCorpus()
     const byId = new Map(tools.map((t) => [t.tool_id, t]))
     const result = await recommendArchitecture(
       'Build a SaaS app with authentication, billing, database, and deployment'

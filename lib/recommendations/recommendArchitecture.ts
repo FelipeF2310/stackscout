@@ -11,7 +11,7 @@ import {
   type ToolExplanation,
 } from './explainRecommendation'
 import { getAlternativesForCapability, type AlternativeTool } from './alternatives'
-import { getSeed } from '../seed/loadSeed'
+import { getAllTools } from '../corpus/corpus'
 
 export interface CapabilityAlternatives {
   capability_id: string
@@ -42,7 +42,7 @@ export async function recommendArchitecture(
   projectDescription: string,
   context: RefinementContext = {}
 ): Promise<RecommendationResult> {
-  const { tools } = getSeed() // also ensures the relationship graph is loaded
+  const tools = getAllTools() // corpus load also populates the relationship graph
 
   // 1. Capabilities first.
   const capabilities = detectCapabilities(projectDescription)
