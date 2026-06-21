@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { ToolExplanation } from '@/lib/recommendations/explainRecommendation'
 
 interface Props {
@@ -12,7 +13,11 @@ export default function ToolRecommendationCard({ tool }: Props) {
     <div className="border rounded-lg p-4 space-y-2">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="font-semibold">{tool.tool_id}</h3>
+          <h3 className="font-semibold">
+            <Link href={`/tools/${tool.tool_id}`} className="hover:underline">
+              {tool.tool_id}
+            </Link>
+          </h3>
           <p className="text-xs text-muted-foreground">{tool.capability_label}</p>
         </div>
         <a
