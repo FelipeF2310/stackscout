@@ -14,9 +14,10 @@ describe('RecommendedStack', () => {
 
     try {
       const html = renderToStaticMarkup(<RecommendedStack explanations={explanations} />)
-      const llamaindexHeadings = html.match(/<h3[^>]*>llamaindex<\/h3>/g) ?? []
+      // The tool name now links to its detail page; one internal link per card.
+      const llamaindexLinks = html.match(/href="\/tools\/llamaindex"/g) ?? []
 
-      expect(llamaindexHeadings).toHaveLength(1)
+      expect(llamaindexLinks).toHaveLength(1)
       expect(html).toContain('Retrieval and Document Parsing')
       expect(consoleError).not.toHaveBeenCalledWith(
         expect.stringContaining('Encountered two children with the same key')
