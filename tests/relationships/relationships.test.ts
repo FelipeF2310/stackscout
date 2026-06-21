@@ -1,15 +1,14 @@
 import { describe, it, expect } from 'vitest'
-import { getSeed } from '../../lib/seed/loadSeed'
+import { getCorpus, getToolById } from '../../lib/corpus/corpus'
 import { getAlternatives, getRelationshipsBetween } from '../../lib/relationships/relationshipGraph'
 import { checkCompatibility } from '../../lib/relationships/compatibility'
 import { getAlternativesForCapability } from '../../lib/recommendations/alternatives'
-import { getToolById } from '../../lib/seed/loadSeed'
 
 // Relationship and alternative lookups against the seeded graph.
 
 describe('relationship graph (seeded)', () => {
-  // Ensure the graph singleton is loaded from the seed before any lookups.
-  getSeed()
+  // Ensure the corpus (and its relationship graph) is loaded before any lookups.
+  getCorpus()
 
   it('finds alternative-to neighbours for a tool', () => {
     const alternatives = getAlternatives('pinecone')

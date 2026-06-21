@@ -1,5 +1,4 @@
-import { getAlternatives } from '../relationships/relationshipGraph'
-import { getToolById } from '../seed/loadSeed'
+import { getAlternativesForTool } from '../corpus/corpus'
 import { alternativeReason } from './explanationCopy'
 
 export interface AlternativeTool {
@@ -14,12 +13,12 @@ export function getAlternativesForCapability(
   selectedToolId: string,
   capabilityId: string
 ): AlternativeTool[] {
-  return getAlternatives(selectedToolId)
-    .filter((id) => id !== selectedToolId)
-    .filter((id) => getToolById(id)?.capability_ids.includes(capabilityId))
+  return getAlternativesForTool(selectedToolId)
+    .filter((tool) => tool.tool_id !== selectedToolId)
+    .filter((tool) => tool.capability_ids.includes(capabilityId))
     .slice(0, 3)
-    .map((id) => ({
-      tool_id: id,
-      reason_not_selected: alternativeReason(selectedToolId, id, capabilityId),
+    .map((tool) => ({
+      tool_id: tool.tool_id,
+      reason_not_selected: alternativeReason(selectedToolId, tool.tool_id, capabilityId),
     }))
 }

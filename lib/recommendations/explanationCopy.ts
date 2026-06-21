@@ -1,6 +1,10 @@
-import { getToolById, type SeedTool } from '../seed/loadSeed'
-import { getAlternatives, getRelationshipsBetween } from '../relationships/relationshipGraph'
-import { getCapabilityById } from '../capabilities/capabilityTaxonomy'
+import {
+  getToolById,
+  getRelationshipsBetween,
+  getAlternativesForTool,
+  getCapabilityById,
+  type CorpusTool,
+} from '../corpus/corpus'
 
 // Deterministic copy builders for the recommendation experience (Phase 1).
 //
@@ -14,12 +18,12 @@ export function capabilityName(capabilityId: string): string {
 }
 
 /** Non-technical one-liner: what this tool does for you. */
-export function simpleLine(tool: SeedTool, capName: string): string {
+export function simpleLine(tool: CorpusTool, capName: string): string {
   return `${tool.tool_id} handles ${capName.toLowerCase()} so you don't have to build it yourself.`
 }
 
 /** Why this tool — distinguishing strengths drawn from its attributes. */
-export function whyThisTool(tool: SeedTool, capName: string): string {
+export function whyThisTool(tool: CorpusTool, capName: string): string {
   const base = tool.managed
     ? 'a managed service, so there is little infrastructure to run yourself'
     : 'self-hosted, so you keep full control of your data and infrastructure'
@@ -55,7 +59,7 @@ export function fitsWith(toolId: string, otherSelectedIds: string[]): string | n
 }
 
 /** A concrete tradeoff the user accepts by choosing this tool. */
-export function tradeoff(tool: SeedTool): string {
+export function tradeoff(tool: CorpusTool): string {
   if (!tool.production_ready) {
     return 'It is earlier-stage, so validate it on your workload before depending on it in production.'
   }
@@ -67,9 +71,10 @@ export function tradeoff(tool: SeedTool): string {
 
 /** Alternatives that serve the SAME capability (keeps suggestions capability-first). */
 export function sameCapabilityAlternatives(selectedToolId: string, capabilityId: string): string[] {
-  return getAlternatives(selectedToolId)
-    .filter((id) => id !== selectedToolId)
-    .filter((id) => getToolById(id)?.capability_ids.includes(capabilityId))
+  return getAlternativesForTool(selectedToolId)
+    .filter((tool) => tool.tool_id !== selectedToolId)
+    .filter((tool) => tool.capability_ids.includes(capabilityId))
+    .map((tool) => tool.tool_id)
 }
 
 /** One-line "when would I switch?" naming a concrete same-capability alternative. */
