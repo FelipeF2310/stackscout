@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StackScout — Conversation → living Architecture Brief</title>
+<style>
+  /* StackScout · conversational guided flow
+     Closest reading of the reference rhythm (cursor-flow-reference frames):
+     a calm CONVERSATION on the left that builds a LIVING ARTIFACT on the right.
+     Borrowed: brief narrated reasoning, an announced "Architecture Mode" switch,
+     inline paginated A–F question cards (Skip/Next), answers echoed in-thread,
+     a "Review Brief" card, and an artifact with In scope / Out of scope /
+     capability→tool / architecture diagram / next step.
+     NOT borrowed: IDE chrome, file tree, terminal, Cursor's colors/type/icons.
+     Deterministic / seed-based. No LLM, no auth, no persistence. */
+  :root{
+    --bg:hsl(210 40% 98%); --surface:hsl(0 0% 100%); --surface-2:hsl(210 40% 99%);
+    --fg:hsl(222 47% 11%); --muted-fg:hsl(215 16% 47%); --faint:hsl(215 14% 64%);
+    --border:hsl(214 32% 91%); --border-2:hsl(214 32% 95%);
+    --primary:hsl(222 47% 11%); --primary-fg:hsl(0 0% 98%);
+    --accent:hsl(221 83% 53%); --accent-soft:hsl(221 83% 96%); --accent-bd:hsl(221 60% 84%);
+    --secondary:hsl(210 40% 96%);
+    --clay:hsl(22 60% 42%); --clay-soft:hsl(22 70% 96%);
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:var(--mono)}
+  button{font-family:inherit;cursor:pointer}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+
+  /* top bar */
+  .top{display:flex;align-items:center;gap:12px;height:50px;padding:0 18px;background:var(--surface);
+    border-bottom:1px solid var(--border)}
+  .brand{font-weight:800;font-size:15px;letter-spacing:-.02em}
+  .modechip{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--accent);
+    background:var(--accent-soft);border:1px solid var(--accent-bd);padding:4px 10px;border-radius:999px}
+  .modechip .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .top .right{margin-left:auto;font-size:12px;color:var(--faint)}
+
+  /* two-pane */
+  .panes{display:grid;grid-template-columns:minmax(0,46fr) minmax(0,54fr);height:calc(100vh - 50px)}
+  .conv{border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0;background:var(--surface-2)}
+  .thread{flex:1;overflow:auto;padding:26px 26px 12px}
+  .composer{border-top:1px solid var(--border);padding:12px 16px;background:var(--surface)}
+  .artifact{overflow:auto;background:var(--bg)}
+
+  /* conversation atoms */
+  .turn{margin-bottom:20px;max-width:560px}
+  .you{background:var(--clay-soft);border:1px solid hsl(22 50% 90%);border-radius:12px;padding:12px 15px;
+    font-size:15px;color:hsl(22 45% 25%)}
+  .you .tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--clay);margin-bottom:5px}
+  .think{color:var(--faint);font-size:13px;display:flex;align-items:center;gap:8px;margin:2px 0}
+  .think::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--faint)}
+  .say{color:var(--fg);font-size:15px;line-height:1.6}
+  .switch{border:1px solid var(--accent-bd);background:var(--accent-soft);border-radius:12px;padding:13px 15px;margin:4px 0}
+  .switch .h{font-weight:600;font-size:14px;color:var(--accent);display:flex;align-items:center;gap:8px}
+  .switch p{margin:6px 0 0;font-size:13.5px;color:var(--muted-fg)}
+  .caps{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+  .capchip{font-size:13px;padding:6px 11px;border-radius:999px;background:var(--surface);
+    border:1px solid var(--border);display:inline-flex;align-items:center;gap:7px}
+  .capchip .x{color:var(--faint);font-size:11px}
+  .capchip.add{background:transparent;color:var(--accent);border:1px dashed var(--accent-bd)}
+  .inlinebtns{display:flex;gap:8px;margin-top:12px}
+
+  /* inline question card */
+  .qcard{border:1px solid var(--border);background:var(--surface);border-radius:14px;padding:16px;
+    box-shadow:0 1px 2px rgba(16,24,40,.04),0 10px 26px -22px rgba(16,24,40,.5);margin-bottom:20px}
+  .qcard .qhead{display:flex;align-items:center;justify-content:space-between;color:var(--muted-fg)}
+  .qcard .qhead .ttl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+  .qcard .pg{display:flex;align-items:center;gap:8px;font-size:12px}
+  .qcard .pg button{border:0;background:none;color:var(--faint);font-size:14px;padding:0 2px}
+  .qtext{font-size:16px;font-weight:600;margin:10px 0 12px}
+  .opts{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px}
+  .opt{display:flex;align-items:center;gap:11px;border:1px solid var(--border);border-radius:10px;
+    padding:10px 13px;font-size:14.5px;color:var(--fg)}
+  .opt:hover{border-color:var(--accent-bd);background:var(--accent-soft)}
+  .opt[aria-pressed="true"]{border-color:var(--primary);font-weight:600}
+  .opt .ltr{font-family:var(--mono);font-size:12px;color:var(--faint);width:14px}
+  .opt[aria-pressed="true"] .ltr{color:var(--primary)}
+  .opt.soft{color:var(--muted-fg)}
+  .qfoot{display:flex;align-items:center;gap:8px;margin-top:14px}
+  .spacer{flex:1}
+
+  /* review card */
+  .review{border:1px solid var(--border);background:var(--surface);border-radius:14px;padding:16px;
+    box-shadow:0 1px 2px rgba(16,24,40,.04)}
+  .review .k{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-fg)}
+  .review h4{margin:6px 0 6px;font-size:16px;font-weight:700}
+  .review p{margin:0;font-size:13.5px;color:var(--muted-fg)}
+  .review .row{display:flex;gap:8px;margin-top:14px;align-items:center}
+
+  /* buttons */
+  .btn{font-size:13.5px;font-weight:600;padding:8px 14px;border-radius:9px;border:1px solid var(--border);
+    background:var(--surface);color:var(--fg)}
+  .btn:hover{border-color:var(--faint)}
+  .btn.primary{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
+  .btn.primary:hover{filter:brightness(1.18)}
+  .btn.link{background:none;border-color:transparent;color:var(--muted-fg)}
+  .btn.link:hover{color:var(--fg)}
+  .btn.sm{padding:6px 11px;font-size:12.5px}
+  .kbd{font-family:var(--mono);font-size:11px;color:var(--faint)}
+
+  /* composer */
+  .cfield{display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:11px;
+    padding:8px 8px 8px 12px;background:var(--surface)}
+  .cfield .mchip{font-size:11.5px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-bd);
+    padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .cfield input{flex:1;border:0;outline:none;font-family:var(--sans);font-size:14px;color:var(--fg);background:none}
+  .cfield .sel{font-size:12px;color:var(--faint)}
+  .cfoot{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:var(--faint)}
+
+  /* ---------- ARTIFACT ---------- */
+  .art-bar{position:sticky;top:0;background:hsl(210 40% 98% / .9);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);padding:13px 28px;display:flex;align-items:center;gap:10px;z-index:2}
+  .art-bar .crumb{font-size:12.5px;color:var(--muted-fg)}
+  .art-bar .crumb b{color:var(--fg)}
+  .badge{font-size:11.5px;padding:3px 10px;border-radius:999px;background:var(--secondary);color:var(--muted-fg);border:1px solid var(--border)}
+  .art-bar .badge.live{color:var(--accent);background:var(--accent-soft);border-color:var(--accent-bd)}
+  .doc{max-width:620px;margin:0 auto;padding:26px 28px 90px}
+  .doc h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
+  .doc .sub{color:var(--muted-fg);font-size:15px;margin:0 0 6px}
+  .sec{margin-top:26px}
+  .sec h3{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted-fg);margin:0 0 8px}
+  .sec p{margin:0;font-size:15px;line-height:1.6}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  ul.clean{margin:6px 0 0;padding-left:18px}
+  ul.clean li{margin:4px 0;font-size:14px}
+  ul.clean.muted li{color:var(--muted-fg)}
+  .ghostchips{display:flex;flex-wrap:wrap;gap:7px}
+  .gchip{font-size:12.5px;padding:5px 11px;border-radius:999px;background:transparent;color:var(--muted-fg);border:1px dashed var(--border)}
+  .stack-row{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px dashed var(--border)}
+  .stack-row:last-child{border-bottom:0}
+  .stack-row .cap{color:var(--muted-fg);font-size:13.5px}
+  .stack-row .why{color:var(--faint);font-size:12.5px}
+  .divider{height:1px;background:var(--border);border:0;margin:6px 0 0}
+  details.disc>summary{list-style:none;cursor:pointer;color:var(--accent);font-size:13px;padding:3px 0}
+  details.disc>summary::-webkit-details-marker{display:none}
+  details.disc>summary::before{content:"+ ";font-family:var(--mono)}
+  details.disc[open]>summary::before{content:"– "}
+  .disc .panel{padding:8px 0 0;font-size:13.5px;color:var(--muted-fg)}
+
+  /* architecture diagram (capability-first node map) */
+  .diagram{margin-top:10px;border:1px solid var(--border);border-radius:12px;background:var(--surface);
+    padding:22px 18px 26px}
+  .node{border:1px solid var(--border);border-radius:9px;padding:8px 10px;text-align:center;background:var(--surface)}
+  .node .t{font-size:12.5px;font-weight:600}
+  .node .s{font-size:11px;color:var(--faint)}
+  .proj{max-width:240px;margin:0 auto;border-color:var(--primary);background:var(--primary);color:var(--primary-fg)}
+  .proj .s{color:hsl(210 30% 80%)}
+  .spineline{width:1px;height:18px;background:var(--border);margin:6px auto}
+  .caprow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:2px}
+  .col{display:flex;flex-direction:column;align-items:stretch;gap:6px}
+  .col .cap-n{border-color:var(--accent-bd);background:var(--accent-soft)}
+  .col .cap-n .t{color:var(--accent)}
+  .col .conn{width:1px;height:12px;background:var(--border);margin:0 auto}
+  .col .tool-n .t{font-family:var(--mono);font-size:11.5px}
+  .col .alt{font-size:10.5px;color:var(--faint);text-align:center}
+  @media(max-width:1080px){.caprow{grid-template-columns:repeat(2,1fr);gap:12px}}
+  @media(max-width:860px){.panes{grid-template-columns:1fr;height:auto}.conv{border-right:0;border-bottom:1px solid var(--border)}
+    .thread{max-height:none}.artifact{height:auto}.grid2{grid-template-columns:1fr}.caprow{grid-template-columns:1fr}}
+
+  /* notes */
+  .notes{background:var(--fg);color:hsl(210 16% 86%)}
+  .notes .in{max-width:900px;margin:0 auto}
+  .notes details{border-top:1px solid hsl(215 20% 28%)}
+  .notes summary{cursor:pointer;padding:14px 22px;font-size:13px;color:hsl(210 14% 72%);list-style:none}
+  .notes summary::-webkit-details-marker{display:none}
+  .notes summary::before{content:"▸ ";color:hsl(210 12% 55%)}
+  .notes details[open] summary::before{content:"▾ "}
+  .notes .body{padding:0 22px 22px;font-size:14px;line-height:1.62;color:hsl(210 14% 80%)}
+  .notes h4{color:#fff;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin:16px 0 5px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <span class="brand">StackScout</span>
+  <span class="modechip"><span class="dot"></span>Architecture Mode</span>
+  <span class="right mono">deterministic · seed-based · mockup</span>
+</div>
+
+<div class="panes">
+
+  <!-- LEFT: CONVERSATION -->
+  <section class="conv">
+    <div class="thread" id="thread">
+
+      <div class="turn"><div class="you"><div class="tag">You</div>Build a PDF chatbot for internal company documents</div></div>
+
+      <div class="turn">
+        <div class="think">Thought for 1s</div>
+        <div class="say">Capability-first means I work out <b>what the system needs to do</b> before naming tools. I’ll read your description, reflect back the capabilities, then ask only the questions that change the architecture.</div>
+      </div>
+
+      <div class="turn">
+        <div class="switch">
+          <div class="h">⇄ Switched to Architecture Mode</div>
+          <p>You’re asking to plan a system, not to browse repos — so I’ll assemble an Architecture Brief with tradeoffs before drilling into tools.</p>
+        </div>
+      </div>
+
+      <div class="turn">
+        <div class="say">Here’s what I think you’re building — a <b>private document Q&amp;A assistant</b> (RAG over your own PDFs). It needs:</div>
+        <div class="caps">
+          <span class="capchip">Document Parsing <span class="x">×</span></span>
+          <span class="capchip">Vector Storage <span class="x">×</span></span>
+          <span class="capchip">Retrieval <span class="x">×</span></span>
+          <span class="capchip">LLM API <span class="x">×</span></span>
+          <span class="capchip">Authentication <span class="x">×</span></span>
+          <span class="capchip add">+ add</span>
+        </div>
+        <div class="inlinebtns">
+          <button class="btn primary sm" onclick="confirmCaps()">Looks right →</button>
+          <button class="btn link sm">Adjust</button>
+        </div>
+      </div>
+
+      <!-- inline question card -->
+      <div class="turn" id="qturn">
+        <div class="qcard">
+          <div class="qhead"><span class="ttl">Questions</span>
+            <span class="pg"><button>‹</button><span id="qpg">1 of 3</span><button onclick="nextQ()">›</button></span></div>
+          <div class="qtext" id="qtext">Who is this for, and where will it run?</div>
+          <ul class="opts" id="qopts">
+            <li class="opt" aria-pressed="true" onclick="pick(this)"><span class="ltr">A</span>Internal tool — for colleagues only</li>
+            <li class="opt" onclick="pick(this)"><span class="ltr">B</span>Customer-facing product</li>
+            <li class="opt" onclick="pick(this)"><span class="ltr">C</span>Personal / weekend prototype</li>
+            <li class="opt soft" onclick="pick(this)"><span class="ltr">D</span>Not sure — pick a sensible default</li>
+            <li class="opt soft" onclick="pick(this)"><span class="ltr">E</span>Other — I’ll describe it in chat</li>
+          </ul>
+          <div class="qfoot">
+            <span class="spacer"></span>
+            <button class="btn link sm" onclick="nextQ()">Skip</button>
+            <button class="btn primary sm" onclick="nextQ()">Next <span class="kbd">↵</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- review brief card (revealed after questions) -->
+      <div class="turn" id="reviewturn" style="display:none">
+        <div class="think">Created brief</div>
+        <div class="review">
+          <div class="k">Review brief</div>
+          <h4>PDF chatbot for internal company documents</h4>
+          <p>A private RAG assistant over your PDFs — five capabilities mapped to a managed TypeScript stack, with tradeoffs and what’s deliberately out of scope. →</p>
+          <div class="row">
+            <button class="btn primary sm" onclick="document.getElementById('art').scrollIntoView({behavior:'smooth'})">Open brief →</button>
+            <button class="btn link sm">Refine answers</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="composer">
+      <div class="cfield">
+        <span class="mchip">Architecture Mode</span>
+        <input placeholder="Plan the architecture — describe or refine…">
+        <span class="sel mono">Seed corpus ▾</span>
+      </div>
+      <div class="cfoot"><span>Capabilities before tools.</span><span class="kbd">↵ to send</span></div>
+    </div>
+  </section>
+
+  <!-- RIGHT: LIVING ARTIFACT -->
+  <section class="artifact" id="art">
+    <div class="art-bar">
+      <span class="crumb">Briefs / <b>PDF chatbot</b></span>
+      <span class="spacer" style="flex:1"></span>
+      <span class="badge live" id="artstate">drafting…</span>
+      <span class="badge">Managed · TypeScript</span>
+    </div>
+    <div class="doc">
+      <h1>Architecture Brief</h1>
+      <p class="sub">PDF chatbot for internal company documents</p>
+
+      <div class="sec"><h3>What you’re building</h3>
+        <p>A private document Q&amp;A assistant (RAG over your own PDFs).</p></div>
+      <div class="sec"><h3>MVP goal</h3>
+        <p>Ask a question → get a cited answer drawn from your documents.</p></div>
+
+      <div class="grid2" style="margin-top:26px">
+        <div class="sec" style="margin-top:0"><h3>In scope (v1)</h3>
+          <ul class="clean"><li>Upload &amp; parse PDFs</li><li>Embed + store vectors</li><li>Retrieve &amp; cite answers</li><li>Sign-in for colleagues</li></ul></div>
+        <div class="sec" style="margin-top:0"><h3>Out of scope (deliberately)</h3>
+          <div class="ghostchips"><span class="gchip">Fine-tuning</span><span class="gchip">Multi-tenant orgs</span><span class="gchip">Analytics</span></div></div>
+      </div>
+
+      <div class="sec"><h3>Capabilities → recommended tool</h3>
+        <div class="stack-row"><span class="cap">Document Parsing</span><span><a href="#">llamaparse</a> <span class="why">— reliable PDF/table extraction.</span></span></div>
+        <div class="stack-row"><span class="cap">Vector Storage</span><span><a href="#">qdrant</a> <span class="why">— production vector search you control.</span></span></div>
+        <div class="stack-row"><span class="cap">Retrieval</span><span><a href="#">llamaindex</a> <span class="why">— RAG orchestration; pairs with llamaparse.</span></span></div>
+        <div class="stack-row"><span class="cap">LLM API</span><span><a href="#">openai-sdk</a> <span class="why">— well-documented, strong models.</span></span></div>
+        <div class="stack-row"><span class="cap">Authentication</span><span><a href="#">clerk</a> <span class="why">— managed auth, little to run.</span></span></div>
+      </div>
+
+      <div class="sec"><h3>Architecture <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--faint)">— capability-first map</span></h3>
+        <div class="diagram">
+          <div class="node proj"><div class="t">PDF chatbot</div><div class="s">RAG over internal PDFs</div></div>
+          <div class="spineline"></div>
+          <div class="caprow">
+            <div class="col">
+              <div class="node cap-n"><div class="t">Doc Parsing</div></div><div class="conn"></div>
+              <div class="node tool-n"><div class="t">llamaparse</div></div><div class="alt">alt: unstructured</div>
+            </div>
+            <div class="col">
+              <div class="node cap-n"><div class="t">Vector</div></div><div class="conn"></div>
+              <div class="node tool-n"><div class="t">qdrant</div></div><div class="alt">alt: pinecone</div>
+            </div>
+            <div class="col">
+              <div class="node cap-n"><div class="t">Retrieval</div></div><div class="conn"></div>
+              <div class="node tool-n"><div class="t">llamaindex</div></div><div class="alt">&nbsp;</div>
+            </div>
+            <div class="col">
+              <div class="node cap-n"><div class="t">LLM API</div></div><div class="conn"></div>
+              <div class="node tool-n"><div class="t">openai-sdk</div></div><div class="alt">alt: anthropic</div>
+            </div>
+            <div class="col">
+              <div class="node cap-n"><div class="t">Auth</div></div><div class="conn"></div>
+              <div class="node tool-n"><div class="t">clerk</div></div><div class="alt">alt: authjs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <details class="disc" style="margin-top:24px"><summary>Tradeoffs &amp; alternatives</summary>
+        <div class="panel">
+          <p style="margin:0 0 6px;color:var(--fg);font-weight:600">Tradeoffs you’re accepting</p>
+          <ul class="clean muted"><li>Managed services (clerk, openai-sdk) add vendor cost as you scale.</li>
+            <li>qdrant self-hosted means you operate it — or swap for managed.</li></ul>
+          <p style="margin:12px 0 6px;color:var(--fg);font-weight:600">Alternatives worth knowing</p>
+          <ul class="clean muted"><li><b style="color:var(--fg)">Vector:</b> pinecone (managed) · weaviate (self-host)</li>
+            <li><b style="color:var(--fg)">Auth:</b> authjs (self-host, full control)</li></ul>
+        </div>
+      </details>
+
+      <div class="sec"><h3>Next implementation step</h3>
+        <p style="font-size:14.5px">Scaffold a Next.js app → wire <em>llamaparse → qdrant</em> ingest → a retrieval route calling <em>openai-sdk</em>.</p></div>
+
+      <div class="sec" style="display:flex;gap:10px">
+        <button class="btn" onclick="window.print()">Save brief</button>
+        <span class="spacer" style="flex:1"></span>
+        <button class="btn primary">Explore tools →</button>
+      </div>
+      <p style="font-size:12px;color:var(--faint);margin-top:14px">Each tool name opens its StackScout tool page. “Save brief” is a concept — markdown export TBD.</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- DESIGN NOTES -->
+<section class="notes">
+  <div class="in">
+    <details>
+      <summary>Design notes — what the real reference frames changed</summary>
+      <div class="body">
+        <h4>Why this variant exists</h4>
+        <p>The full ~80s recording (cursor-flow-reference) shows a <em>conversation that builds a living artifact</em> — not a stepped wizard. Frame 06: it narrates a brief thought and announces “Switched to Plan Mode” with a reason. Frame 09: questions are an <em>inline card</em> in the thread (paginated, lettered A–F, Skip/Next). Frames 16–17: a two-pane view — conversation left, a Plan artifact right with In scope / Out of scope / an architecture <em>diagram</em> / behavior / next steps, plus a “Review Plan” card with a primary action.</p>
+        <h4>Translated to StackScout (not copied)</h4>
+        <p>Left = a calm conversation: your idea, a one-line reasoning beat, an announced <b>Architecture Mode</b> switch (our Plan Mode analog, capability-first rationale), reflected capabilities as removable chips, an inline A–E question card, then a <b>Review brief</b> card. Right = the <b>living Architecture Brief</b> from your DESIGN_INSPO — What you’re building, MVP goal, In/Out of scope, capability→tool, an architecture <b>diagram</b> (capability-first node map), tradeoffs (one tap), next step. No IDE chrome, file tree, terminal, or Cursor colors/type.</p>
+        <h4>How it stays simple</h4>
+        <p>Each pane does exactly one job (talk · the artifact). Questions live in the thread so there’s no separate wizard. Secondary depth (tradeoffs/alternatives) is one disclosure. Accent only on links, mode, and the active answer; near-black only on primary actions.</p>
+        <h4>vs simplified.html</h4>
+        <p><span class="mono">simplified.html</span> = the same content as a calm <em>linear stepped</em> flow (good for narrow screens / lowest cognitive load). <span class="mono">conversational.html</span> (this) = the reference’s <em>conversation→living-artifact</em> rhythm, momentum preserved. Same StackScout content and tokens; pick the interaction model.</p>
+        <h4>Still rough</h4>
+        <p>One real question wired (Next just reveals the Review card + flips the artifact state to “ready”). Composer, model selector, add/remove chips, and tool links are visual. All data illustrative; deterministic/seed framing, no LLM/auth/persistence.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<script>
+  let qi=1;const total=3;
+  function pick(el){el.parentNode.querySelectorAll('.opt').forEach(o=>o.setAttribute('aria-pressed','false'));
+    el.setAttribute('aria-pressed','true');}
+  function confirmCaps(){document.getElementById('qturn').scrollIntoView({behavior:'smooth',block:'center'});}
+  function nextQ(){
+    if(qi<total){qi++;document.getElementById('qpg').textContent=qi+' of '+total;
+      // a tiny illustrative second/third question
+      const t=document.getElementById('qtext'),o=document.getElementById('qopts');
+      if(qi===2){t.textContent='Where should it run?';
+        o.innerHTML='<li class="opt" aria-pressed="true" onclick="pick(this)"><span class=ltr>A</span>Managed / serverless</li><li class="opt" onclick="pick(this)"><span class=ltr>B</span>Self-hosted</li><li class="opt soft" onclick="pick(this)"><span class=ltr>C</span>Not sure — sensible default</li>';}
+      else if(qi===3){t.textContent='Which ecosystem?';
+        o.innerHTML='<li class="opt" aria-pressed="true" onclick="pick(this)"><span class=ltr>A</span>TypeScript</li><li class="opt" onclick="pick(this)"><span class=ltr>B</span>Python</li><li class="opt soft" onclick="pick(this)"><span class=ltr>C</span>Mixed / no preference</li>';}
+      return;
+    }
+    // done → reveal review card + mark artifact ready
+    document.getElementById('qturn').style.display='none';
+    const r=document.getElementById('reviewturn');r.style.display='block';
+    const st=document.getElementById('artstate');st.textContent='ready';st.style.color='hsl(150 55% 32%)';
+    st.style.background='hsl(150 55% 95%)';st.style.borderColor='hsl(150 40% 80%)';
+    r.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+</script>
+</body>
+</html>
