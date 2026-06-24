@@ -14,8 +14,7 @@ Your job is to identify documentation that has fallen out of sync with the imple
 - Are all entities, fields, and types consistent?
 
 ### Capability taxonomy sync
-- Does `docs/CAPABILITY_TAXONOMY.md` match `lib/capabilities/capabilityTaxonomy.ts`?
-- Does it match `data/seed/capabilities.json`?
+- Does `docs/CAPABILITY_TAXONOMY.md` match `lib/capabilities/capabilityTaxonomy.ts` (the canonical capability registry)?
 
 ### Scoring model sync
 - Does `docs/SCORING_MODEL.md` describe the logic in `lib/recommendations/scoreTools.ts`?

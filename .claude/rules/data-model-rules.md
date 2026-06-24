@@ -19,8 +19,9 @@ The data model has five core entities. Do not add entities without updating `doc
 ## Capabilities
 
 - Capabilities are canonical — they live in the taxonomy, not in user input.
+- `lib/capabilities/capabilityTaxonomy.ts` (`CAPABILITY_TAXONOMY`) is the single canonical capability registry. The corpus and all other code read capabilities from it. There is no separate capability seed file.
 - capability_id is a stable slug (e.g., `auth`, `vector-storage`), not a UUID.
-- Adding a capability requires updating: `data/seed/capabilities.json`, `lib/capabilities/capabilityTaxonomy.ts`, and `docs/CAPABILITY_TAXONOMY.md`.
+- Adding a capability requires updating `lib/capabilities/capabilityTaxonomy.ts`. Keep `docs/CAPABILITY_TAXONOMY.md` in sync until that doc is generated from the taxonomy (deferred).
 
 ---
 
@@ -60,7 +61,7 @@ The data model has five core entities. Do not add entities without updating `doc
 
 ## Seed Data
 
-- Phase 1 seed data lives in `data/seed/`.
+- Phase 1 seed data lives in `data/seed/` (`tools.json`, `relationships.json`). Capabilities are **not** seed data — they come from the canonical taxonomy (see Capabilities above).
 - Target: 50–100 tools covering core capabilities.
-- Seed data is the source of truth for the MVP. The database is populated from it.
+- Tool and relationship seed data is the source of truth for the MVP corpus. The database is populated from it.
 - Do not hardcode tool data in application code — always reference from seed/db.

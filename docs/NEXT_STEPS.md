@@ -18,8 +18,7 @@ as possible next work. This is a status note, not new product direction.
 
 - Improve tool page design / information hierarchy.
 - Evaluate whether to add simple saved/exportable architecture output.
-- Consolidate capability data sources: `data/seed/capabilities.json` and
-  `lib/capabilities/capabilityTaxonomy.ts`.
+- ~~Consolidate capability data sources~~ **Done** — `lib/capabilities/capabilityTaxonomy.ts` is now the single canonical capability registry; the duplicate `data/seed/capabilities.json` was removed.
 - Improve seed corpus quality.
 - Revisit static vs dynamic/ISR for tool pages if live GitHub metadata or
   freshness scoring is added later.
