@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
-import capabilitiesData from '../../data/seed/capabilities.json'
 import toolsData from '../../data/seed/tools.json'
 import relationshipsData from '../../data/seed/relationships.json'
 
+import { CAPABILITY_TAXONOMY } from '../capabilities/capabilityTaxonomy'
 import type { Capability } from '../capabilities/capabilityTypes'
 import type { Relationship } from '../relationships/relationshipTypes'
 import {
@@ -15,10 +15,14 @@ import {
 
 // Curated corpus module (Phase 1).
 //
-// The single interface for reading StackScout's seed data: Capabilities, Tools,
-// and Relationships. It owns loading, validation, and typed query helpers. There
-// is no database, no network, and no persistence — the corpus is loaded once
-// from data/seed/*.json, validated, indexed in memory, and reused.
+// The single interface for reading StackScout's curated data: Capabilities,
+// Tools, and Relationships. It owns loading, validation, and typed query
+// helpers. There is no database, no network, and no persistence — the corpus is
+// loaded once, validated, indexed in memory, and reused.
+//
+// Capabilities are sourced from the canonical taxonomy (CAPABILITY_TAXONOMY in
+// lib/capabilities/capabilityTaxonomy.ts) — the single source of truth for the
+// primary product object. Tools and relationships are read from data/seed/*.json.
 //
 // Relationship lookups delegate to the in-memory relationship graph, which this
 // module populates on load (so compatibility scoring keeps working unchanged).
@@ -82,7 +86,9 @@ let _capabilityById: Map<string, Capability> = new Map()
 function load(): Corpus {
   if (_corpus) return _corpus
 
-  const capabilities = capabilitySchema.array().parse(capabilitiesData) as Capability[]
+  // Canonical capabilities come from the taxonomy; still validated here so the
+  // corpus keeps its "loaded + validated" contract.
+  const capabilities = capabilitySchema.array().parse(CAPABILITY_TAXONOMY) as Capability[]
   const tools = toolSchema.array().parse(toolsData)
   const relationships = relationshipSchema.array().parse(relationshipsData)
 
