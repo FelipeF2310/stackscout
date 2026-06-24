@@ -189,13 +189,18 @@ not current state.
 
 ## 10. Near-term direction
 
-The next major product direction is likely **one of** the following — to be
-chosen deliberately, not all at once:
+**Decided (2026-06-24): the canonical UX — a landing page → guided two-pane
+workspace with a capability-first Stack Map as the right-pane artifact.** See
+[`UX_CANONICAL_DIRECTION.md`](./UX_CANONICAL_DIRECTION.md) for the authoritative
+description, the visual-target prototypes, and the phased path. The old stacked
+results-page is **scrapped**.
 
-- **Stack Map** artifact / ecosystem view.
-- **Repo memory / ecosystem learning** architecture (a design document first).
+Still parked (not the current focus):
+
+- **Repo memory / ecosystem learning** architecture — design captured in
+  [`REPO_MEMORY_AND_LEARNING.md`](./REPO_MEMORY_AND_LEARNING.md), not implemented.
 - **Keyword cleanup** after real prompt testing.
 
-This document does **not** prescribe implementation. Its job is to align the team
-*before* the next branch is cut. Pick one direction, plan it, then build the
-smallest safe PR — per the phased discipline above.
+This document does **not** prescribe implementation. Each phase of the canonical
+UX gets its own planning pass, then the smallest safe PR — per the phased
+discipline above.

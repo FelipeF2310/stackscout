@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StackScout — Stack Map</title>
+<style>
+  /* ===========================================================================
+     StackScout · Stack Map prototype  (static UX/visual exploration only)
+     -----------------------------------------------------------------------
+     Product thesis made structural: CAPABILITIES are the navigation spine;
+     each capability opens a TOOL ECOSYSTEM (recommended + alternatives +
+     compatibility + risks). The Architecture Brief is only a compact framing
+     header. Tool exploration is the centre of gravity, not a footnote.
+
+     Borrowed from the reference: focused entry, guided progression, a clear
+     artifact. NOT borrowed: Cursor brand/colours/type, IDE chrome, dark neon,
+     dashboard cards, repo-search grids. Deterministic / seed-based — no LLM,
+     no auth, no persistence. Not production code.
+     ========================================================================= */
+  :root{
+    --bg:hsl(210 38% 97%); --surface:hsl(0 0% 100%); --surface-2:hsl(210 40% 99%);
+    --fg:hsl(222 47% 11%); --muted:hsl(215 16% 42%); --faint:hsl(215 14% 60%);
+    --line:hsl(214 30% 90%); --line-2:hsl(214 30% 94%);
+    --ink:hsl(222 47% 11%); --ink-fg:hsl(0 0% 99%);
+    --accent:hsl(221 70% 46%); --accent-soft:hsl(221 78% 96%); --accent-bd:hsl(221 52% 82%);
+    --clay:hsl(20 52% 40%); --clay-soft:hsl(24 60% 96%); --clay-bd:hsl(24 40% 88%);
+    --good:hsl(158 50% 34%); --good-soft:hsl(158 46% 95%);
+    --warn:hsl(28 64% 42%); --warn-soft:hsl(34 78% 95%);
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:var(--mono)}
+  button{font-family:inherit;cursor:pointer;color:inherit}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  ::selection{background:var(--accent-soft)}
+
+  /* ---- top bar --------------------------------------------------------- */
+  .top{display:flex;align-items:center;gap:14px;height:52px;padding:0 22px;background:var(--surface);
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+  .brand{font-weight:800;font-size:15px;letter-spacing:-.02em}
+  .brand .dot{color:var(--accent)}
+  .crumbs{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--faint)}
+  .crumbs .sep{color:var(--line)}
+  .crumbs b{color:var(--muted);font-weight:600}
+  .top .right{margin-left:auto;display:flex;gap:18px;font-size:13px;color:var(--muted)}
+  .top .right a{color:var(--muted)}.top .right a:hover{color:var(--fg);text-decoration:none}
+
+  /* ---- two-pane shell -------------------------------------------------- */
+  .panes{display:grid;grid-template-columns:minmax(0,40fr) minmax(0,60fr);height:calc(100vh - 52px)}
+  .flow{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--surface-2)}
+  .thread{flex:1;overflow:auto;padding:26px 28px 20px}
+  .composer{border-top:1px solid var(--line);padding:12px 18px;background:var(--surface)}
+  .map{overflow:auto;background:var(--bg)}
+
+  /* ---- conversation atoms --------------------------------------------- */
+  .turn{margin-bottom:22px;max-width:540px}
+  .lab{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--faint);margin-bottom:7px}
+  .you{background:var(--clay-soft);border:1px solid var(--clay-bd);border-radius:12px;padding:13px 15px;
+    color:hsl(20 40% 24%);font-size:15px}
+  .you .lab{color:var(--clay)}
+  .say{font-size:15px;line-height:1.62;color:var(--fg)}
+  .say .soft{color:var(--muted)}
+
+  /* understood — capability reflection */
+  .understood .caps{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  .ucap{display:flex;align-items:baseline;gap:10px;border:1px solid var(--line);background:var(--surface);
+    border-radius:10px;padding:10px 13px}
+  .ucap .n{font-family:var(--mono);font-size:11px;color:var(--faint);min-width:18px}
+  .ucap .t{font-weight:600;font-size:14px}
+  .ucap .d{color:var(--muted);font-size:13px}
+  .note{font-size:12.5px;color:var(--faint);margin-top:9px}
+
+  /* clarifying question cards */
+  .q{border:1px solid var(--line);background:var(--surface);border-radius:13px;padding:15px;
+    box-shadow:0 1px 2px rgba(16,24,40,.04);margin-bottom:14px}
+  .q .qt{font-size:15px;font-weight:600;margin-bottom:3px}
+  .q .qwhy{font-size:12.5px;color:var(--accent);margin-bottom:11px}
+  .q .opts{display:flex;flex-wrap:wrap;gap:7px}
+  .opt{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:8px 13px;
+    font-size:13.5px;color:var(--fg)}
+  .opt:hover{border-color:var(--accent-bd);background:var(--accent-soft)}
+  .opt[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--ink-fg);font-weight:600}
+  .qskip{margin-top:11px;font-size:12px;color:var(--faint);background:none;border:0;padding:0}
+  .qskip:hover{color:var(--muted)}
+
+  /* the hand-off CTA into the map */
+  .handoff{border:1px solid var(--accent-bd);background:var(--accent-soft);border-radius:13px;padding:15px}
+  .handoff .h{font-weight:700;font-size:15px}
+  .handoff p{margin:5px 0 12px;font-size:13.5px;color:var(--muted)}
+
+  /* buttons */
+  .btn{font-size:13.5px;font-weight:600;padding:9px 15px;border-radius:9px;border:1px solid var(--line);
+    background:var(--surface);color:var(--fg);display:inline-flex;align-items:center;gap:8px}
+  .btn:hover{border-color:var(--faint)}
+  .btn.primary{background:var(--ink);color:var(--ink-fg);border-color:var(--ink)}
+  .btn.primary:hover{filter:brightness(1.22)}
+  .btn.sm{padding:6px 11px;font-size:12.5px}
+  .btn.ghost{background:none;border-color:transparent;color:var(--muted)}
+  .btn.ghost:hover{color:var(--fg);background:var(--surface)}
+
+  /* composer */
+  .cfield{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:11px;
+    padding:9px 9px 9px 13px;background:var(--surface)}
+  .cfield input{flex:1;border:0;outline:none;font-family:var(--sans);font-size:14px;background:none;color:var(--fg)}
+  .cfield .mchip{font-size:11px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-bd);
+    padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .cfoot{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:var(--faint)}
+
+  /* =====================================================================
+     RIGHT PANE · STACK MAP
+     ===================================================================== */
+  .map-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;color:var(--faint);padding:40px}
+  .map-empty .ring{width:46px;height:46px;border-radius:50%;border:1.5px dashed var(--line);margin-bottom:16px}
+  .map-empty h3{font-size:15px;font-weight:600;color:var(--muted);margin:0 0 4px}
+  .map-empty p{font-size:13px;max-width:280px;margin:0}
+
+  .mapwrap{max-width:680px;margin:0 auto;padding:24px 30px 100px}
+
+  /* brief framing header (compact, intentionally) */
+  .brief{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:18px 20px}
+  .brief .k{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .brief h1{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-.01em;margin:5px 0 8px;line-height:1.3}
+  .brief .ctx{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .ctxchip{font-size:11.5px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);
+    padding:3px 10px;border-radius:999px}
+  .brief .counts{display:flex;gap:22px;margin-top:14px;padding-top:13px;border-top:1px solid var(--line-2)}
+  .brief .counts .c{display:flex;flex-direction:column}
+  .brief .counts .num{font-size:20px;font-weight:700;font-family:var(--serif)}
+  .brief .counts .cl{font-size:11.5px;color:var(--muted)}
+
+  /* spine intro — states the product logic out loud */
+  .logic{margin:26px 2px 14px;display:flex;gap:11px;align-items:flex-start}
+  .logic .bar{width:3px;align-self:stretch;background:var(--accent);border-radius:2px;flex:none;margin-top:2px}
+  .logic p{margin:0;font-size:13.5px;color:var(--muted)}
+  .logic b{color:var(--fg)}
+
+  /* capability ecosystem card */
+  .cap{border:1px solid var(--line);background:var(--surface);border-radius:14px;margin-bottom:14px;
+    overflow:hidden;box-shadow:0 1px 2px rgba(16,24,40,.03)}
+  .cap-h{display:flex;align-items:flex-start;gap:13px;padding:16px 18px;cursor:pointer;user-select:none}
+  .cap-h:hover{background:var(--surface-2)}
+  .cap-no{font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--accent-soft);
+    border:1px solid var(--accent-bd);width:26px;height:26px;border-radius:7px;display:grid;place-items:center;flex:none;margin-top:1px}
+  .cap-ti{flex:1;min-width:0}
+  .cap-ti .nm{font-size:15.5px;font-weight:700;letter-spacing:-.01em}
+  .cap-ti .bl{font-size:13px;color:var(--muted);margin-top:2px}
+  .cap-rec{display:flex;align-items:center;gap:8px;flex:none;margin-top:1px}
+  .cap-rec .rl{font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.07em}
+  .cap-rec .rt{font-family:var(--mono);font-size:13px;font-weight:600}
+  .chev{flex:none;color:var(--faint);transition:transform .18s;margin-top:3px}
+  .cap.open .chev{transform:rotate(90deg)}
+
+  .cap-body{display:none;padding:0 18px 18px;border-top:1px solid var(--line-2)}
+  .cap.open .cap-body{display:block}
+  .seg{padding-top:15px}
+  .seg .sl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);
+    margin-bottom:8px}
+
+  /* recommended block */
+  .rec{display:flex;gap:13px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--line);
+    border-radius:11px;padding:13px 14px}
+  .rec .logo{width:34px;height:34px;border-radius:8px;background:var(--ink);color:var(--ink-fg);flex:none;
+    display:grid;place-items:center;font-family:var(--mono);font-size:14px;font-weight:700}
+  .rec .meat{flex:1;min-width:0}
+  .rec .tnm{font-size:15px;font-weight:700;font-family:var(--mono);display:flex;align-items:center;gap:8px}
+  .badge-fit{font-size:10px;font-weight:600;color:var(--good);background:var(--good-soft);border:1px solid hsl(158 40% 84%);
+    padding:2px 7px;border-radius:999px;letter-spacing:.02em;font-family:var(--sans)}
+  .rec .simple{font-size:13.5px;color:var(--fg);margin-top:4px}
+  .rec .explore{margin-top:10px}
+
+  .disc{margin-top:6px}
+  .disc>summary{list-style:none;cursor:pointer;color:var(--accent);font-size:12.5px;padding:2px 0;
+    display:inline-flex;align-items:center;gap:6px}
+  .disc>summary::-webkit-details-marker{display:none}
+  .disc>summary::before{content:"＋";font-family:var(--mono);font-size:11px}
+  .disc[open]>summary::before{content:"－"}
+  .disc .panel{font-size:13px;color:var(--muted);padding:7px 0 2px;line-height:1.6}
+
+  /* alternatives */
+  .alts{display:flex;flex-direction:column;gap:8px}
+  .alt{display:flex;gap:11px;align-items:baseline;border:1px solid var(--line);border-radius:10px;padding:10px 13px}
+  .alt .an{font-family:var(--mono);font-size:13px;font-weight:600;flex:none}
+  .alt .aw{font-size:13px;color:var(--muted)}
+  .alt .aw b{color:var(--fg);font-weight:600}
+
+  /* pairs-with */
+  .pairs{display:flex;flex-direction:column;gap:7px}
+  .pair{display:flex;gap:10px;align-items:baseline;font-size:13px}
+  .pair .pn{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--fg);flex:none;min-width:96px}
+  .pair .pnote{color:var(--muted)}
+
+  /* risks */
+  .risks{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px}
+  .risks li{display:flex;gap:9px;font-size:13px;color:var(--muted)}
+  .risks li::before{content:"";width:5px;height:5px;border-radius:1px;background:var(--warn);
+    flex:none;margin-top:7px;transform:rotate(45deg)}
+
+  /* how it fits together — lightweight info-structure (data flow, not a flashy graph) */
+  .fits{margin-top:30px;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:18px 20px}
+  .fits h3{font-size:13px;font-weight:700;letter-spacing:-.01em;margin:0 0 3px}
+  .fits .sub{font-size:13px;color:var(--muted);margin:0 0 16px}
+  .flowline{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+  .fstep{flex:1;min-width:104px;text-align:center}
+  .fstep .fc{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em}
+  .fstep .ft{font-family:var(--mono);font-size:12.5px;font-weight:600;margin-top:3px;
+    border:1px solid var(--line);border-radius:8px;padding:8px 6px;background:var(--surface-2)}
+  .farrow{display:grid;place-items:center;color:var(--faint);padding:0 4px;align-self:center;
+    margin-top:14px;font-size:14px}
+  .fgate{margin-top:14px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:8px;
+    border-top:1px dashed var(--line);padding-top:12px}
+  .fgate .gk{font-family:var(--mono);font-size:11px;background:var(--surface-2);border:1px solid var(--line);
+    padding:2px 8px;border-radius:6px}
+
+  .rationale{margin-top:22px;font-size:14px;line-height:1.65;color:var(--fg);
+    border-left:3px solid var(--line);padding:2px 0 2px 16px}
+  .rationale .rl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--faint);display:block;margin-bottom:6px}
+
+  /* =====================================================================
+     TOOL DETAIL PAGE  (full-screen route)
+     ===================================================================== */
+  .detail{position:fixed;inset:0;background:var(--bg);z-index:50;overflow:auto;display:none}
+  .detail.show{display:block}
+  .dbar{display:flex;align-items:center;gap:14px;height:52px;padding:0 22px;background:var(--surface);
+    border-bottom:1px solid var(--line);position:sticky;top:0}
+  .dwrap{max-width:740px;margin:0 auto;padding:30px 30px 100px}
+  .dhead{display:flex;gap:16px;align-items:flex-start}
+  .dhead .logo{width:52px;height:52px;border-radius:11px;background:var(--ink);color:var(--ink-fg);flex:none;
+    display:grid;place-items:center;font-family:var(--mono);font-size:20px;font-weight:700}
+  .dhead h1{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:0;display:flex;align-items:center;gap:11px}
+  .dhead .role{font-size:13.5px;color:var(--muted);margin-top:4px}
+  .dhead .role b{color:var(--fg)}
+  .dsec{margin-top:30px}
+  .dsec h2{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
+    margin:0 0 11px;padding-bottom:8px;border-bottom:1px solid var(--line-2)}
+  .dsec p{margin:0 0 10px;font-size:15px;line-height:1.65}
+  .dsec p.simple{font-size:16px}
+  .dsec .tech{color:var(--muted);font-size:14.5px}
+  .whybox{background:var(--accent-soft);border:1px solid var(--accent-bd);border-radius:12px;padding:15px 17px;
+    font-size:14.5px;line-height:1.6}
+  .whybox .wl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);display:block;margin-bottom:6px}
+  .cmp{width:100%;border-collapse:collapse;font-size:13.5px}
+  .cmp td{padding:11px 12px;border-bottom:1px solid var(--line-2);vertical-align:top}
+  .cmp tr td:first-child{font-family:var(--mono);font-weight:600;width:120px;white-space:nowrap}
+  .cmp .when{color:var(--muted)}
+  .dpairs{display:flex;flex-direction:column;gap:9px}
+  @media(max-width:1040px){
+    .panes{grid-template-columns:1fr;height:auto}
+    .flow{border-right:0;border-bottom:1px solid var(--line)}
+    .map{height:auto}
+    .cap-rec{display:none}
+  }
+  @media(max-width:560px){.flowline{flex-direction:column}.farrow{transform:rotate(90deg);margin:2px auto}}
+</style>
+</head>
+<body>
+
+<!-- ======================= MAIN APP ======================= -->
+<div class="top">
+  <a class="brand" href="01-landing.html" style="color:inherit;text-decoration:none">StackScout<span class="dot">.</span></a>
+  <div class="crumbs">
+    <span class="sep">/</span>
+    <span>New architecture</span>
+    <span class="sep">·</span>
+    <b id="crumbMode">Guided</b>
+  </div>
+  <div class="right">
+    <a href="#">Saved</a>
+    <a href="#">Capabilities</a>
+  </div>
+</div>
+
+<div class="panes">
+  <!-- ---------------- LEFT · GUIDED FLOW ---------------- -->
+  <section class="flow">
+    <div class="thread" id="thread">
+
+      <div class="turn">
+        <div class="lab">Your idea</div>
+        <div class="you">A chatbot that answers questions over our internal PDFs.</div>
+      </div>
+
+      <div class="turn understood">
+        <div class="say"><span class="soft">Here's what I understood. Before any tools, this breaks down into
+          <b>five capabilities</b> — tools are how you fill each one.</span></div>
+        <div class="caps" id="ucaps"></div>
+        <div class="note">Capabilities come first so you compare like-for-like, not repo-against-repo.</div>
+      </div>
+
+      <div class="turn" id="qzone">
+        <div class="lab">A few questions — each one re-ranks the tools</div>
+        <div id="qcards"></div>
+      </div>
+
+      <div class="turn" id="handoffTurn" style="display:none">
+        <div class="handoff">
+          <div class="h">Your Stack Map is ready →</div>
+          <p>The ecosystem around what you're building — organised by capability, with the tradeoffs and pairings that decide each pick.</p>
+          <button class="btn primary" onclick="openMap()">Open the Stack Map</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="composer">
+      <div class="cfield">
+        <span class="mchip">Guided</span>
+        <input placeholder="Ask the map — &quot;why not Pinecone?&quot;, &quot;swap auth&quot;…">
+        <button class="btn sm ghost">Send</button>
+      </div>
+      <div class="cfoot"><span>Exploration stays in this thread</span><span>Deterministic · no model calls</span></div>
+    </div>
+  </section>
+
+  <!-- ---------------- RIGHT · STACK MAP ---------------- -->
+  <section class="map" id="map">
+    <div class="map-empty" id="mapEmpty">
+      <div class="ring"></div>
+      <h3>Your Stack Map will open here</h3>
+      <p>Answer the questions on the left, then open the map to explore the tool ecosystem for each capability.</p>
+    </div>
+    <div class="mapwrap" id="mapBody" style="display:none"></div>
+  </section>
+</div>
+
+<!-- ======================= TOOL DETAIL ROUTE ======================= -->
+<div class="detail" id="detail">
+  <div class="dbar">
+    <button class="btn sm ghost" onclick="closeDetail()">← Back to Stack Map</button>
+    <div class="crumbs"><span class="sep">/</span><span id="dCrumbCap">Capability</span></div>
+  </div>
+  <div class="dwrap" id="detailBody"></div>
+</div>
+
+<script>
+/* =========================================================================
+   DATA  ·  capability-first model for the canonical example
+   (PDF chatbot over internal docs). Deterministic seed content.
+   ========================================================================= */
+const CAPS = [
+  {
+    id:"parsing", name:"Document parsing",
+    blurb:"Turn messy PDFs into clean, structured text an LLM can read.",
+    rec:"llamaparse", alts:["unstructured"]
+  },
+  {
+    id:"vector", name:"Vector storage",
+    blurb:"Store the meaning of document chunks so the app can find relevant ones.",
+    rec:"qdrant", alts:["pinecone","weaviate"]
+  },
+  {
+    id:"retrieval", name:"Retrieval orchestration",
+    blurb:"Chunk, embed, retrieve, and assemble context for each question.",
+    rec:"llamaindex", alts:["langchain"]
+  },
+  {
+    id:"generation", name:"Answer generation",
+    blurb:"The model that writes the answer from the retrieved context.",
+    rec:"openai-sdk", alts:["anthropic-sdk"]
+  },
+  {
+    id:"auth", name:"Authentication",
+    blurb:"Make sure only your team can reach the internal chatbot.",
+    rec:"clerk", alts:["authjs"]
+  },
+];
+
+const TOOLS = {
+  "llamaparse":{
+    name:"LlamaParse", mark:"Lp", cap:"Document parsing",
+    simple:"Turns messy PDFs — tables, scans, multi-column layouts — into clean text the rest of the system can actually use.",
+    technical:"A managed parsing API tuned for complex documents: preserves table structure, runs OCR on scanned pages, and outputs layout-aware markdown. It's a hosted service, so pages are processed on LlamaIndex's infrastructure.",
+    why:"Your source is real-world PDFs with layout. Naive text extraction drops tables and column order; LlamaParse keeps them — and parsing quality sets the ceiling for everything downstream.",
+    tradeoffs:[
+      "Hosted — document pages leave your infrastructure to be processed.",
+      "Per-page pricing adds up on a large corpus.",
+      "Less control than a parser you run yourself."
+    ],
+    pairs:[
+      {n:"LlamaIndex", note:"same ecosystem — native ingestion integration, almost no glue code."},
+      {n:"Qdrant", note:"parsed chunks embed and flow straight into the vector store."}
+    ],
+    alts:[
+      {n:"Unstructured", when:"better if you need to self-host parsing or handle formats beyond PDF (HTML, PPTX, email)."}
+    ]
+  },
+  "unstructured":{
+    name:"Unstructured", mark:"Un", cap:"Document parsing",
+    simple:"Open-source document parsing you can run yourself, across many file types — not just PDFs.",
+    technical:"A library + optional API for extracting and chunking content from PDFs, HTML, Office docs, and email. Self-hostable, which keeps documents inside your own infrastructure.",
+    why:"In the running because your docs may expand beyond PDFs, and self-hosting keeps sensitive material in-house.",
+    tradeoffs:[
+      "More setup than a managed parser — you own the pipeline.",
+      "Table/layout fidelity on hard PDFs can trail a specialised service."
+    ],
+    pairs:[{n:"Qdrant", note:"chunked output embeds cleanly into the vector store."}],
+    alts:[{n:"LlamaParse", when:"better if you want managed, high-fidelity PDF table extraction with no ops."}]
+  },
+  "qdrant":{
+    name:"Qdrant", mark:"Qd", cap:"Vector storage",
+    simple:"Stores the 'meaning' of your document chunks so the app can fetch the most relevant ones for a question.",
+    technical:"An open-source vector database (Rust core) with strong metadata filtering, hybrid keyword-plus-vector search, and a managed cloud tier. Good performance at small-to-moderate scale.",
+    why:"A prototype that may reach production: start on the free local/cloud tier and keep the same engine in production without a rewrite. Hybrid search helps when users ask keyword-heavy questions of internal docs.",
+    tradeoffs:[
+      "You run the instance, or pay for Qdrant Cloud and its ops.",
+      "Smaller managed ecosystem than Pinecone.",
+      "Hybrid search needs deliberate configuration."
+    ],
+    pairs:[
+      {n:"LlamaIndex", note:"first-class Qdrant vector-store integration."},
+      {n:"LlamaParse", note:"parsed, embedded chunks land here for retrieval."}
+    ],
+    alts:[
+      {n:"Pinecone", when:"better if you want fully-managed, zero-ops storage and will pay for it."},
+      {n:"Weaviate", when:"better if you want built-in modules — rerankers, generative search — in one system."}
+    ]
+  },
+  "pinecone":{
+    name:"Pinecone", mark:"Pc", cap:"Vector storage",
+    simple:"A fully-managed vector database — no servers to run, you just send and query vectors.",
+    technical:"A hosted, serverless vector store that removes ops entirely: no instances, automatic scaling, predictable APIs. You trade self-hosting for a usage-based bill.",
+    why:"In the running because zero-ops is attractive for a small team that doesn't want to manage infrastructure.",
+    tradeoffs:[
+      "Fully managed — your vectors live on Pinecone's platform.",
+      "Cost scales with vectors stored and queries served.",
+      "Less portable than self-hostable engines."
+    ],
+    pairs:[{n:"LlamaIndex", note:"native vector-store integration."}],
+    alts:[{n:"Qdrant", when:"better if you want an open-source engine you can run locally and self-host later."}]
+  },
+  "weaviate":{
+    name:"Weaviate", mark:"Wv", cap:"Vector storage",
+    simple:"A vector database with extra built-in features like reranking and generative search bundled in.",
+    technical:"An open-source vector DB with a modular design: rerankers, generative-search, and multi-tenancy as first-class modules. More capability in one system, more surface to configure.",
+    why:"In the running if you want retrieval, reranking, and generation features under one roof rather than wired together.",
+    tradeoffs:[
+      "More moving parts and configuration than a focused store.",
+      "Module ecosystem is powerful but adds learning curve."
+    ],
+    pairs:[{n:"LlamaIndex", note:"supported vector-store backend."}],
+    alts:[{n:"Qdrant", when:"better if you want a leaner, focused store and will add reranking yourself."}]
+  },
+  "llamaindex":{
+    name:"LlamaIndex", mark:"Li", cap:"Retrieval orchestration",
+    simple:"The glue: it chunks your documents, turns them into vectors, retrieves the right ones, and hands them to the model.",
+    technical:"A data framework for RAG — ingestion pipelines, chunking strategies, retrievers, query engines, and response synthesis. An abstraction layer that trades some transparency for a lot less wiring.",
+    why:"It ties LlamaParse, Qdrant, and the LLM together with minimal code — which is exactly what a prototype needs. Every other tool picked here has a native LlamaIndex integration.",
+    tradeoffs:[
+      "Abstraction can hide what's happening under the hood.",
+      "Fast-moving API — expect breaking changes between versions.",
+      "Overkill for a single-document, one-off case."
+    ],
+    pairs:[
+      {n:"LlamaParse", note:"native parser integration in the same ecosystem."},
+      {n:"Qdrant", note:"native vector-store integration."},
+      {n:"OpenAI SDK", note:"pluggable as the response model."}
+    ],
+    alts:[
+      {n:"LangChain", when:"better if you need a broader agent and tool ecosystem beyond retrieval."}
+    ]
+  },
+  "langchain":{
+    name:"LangChain", mark:"Lc", cap:"Retrieval orchestration",
+    simple:"A broad framework for chaining LLM calls, tools, and agents — retrieval is one of many things it does.",
+    technical:"A general LLM-application framework: chains, agents, tools, memory, and retrieval. Wider scope than a retrieval-focused framework, with a correspondingly larger API surface.",
+    why:"In the running if the chatbot will grow into agentic behaviour — tools, multi-step reasoning — beyond document Q&A.",
+    tradeoffs:[
+      "Large surface area — more than a pure RAG app needs.",
+      "Abstractions shift quickly across versions."
+    ],
+    pairs:[{n:"Qdrant", note:"supported retriever backend."}],
+    alts:[{n:"LlamaIndex", when:"better if the job is document retrieval first, with less framework to learn."}]
+  },
+  "openai-sdk":{
+    name:"OpenAI SDK", mark:"Oa", cap:"Answer generation",
+    simple:"The model that actually writes the answer, using your document chunks as its source material.",
+    technical:"The client for GPT models — strong instruction-following, JSON mode, and broad tooling support. A vendor dependency: requests and context go to OpenAI unless you're on a zero-retention tier.",
+    why:"Reliable, well-documented, and the default in most RAG references — low friction for a prototype. Because LlamaIndex abstracts the model, swapping it later is a small change.",
+    tradeoffs:[
+      "Vendor lock-in at the API level.",
+      "Per-token cost scales directly with usage.",
+      "Context leaves your infrastructure on each call."
+    ],
+    pairs:[{n:"LlamaIndex", note:"drops in as the response model behind the query engine."}],
+    alts:[
+      {n:"Anthropic SDK", when:"better if you prefer Claude's long-context handling, or your model preference is Anthropic."}
+    ]
+  },
+  "anthropic-sdk":{
+    name:"Anthropic SDK", mark:"An", cap:"Answer generation",
+    simple:"An alternative model client — Claude — for writing answers from retrieved context.",
+    technical:"The client for Claude models, with notably strong long-context handling and careful instruction-following. Same vendor-dependency shape as any hosted LLM.",
+    why:"In the running if long, dense documents push you toward big context windows, or your stated model preference is Anthropic.",
+    tradeoffs:[
+      "Vendor dependency, like any hosted model.",
+      "Per-token cost scales with usage."
+    ],
+    pairs:[{n:"LlamaIndex", note:"pluggable as the response model."}],
+    alts:[{n:"OpenAI SDK", when:"better if you want the most-documented default with the widest tooling."}]
+  },
+  "clerk":{
+    name:"Clerk", mark:"Ck", cap:"Authentication",
+    simple:"Handles sign-in so only your team can use the chatbot — you don't build login yourself.",
+    technical:"Hosted authentication with prebuilt React components, OAuth, session management, and organisations. A managed dependency on a critical path, in exchange for getting gated access working fast.",
+    why:"An internal tool with a known set of users: Clerk's prebuilt components get access-gating working in an afternoon, which fits a prototype timeline.",
+    tradeoffs:[
+      "Vendor dependency on a critical path (auth).",
+      "Cost grows with monthly active users.",
+      "Less control than self-hosted auth."
+    ],
+    pairs:[{n:"Next.js", note:"first-class SDK and middleware for the app framework."}],
+    alts:[
+      {n:"Auth.js", when:"better if you need full data ownership and don't mind wiring sessions yourself."}
+    ]
+  },
+  "authjs":{
+    name:"Auth.js", mark:"Aj", cap:"Authentication",
+    simple:"Open-source authentication you wire into your own app and database — you own all the data.",
+    technical:"A self-hosted auth library (formerly NextAuth) with many OAuth providers and database adapters. You own sessions and user data; you also own the wiring and edge cases.",
+    why:"In the running if data ownership matters more than speed, or you want auth living inside your own database.",
+    tradeoffs:[
+      "More to build and maintain than a hosted service.",
+      "You own security-sensitive edge cases (sessions, tokens)."
+    ],
+    pairs:[{n:"Next.js", note:"designed around the App Router."}],
+    alts:[{n:"Clerk", when:"better if you want prebuilt UI and the fastest path to gated access."}]
+  },
+};
+
+/* =========================================================================
+   LEFT PANE — capability reflection + clarifying questions
+   ========================================================================= */
+CAPS.forEach((c,i)=>{
+  const el=document.createElement("div");
+  el.className="ucap";
+  el.innerHTML=`<span class="n">${i+1}</span><span><span class="t">${c.name}</span>
+    <span class="d"> — ${c.blurb}</span></span>`;
+  document.getElementById("ucaps").appendChild(el);
+});
+
+const QUESTIONS=[
+  { q:"Where should this run?", why:"Decides whether vector storage and auth lean managed or self-hosted.",
+    opts:["Managed / least ops","Self-hosted","Not sure yet"] },
+  { q:"Prototype or heading to production?", why:"Shifts the weighting toward speed-to-ship vs. long-term control.",
+    opts:["Prototype now, maybe prod later","Straight to production"] },
+  { q:"Any model preference?", why:"Changes the answer-generation pick (and nothing else).",
+    opts:["OpenAI","Anthropic","No preference"] },
+];
+let answered=0;
+QUESTIONS.forEach((qq,qi)=>{
+  const card=document.createElement("div");
+  card.className="q";
+  card.innerHTML=`<div class="qt">${qq.q}</div><div class="qwhy">↳ ${qq.why}</div>
+    <div class="opts">${qq.opts.map((o,oi)=>`<button class="opt" data-q="${qi}" data-o="${oi}">${o}</button>`).join("")}</div>`;
+  document.getElementById("qcards").appendChild(card);
+});
+document.querySelectorAll(".opt").forEach(b=>{
+  b.addEventListener("click",()=>{
+    const q=b.dataset.q, sib=document.querySelectorAll(`.opt[data-q="${q}"]`);
+    const firstPick=![...sib].some(x=>x.getAttribute("aria-pressed")==="true");
+    sib.forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true");
+    if(firstPick){answered++; if(answered>=QUESTIONS.length) revealHandoff();}
+  });
+});
+function revealHandoff(){
+  const h=document.getElementById("handoffTurn");
+  h.style.display="block";
+  h.scrollIntoView({behavior:"smooth",block:"end"});
+}
+
+/* =========================================================================
+   RIGHT PANE — render the Stack Map
+   ========================================================================= */
+function openMap(){
+  document.getElementById("mapEmpty").style.display="none";
+  const body=document.getElementById("mapBody");
+  body.style.display="block";
+  body.innerHTML=renderMap();
+  document.getElementById("map").scrollTo({top:0,behavior:"smooth"});
+  // open the first capability by default so the structure reads immediately
+  const first=document.querySelector(".cap");
+  if(first) first.classList.add("open");
+}
+
+function renderMap(){
+  const recName = id => TOOLS[id].name;
+  let caps = CAPS.map((c,i)=>{
+    const t=TOOLS[c.rec];
+    const alts=c.alts.map(aid=>{
+      const a=TOOLS[aid];
+      const reason=(t.alts.find(x=>x.n===a.name)||{}).when || `another option for ${c.name.toLowerCase()}.`;
+      return `<div class="alt"><span class="an">${a.name}</span>
+        <span class="aw">${reason.replace(/^better/,"<b>Better</b>")}</span></div>`;
+    }).join("");
+    const pairs=t.pairs.map(p=>`<div class="pair"><span class="pn">${p.n}</span><span class="pnote">${p.note}</span></div>`).join("");
+    const risks=t.tradeoffs.map(r=>`<li>${r}</li>`).join("");
+    return `
+    <div class="cap" data-cap="${c.id}">
+      <div class="cap-h" onclick="toggleCap(this)">
+        <span class="cap-no">${i+1}</span>
+        <span class="cap-ti"><span class="nm">${c.name}</span><span class="bl">${c.blurb}</span></span>
+        <span class="cap-rec"><span class="rl">Recommended</span><span class="rt mono">${recName(c.rec)}</span></span>
+        <span class="chev">›</span>
+      </div>
+      <div class="cap-body">
+        <div class="seg">
+          <div class="sl">Recommended for your context</div>
+          <div class="rec">
+            <div class="logo">${t.mark}</div>
+            <div class="meat">
+              <div class="tnm">${t.name} <span class="badge-fit">strong fit</span></div>
+              <div class="simple">${t.simple}</div>
+              <details class="disc"><summary>Why it fits, in technical terms</summary>
+                <div class="panel">${t.technical}</div></details>
+              <div class="explore"><button class="btn sm" onclick="openDetail('${c.rec}')">Explore ${t.name} →</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="seg">
+          <div class="sl">Alternatives — when to choose them</div>
+          <div class="alts">${alts}</div>
+        </div>
+        <div class="seg">
+          <div class="sl">Pairs with</div>
+          <div class="pairs">${pairs}</div>
+        </div>
+        <div class="seg">
+          <div class="sl">Risks &amp; tradeoffs</div>
+          <ul class="risks">${risks}</ul>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  return `
+    <div class="brief">
+      <div class="k">Architecture Brief</div>
+      <h1>A chatbot that answers questions over your internal PDFs</h1>
+      <div class="ctx">
+        <span class="ctxchip">Managed-leaning</span>
+        <span class="ctxchip">Prototype → production</span>
+        <span class="ctxchip">OpenAI</span>
+        <span class="ctxchip">TypeScript / Next.js</span>
+      </div>
+      <div class="counts">
+        <div class="c"><span class="num">5</span><span class="cl">capabilities</span></div>
+        <div class="c"><span class="num">11</span><span class="cl">tools mapped</span></div>
+        <div class="c"><span class="num">6</span><span class="cl">alternatives</span></div>
+      </div>
+    </div>
+
+    <div class="logic">
+      <span class="bar"></span>
+      <p><b>StackScout maps your build as capabilities first.</b> Tools are implementations — so you
+      compare like-for-like within each capability, and see how the picks fit together, not just a flat list of repos.</p>
+    </div>
+
+    ${caps}
+
+    <div class="fits">
+      <h3>How it fits together</h3>
+      <p class="sub">The picks form one retrieval pipeline. Each capability hands off to the next.</p>
+      <div class="flowline">
+        <div class="fstep"><div class="fc">Parse</div><div class="ft">LlamaParse</div></div>
+        <div class="farrow">→</div>
+        <div class="fstep"><div class="fc">Store</div><div class="ft">Qdrant</div></div>
+        <div class="farrow">→</div>
+        <div class="fstep"><div class="fc">Retrieve</div><div class="ft">LlamaIndex</div></div>
+        <div class="farrow">→</div>
+        <div class="fstep"><div class="fc">Generate</div><div class="ft">OpenAI SDK</div></div>
+      </div>
+      <div class="fgate"><span class="gk">Clerk</span> gates the whole pipeline — only signed-in team members reach it.</div>
+    </div>
+
+    <div class="rationale">
+      <span class="rl">Why this architecture holds together</span>
+      Four of the five picks live in the LlamaIndex ecosystem, so they connect with little glue code — which is
+      what a prototype needs. The two managed services (LlamaParse, Clerk) buy speed where building from scratch
+      would cost days. The one engine you run yourself — Qdrant — is the piece most likely to follow you into
+      production, so it's worth owning. Nothing here is locked in: the model sits behind an abstraction, and the
+      vector store is portable.
+    </div>
+  `;
+}
+
+function toggleCap(h){ h.parentElement.classList.toggle("open"); }
+
+/* =========================================================================
+   TOOL DETAIL ROUTE
+   ========================================================================= */
+function openDetail(id){
+  const t=TOOLS[id];
+  document.getElementById("dCrumbCap").textContent=t.cap;
+  const alts=t.alts.map(a=>`<tr><td>${a.n}</td><td class="when">${a.when}</td></tr>`).join("");
+  const pairs=t.pairs.map(p=>`<div class="pair"><span class="pn">${p.n}</span><span class="pnote">${p.note}</span></div>`).join("");
+  const risks=t.tradeoffs.map(r=>`<li>${r}</li>`).join("");
+  document.getElementById("detailBody").innerHTML=`
+    <div class="dhead">
+      <div class="logo">${t.mark}</div>
+      <div>
+        <h1>${t.name} <span class="badge-fit">recommended</span></h1>
+        <div class="role">Filling <b>${t.cap}</b> in this architecture · recommended for your context</div>
+      </div>
+    </div>
+
+    <div class="dsec">
+      <h2>What it does</h2>
+      <p class="simple">${t.simple}</p>
+      <p class="tech">${t.technical}</p>
+    </div>
+
+    <div class="dsec">
+      <h2>Why it's recommended here</h2>
+      <div class="whybox"><span class="wl">For your context</span>${t.why}</div>
+    </div>
+
+    <div class="dsec">
+      <h2>Alternatives — when to choose one instead</h2>
+      <table class="cmp"><tbody>${alts}</tbody></table>
+    </div>
+
+    <div class="dsec">
+      <h2>Pairs with</h2>
+      <div class="dpairs">${pairs}</div>
+    </div>
+
+    <div class="dsec">
+      <h2>Risks &amp; tradeoffs</h2>
+      <ul class="risks">${risks}</ul>
+    </div>
+  `;
+  const d=document.getElementById("detail");
+  d.classList.add("show"); d.scrollTo(0,0);
+}
+function closeDetail(){ document.getElementById("detail").classList.remove("show"); }
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeDetail(); });
+</script>
+</body>
+</html>

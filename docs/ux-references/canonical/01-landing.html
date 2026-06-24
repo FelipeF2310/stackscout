@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StackScout — Start</title>
+<style>
+  /* StackScout · landing / entry screen
+     The screen BEFORE the conversation begins. Reads the Cursor reference
+     (frame_01–03): ONE centered focused prompt, a quiet context line above it,
+     a mode selector + submit INSIDE the field, and a few starter suggestion
+     rows below — everything else is calm, empty space.
+     Translated to StackScout, NOT copied: light theme + the app's own tokens,
+     capability-first language, no IDE chrome / file tree / terminal / dark neon.
+     Submitting (or picking a starter) flows into 02-two-pane-workspace.html. */
+  :root{
+    --bg:hsl(210 40% 98%); --surface:hsl(0 0% 100%); --surface-2:hsl(210 40% 99%);
+    --fg:hsl(222 47% 11%); --muted-fg:hsl(215 16% 47%); --faint:hsl(215 14% 64%);
+    --border:hsl(214 32% 91%); --border-2:hsl(214 32% 95%);
+    --primary:hsl(222 47% 11%); --primary-fg:hsl(0 0% 98%);
+    --accent:hsl(221 83% 53%); --accent-soft:hsl(221 83% 96%); --accent-bd:hsl(221 60% 84%);
+    --secondary:hsl(210 40% 96%);
+    --clay:hsl(22 60% 42%); --clay-soft:hsl(22 70% 96%);
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.55;
+    -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
+  .mono{font-family:var(--mono)}
+  button{font-family:inherit;cursor:pointer}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+
+  /* top bar — intentionally sparse */
+  .top{display:flex;align-items:center;gap:12px;height:50px;padding:0 20px}
+  .brand{font-weight:800;font-size:15px;letter-spacing:-.02em}
+  .brand .dot{color:var(--accent)}
+  .top .right{margin-left:auto;display:flex;align-items:center;gap:18px;font-size:13px;color:var(--muted-fg)}
+  .top .right a{color:var(--muted-fg)}.top .right a:hover{color:var(--fg);text-decoration:none}
+
+  /* centered stage */
+  .stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:0 22px;max-width:720px;margin:0 auto;width:100%}
+  .lede{text-align:center;margin-bottom:22px}
+  .lede h1{font-size:27px;font-weight:800;letter-spacing:-.025em;margin:0 0 8px}
+  .lede p{margin:0;color:var(--muted-fg);font-size:15.5px}
+
+  /* context line above the field (Cursor's "Home / Local" breadcrumb, restated) */
+  .ctx{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--faint);
+    margin:0 4px 8px;align-self:flex-start}
+  .ctx .sep{color:var(--border)}
+  .ctx b{color:var(--muted-fg);font-weight:600}
+
+  /* the one focused field */
+  .field{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    box-shadow:0 1px 2px rgba(16,24,40,.04),0 18px 40px -30px rgba(16,24,40,.55);
+    padding:16px 16px 12px;transition:border-color .15s,box-shadow .15s}
+  .field:focus-within{border-color:var(--accent-bd);box-shadow:0 1px 2px rgba(16,24,40,.04),0 0 0 4px var(--accent-soft)}
+  .field textarea{width:100%;border:0;outline:none;resize:none;background:none;font-family:var(--sans);
+    font-size:16px;line-height:1.55;color:var(--fg);min-height:52px}
+  .field textarea::placeholder{color:var(--faint)}
+  .fbar{display:flex;align-items:center;gap:10px;margin-top:8px}
+
+  /* mode selector inside the field (StackScout's Architecture Mode) */
+  .mode{display:inline-flex;border:1px solid var(--border);border-radius:999px;padding:2px;background:var(--surface-2)}
+  .mode button{border:0;background:none;font-size:12.5px;color:var(--muted-fg);padding:5px 12px;border-radius:999px}
+  .mode button[aria-pressed="true"]{background:var(--surface);color:var(--fg);font-weight:600;
+    box-shadow:0 1px 2px rgba(16,24,40,.08)}
+  .hintchip{font-size:11.5px;color:var(--faint)}
+  .spacer{flex:1}
+  .send{width:34px;height:34px;border-radius:9px;border:1px solid var(--primary);background:var(--primary);
+    color:var(--primary-fg);display:grid;place-items:center;font-size:15px;transition:filter .15s,opacity .15s}
+  .send:hover{filter:brightness(1.2)}
+  .send:disabled{opacity:.4;cursor:not-allowed;filter:none}
+
+  /* starter suggestions (Cursor's 3 rows) — StackScout intents, not Cursor's */
+  .starts{width:100%;margin-top:14px;display:flex;flex-direction:column}
+  .start{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:none;border:0;
+    border-radius:11px;padding:12px 12px;color:var(--fg)}
+  .start:hover{background:var(--surface)}
+  .start .ic{width:30px;height:30px;border-radius:8px;flex:none;display:grid;place-items:center;
+    background:var(--accent-soft);border:1px solid var(--accent-bd)}
+  .start .ic svg{width:15px;height:15px;stroke:var(--accent);fill:none;stroke-width:1.8}
+  .start .tx{min-width:0}
+  .start .tt{font-size:14px;font-weight:600}
+  .start .ds{font-size:13px;color:var(--muted-fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .start .ch{margin-left:auto;color:var(--faint);font-size:16px;flex:none}
+
+  /* quiet footer hint */
+  .foot{text-align:center;padding:18px;font-size:12px;color:var(--faint)}
+  .foot .mono{color:var(--muted-fg)}
+
+  @media(max-width:560px){.lede h1{font-size:23px}.start .ds{white-space:normal}}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="brand">StackScout<span class="dot">.</span></div>
+    <div class="right">
+      <a href="#">Saved architectures</a>
+      <a href="#">Capabilities</a>
+    </div>
+  </div>
+
+  <main class="stage">
+    <div class="lede">
+      <h1>What are you building?</h1>
+      <p>Describe it in plain language. StackScout figures out the capabilities, then the stack.</p>
+    </div>
+
+    <div class="ctx">
+      <span>New architecture</span>
+      <span class="sep">·</span>
+      <span id="ctxMode"><b>Guide me</b> through it</span>
+    </div>
+
+    <form class="field" id="form" onsubmit="return submitIdea(event)">
+      <textarea id="idea" placeholder="e.g. A chatbot that answers questions over our internal PDFs"
+        oninput="onType()" onkeydown="onKey(event)"></textarea>
+      <div class="fbar">
+        <div class="mode" role="group" aria-label="Architecture mode">
+          <button type="button" id="mGuide" aria-pressed="true" onclick="setMode('guide')">Guide me</button>
+          <button type="button" id="mStack" aria-pressed="false" onclick="setMode('stack')">Just show a stack</button>
+        </div>
+        <span class="hintchip" id="modeHint">A few questions first, then a brief</span>
+        <span class="spacer"></span>
+        <button class="send" id="send" type="submit" disabled aria-label="Start">↑</button>
+      </div>
+    </form>
+
+    <div class="starts">
+      <button class="start" onclick="useStart('A chatbot that answers questions over our internal PDFs')">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+        <span class="tx">
+          <div class="tt">Chat over your documents</div>
+          <div class="ds">Answer questions from internal PDFs — parsing, vector search, an LLM</div>
+        </span>
+        <span class="ch">›</span>
+      </button>
+      <button class="start" onclick="useStart('A marketplace app where users sign up, list items, and pay each other')">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M3 3h18v4H3z"/><path d="M5 7v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7"/><path d="M9 11h6"/></svg></span>
+        <span class="tx">
+          <div class="tt">Marketplace with payments</div>
+          <div class="ds">Accounts, listings, payments — auth, database, transactions</div>
+        </span>
+        <span class="ch">›</span>
+      </button>
+      <button class="start" onclick="useStart('A realtime collaborative whiteboard that multiple people can edit at once')">
+        <span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M5 12a7 7 0 0 1 14 0M2 12a10 10 0 0 1 20 0"/></svg></span>
+        <span class="tx">
+          <div class="tt">Realtime collaboration</div>
+          <div class="ds">Many people editing live — sync engine, presence, persistence</div>
+        </span>
+        <span class="ch">›</span>
+      </button>
+    </div>
+  </main>
+
+  <div class="foot">
+    Capability-first · every pick comes with why, tradeoffs, and alternatives —
+    never just <span class="mono">"the best"</span>.
+  </div>
+
+<script>
+  var mode = 'guide';
+  function setMode(m){
+    mode = m;
+    document.getElementById('mGuide').setAttribute('aria-pressed', m==='guide');
+    document.getElementById('mStack').setAttribute('aria-pressed', m==='stack');
+    document.getElementById('modeHint').textContent =
+      m==='guide' ? 'A few questions first, then a brief' : 'Straight to a draft brief, refine after';
+    document.getElementById('ctxMode').innerHTML =
+      m==='guide' ? '<b>Guide me</b> through it' : '<b>Just show a stack</b>';
+  }
+  function onType(){
+    var v = document.getElementById('idea').value.trim();
+    document.getElementById('send').disabled = v.length === 0;
+  }
+  function onKey(e){
+    if(e.key === 'Enter' && (e.metaKey || e.ctrlKey)){ e.preventDefault(); submitIdea(e); }
+  }
+  function useStart(text){
+    document.getElementById('idea').value = text;
+    onType();
+    document.getElementById('idea').focus();
+  }
+  function submitIdea(e){
+    e.preventDefault();
+    var v = document.getElementById('idea').value.trim();
+    if(!v) return false;
+    // In the real app this carries the idea + mode into the conversation.
+    var url = '02-two-pane-workspace.html?mode=' + encodeURIComponent(mode) +
+              '&idea=' + encodeURIComponent(v);
+    window.location.href = url;
+    return false;
+  }
+</script>
+</body>
+</html>

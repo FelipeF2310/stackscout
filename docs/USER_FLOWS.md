@@ -1,5 +1,16 @@
 # User Flows
 
+> ⚠️ **Superseded — does not describe the canonical UX.** The flow below is an
+> earlier, partly-aspirational description of the **scrapped** stacked
+> results-page direction. It is kept for history only and references behavior and
+> components that no longer match the product: a redirect to `/architecture/[id]`
+> (the home page renders inline), the removed `CapabilityList`, a database for
+> saving (there is none — persistence is deferred), and `RefinementPanel`.
+>
+> **The authoritative UX is [`UX_CANONICAL_DIRECTION.md`](./UX_CANONICAL_DIRECTION.md)** —
+> a landing page → two-pane guided workspace with a capability-first Stack Map as
+> the right-pane artifact. Build toward that, not the flow below.
+
 ## Primary Flow — Architecture Generation
 
 ### Step 1: Homepage

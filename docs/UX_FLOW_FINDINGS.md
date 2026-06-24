@@ -1,5 +1,16 @@
 # UX Flow Findings — Onboarding/Planning Inspiration
 
+> ℹ️ **Historical UX exploration — not the canonical UX direction.** This doc
+> captures early findings that *informed* StackScout's UX; it is not the source of
+> truth. In particular, the older **"Architecture Brief"** concept described below
+> has been **superseded as the primary artifact** — the canonical right-pane
+> artifact is the **capability-first Stack Map / Tool Ecosystem map** (capabilities
+> → recommended tools → alternatives → relationships → tradeoffs).
+>
+> **The authoritative UX direction is [`UX_CANONICAL_DIRECTION.md`](./UX_CANONICAL_DIRECTION.md).**
+> Keep this doc for historical context only — do not build from it without
+> checking the canonical UX doc first.
+
 Internal product note. Captures UX and product-flow findings from reviewing a
 Cursor-style onboarding/planning flow, translated into implications for
 StackScout's next UX milestone.
