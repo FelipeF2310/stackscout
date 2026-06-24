@@ -7,85 +7,166 @@ import type { Capability } from './capabilityTypes'
 // the project description against the existing capability taxonomy. The goal is
 // recall on realistic builder prompts (dashboards, SaaS apps, doc chatbots,
 // support agents, research assistants) without over-firing. The LLM-backed
-// detector will replace this later — the signature (string -> Capability[])
-// stays stable so the swap is isolated to this file.
+// detector will replace this later — the signatures here stay stable so the
+// swap is isolated to this file.
 //
 // Matching is plain substring containment over the lower-cased description,
 // padded with spaces so tokens like ' ai ' and ' ui ' don't match inside
 // words such as "email" or "build".
+//
+// Detection evidence (PR 1 / feature/detection-evidence-model)
+// ------------------------------------------------------------
+// Each keyword is tagged with a signal type so the UI can show *why* a
+// capability was detected without overclaiming:
+//   - 'direct'   — the phrase names or clearly describes the capability.
+//   - 'inferred' — the phrase implies the capability but does not ask for it.
+// Keywords the audit flagged 'ambiguous' (broad / substring-prone) are tagged
+// 'inferred' for now so a shaky match is never presented as confirmed. See
+// docs/CAPABILITY_DETECTION_AUDIT.md. This change is behavior-preserving: the
+// keyword set, matching logic, and output order are unchanged. No keyword was
+// added, removed, reworded, or reordered.
 
-const KEYWORD_MAP: Record<string, string[]> = {
-  auth: [
-    'auth', 'login', 'log in', 'sign in', 'sign-in', 'sign up', 'account', 'accounts',
-    'user', 'users', 'session', 'permission', 'permissions', 'role', 'roles', 'rbac',
-    'admin', 'internal', 'multi-tenant', 'tenant', 'members', 'team', 'saas',
-  ],
-  database: [
-    'database', 'persist', 'postgres', 'sql', 'records', 'record', 'crud', 'store data',
-    'data', 'tracking', 'track', 'requests', 'request', 'reports', 'reporting',
-    'inventory', 'tickets', 'submissions', 'entries', 'catalog', 'saas',
-  ],
-  'vector-storage': [
-    'vector', 'embedding', 'embeddings', 'similarity', 'semantic', 'rag', 'chatbot',
-    'search documents',
-  ],
-  'file-storage': ['upload', 'uploads', 'file storage', 'images', 'assets', 'blob', 'attachments'],
-  deployment: ['deploy', 'deployment', 'hosting', 'host', 'ship it'],
-  scheduling: [
-    'schedule', 'scheduling', 'cron', 'background job', 'jobs', 'queue', 'worker',
-    'recurring', 'reminders',
-  ],
-  monitoring: [
-    'monitor', 'monitoring', 'observability', 'error tracking', 'metrics', 'logging',
-    'logs', 'telemetry', 'uptime', 'analytics',
-  ],
-  'agent-framework': [
-    'agent', 'agents', 'agentic', 'multi-step', 'orchestrat', 'tool calling', 'autonomous',
-  ],
-  'llm-api': [
-    'llm', ' ai ', 'gpt', 'claude', 'chatbot', 'assistant', 'summar', 'generate text',
-    'nlp', 'conversational', 'copilot',
-  ],
-  retrieval: [
-    'rag', 'retrieval', 'search documents', 'knowledge base', 'knowledge', 'documents',
-    'chatbot', 'q&a', 'question answering', 'ask questions',
-  ],
-  'document-parsing': [
-    'pdf', 'document', 'documents', 'parse', 'extract', 'docx', 'ocr', 'word file',
-    'spreadsheet',
-  ],
-  email: [
-    'email', 'e-mail', 'mail', 'notification', 'notifications', 'transactional',
-    'newsletter', 'support',
-  ],
-  payments: [
-    'payment', 'payments', 'subscription', 'subscriptions', 'billing', 'checkout',
-    'stripe', 'invoice', 'pricing', 'paywall',
-  ],
-  'api-layer': ['api', 'endpoint', 'endpoints', 'rest ', 'graphql', 'rpc', 'webhooks'],
-  'frontend-framework': [
-    'frontend', 'front-end', 'web app', 'webapp', 'dashboard', 'dashboards', 'website',
-    'saas', 'interface', ' ui ', 'portal', 'admin panel', 'landing page',
-  ],
-  search: ['full-text search', 'faceted', 'search bar', 'filtering'],
+export type SignalType = 'direct' | 'inferred'
+export type CapabilityOrigin = 'matched' | 'assumed-floor'
+
+export interface DetectionSignal {
+  // The trigger that matched, trimmed of any matching padding for display
+  // (e.g. ' ai ' surfaces as 'ai').
+  phrase: string
+  type: SignalType
 }
 
-export function detectCapabilities(projectDescription: string): Capability[] {
+export interface CapabilityEvidence {
+  capability: Capability
+  // All keywords that matched for this capability. Empty when the capability
+  // came from the fallback floor rather than a real match.
+  signals: DetectionSignal[]
+  origin: CapabilityOrigin
+}
+
+interface TaggedKeyword {
+  // `match` is the exact string used for substring matching, including any
+  // intentional space padding. Display uses `match.trim()`.
+  match: string
+  type: SignalType
+}
+
+const d = (match: string): TaggedKeyword => ({ match, type: 'direct' })
+const i = (match: string): TaggedKeyword => ({ match, type: 'inferred' })
+
+// Keyword map — identical keywords and order to the prior baseline, now tagged.
+// `direct` = the phrase names the capability; `inferred` = implication or an
+// audit-flagged ambiguous keyword (defaulted to inferred for this phase).
+const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
+  auth: [
+    d('auth'), d('login'), d('log in'), d('sign in'), d('sign-in'), d('sign up'),
+    d('account'), d('accounts'), i('user'), i('users'), d('session'),
+    d('permission'), d('permissions'), i('role'), i('roles'), d('rbac'),
+    i('admin'), i('internal'), d('multi-tenant'), d('tenant'), i('members'),
+    i('team'), i('saas'),
+  ],
+  database: [
+    d('database'), d('persist'), d('postgres'), d('sql'), i('records'),
+    i('record'), d('crud'), d('store data'), i('data'), i('tracking'),
+    i('track'), i('requests'), i('request'), i('reports'), i('reporting'),
+    i('inventory'), i('tickets'), i('submissions'), i('entries'), i('catalog'),
+    i('saas'),
+  ],
+  'vector-storage': [
+    d('vector'), d('embedding'), d('embeddings'), d('similarity'), d('semantic'),
+    d('rag'), i('chatbot'), i('search documents'),
+  ],
+  'file-storage': [
+    d('upload'), d('uploads'), d('file storage'), i('images'), i('assets'),
+    d('blob'), d('attachments'),
+  ],
+  deployment: [d('deploy'), d('deployment'), d('hosting'), i('host'), d('ship it')],
+  scheduling: [
+    d('schedule'), d('scheduling'), d('cron'), d('background job'), i('jobs'),
+    d('queue'), i('worker'), d('recurring'), d('reminders'),
+  ],
+  monitoring: [
+    d('monitor'), d('monitoring'), d('observability'), d('error tracking'),
+    d('metrics'), d('logging'), i('logs'), d('telemetry'), d('uptime'),
+    i('analytics'),
+  ],
+  'agent-framework': [
+    i('agent'), i('agents'), d('agentic'), i('multi-step'), d('orchestrat'),
+    d('tool calling'), d('autonomous'),
+  ],
+  'llm-api': [
+    d('llm'), d(' ai '), d('gpt'), d('claude'), i('chatbot'), i('assistant'),
+    i('summar'), d('generate text'), d('nlp'), i('conversational'), d('copilot'),
+  ],
+  retrieval: [
+    d('rag'), d('retrieval'), i('search documents'), d('knowledge base'),
+    i('knowledge'), i('documents'), i('chatbot'), d('q&a'),
+    d('question answering'), d('ask questions'),
+  ],
+  'document-parsing': [
+    d('pdf'), d('document'), d('documents'), d('parse'), i('extract'),
+    d('docx'), d('ocr'), d('word file'), d('spreadsheet'),
+  ],
+  email: [
+    d('email'), d('e-mail'), i('mail'), i('notification'), i('notifications'),
+    d('transactional'), d('newsletter'), i('support'),
+  ],
+  payments: [
+    d('payment'), d('payments'), d('subscription'), d('subscriptions'),
+    d('billing'), d('checkout'), d('stripe'), d('invoice'), i('pricing'),
+    d('paywall'),
+  ],
+  'api-layer': [
+    i('api'), d('endpoint'), d('endpoints'), i('rest '), d('graphql'), d('rpc'),
+    d('webhooks'),
+  ],
+  'frontend-framework': [
+    d('frontend'), d('front-end'), d('web app'), d('webapp'), d('dashboard'),
+    d('dashboards'), d('website'), i('saas'), i('interface'), d(' ui '),
+    d('portal'), d('admin panel'), d('landing page'),
+  ],
+  search: [d('full-text search'), d('faceted'), d('search bar'), i('filtering')],
+}
+
+// Detection with evidence: per-capability matched signals and origin. Powers
+// the detection-transparency UI. Matching logic and ordering match the legacy
+// detector exactly, so `detectCapabilities` (below) is unchanged.
+export function detectCapabilitiesWithEvidence(
+  projectDescription: string
+): CapabilityEvidence[] {
   const text = ` ${projectDescription.toLowerCase()} `
-  const matched = new Set<string>()
+  const evidence: CapabilityEvidence[] = []
 
   for (const [capabilityId, keywords] of Object.entries(KEYWORD_MAP)) {
-    if (keywords.some((kw) => text.includes(kw))) {
-      matched.add(capabilityId)
+    const signals: DetectionSignal[] = []
+    for (const kw of keywords) {
+      if (text.includes(kw.match)) {
+        signals.push({ phrase: kw.match.trim(), type: kw.type })
+      }
+    }
+    if (signals.length > 0) {
+      const capability = getCapabilityById(capabilityId)
+      if (capability) {
+        evidence.push({ capability, signals, origin: 'matched' })
+      }
     }
   }
 
-  // Any buildable product needs somewhere to render — provide a sensible floor.
-  if (matched.size === 0) {
-    matched.add('frontend-framework')
+  // Any buildable product needs somewhere to render — provide a sensible floor,
+  // surfaced as an explicit assumption rather than a silent default.
+  if (evidence.length === 0) {
+    const floor = getCapabilityById('frontend-framework')
+    if (floor) {
+      evidence.push({ capability: floor, signals: [], origin: 'assumed-floor' })
+    }
   }
 
-  return Array.from(matched)
-    .map((id) => getCapabilityById(id))
-    .filter((c): c is Capability => c !== undefined)
+  return evidence
+}
+
+// Compatibility wrapper. Returns the same Capability[] (same membership and
+// order) as the prior baseline detector, so the recommendation pipeline and all
+// existing tests are unchanged.
+export function detectCapabilities(projectDescription: string): Capability[] {
+  return detectCapabilitiesWithEvidence(projectDescription).map((e) => e.capability)
 }
