@@ -31,9 +31,8 @@ If adding a new capability:
    - `description`: one sentence, "X for Y" format
    - `category`: pick from existing categories or propose a new one
 3. List files to update:
-   - `lib/capabilities/capabilityTaxonomy.ts`
-   - `data/seed/capabilities.json`
-   - `docs/CAPABILITY_TAXONOMY.md`
+   - `lib/capabilities/capabilityTaxonomy.ts` (the canonical capability registry)
+   - `docs/CAPABILITY_TAXONOMY.md` (keep in sync with the registry)
 4. List tools that should be linked to this new capability
 
 ## Current taxonomy

@@ -66,5 +66,5 @@ Before adding a new capability:
 
 1. Verify it doesn't overlap with an existing capability
 2. Confirm it is a system requirement, not a specific tool
-3. Update: this file, `lib/capabilities/capabilityTaxonomy.ts`, `data/seed/capabilities.json`
+3. Add it to `lib/capabilities/capabilityTaxonomy.ts` — the canonical capability registry — and keep this file in sync
 4. Add ≥1 tool linked to the new capability to `data/seed/tools.json`

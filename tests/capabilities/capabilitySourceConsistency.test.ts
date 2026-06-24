@@ -13,12 +13,12 @@ import {
 } from '../../lib/capabilities/detectCapabilities'
 import { recommendArchitecture } from '../../lib/recommendations/recommendArchitecture'
 import { buildToolPageData, getAllToolIds } from '../../lib/tools/toolPage'
-import capabilitiesJson from '../../data/seed/capabilities.json'
 
-// PR 1 of capability-data consolidation: the corpus now sources capabilities
-// from the canonical taxonomy (CAPABILITY_TAXONOMY) instead of capabilities.json.
-// These tests pin the source of truth and guard against drift while both the
-// taxonomy and data/seed/capabilities.json still exist.
+// Capability source-of-truth tests. The corpus sources capabilities from the
+// canonical taxonomy (CAPABILITY_TAXONOMY in lib/capabilities/capabilityTaxonomy.ts),
+// which is the single source of truth — there is no separate capability seed file.
+// These pin that the corpus and taxonomy agree, and that detector, evidence,
+// recommendation, and tool-page behavior is unchanged.
 
 const EXPECTED_IDS = [
   'auth',
@@ -72,12 +72,6 @@ describe('capability source of truth (corpus reads the taxonomy)', () => {
       expect(fromCorpus).toEqual(fromTaxonomy)
     }
     expect(corpusGetCapabilityById('does-not-exist')).toBeUndefined()
-  })
-
-  it('drift guard: capabilities.json still equals the taxonomy while both exist', () => {
-    const json = capabilitiesJson.map(onlyFields).sort(byId)
-    const taxonomy = CAPABILITY_TAXONOMY.map(onlyFields).sort(byId)
-    expect(json).toEqual(taxonomy)
   })
 })
 
