@@ -70,7 +70,8 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     i('record'), d('crud'), d('store data'), i('data'), i('tracking'),
     i('track'), i('requests'), i('request'), i('reports'), i('reporting'),
     i('inventory'), i('tickets'), i('submissions'), i('entries'), i('catalog'),
-    i('saas'),
+    i('saas'), i('analytics dashboard'), i('analytics dashboards'),
+    i('marketplace'), i('listing'), i('listings'), i('list items'),
   ],
   'vector-storage': [
     d('vector'), d('embedding'), d('embeddings'), d('similarity'), d('semantic'),
@@ -86,9 +87,8 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     d('queue'), i('worker'), d('recurring'), d('reminders'),
   ],
   monitoring: [
-    d('monitor'), d('monitoring'), d('observability'), d('error tracking'),
+    d('monitoring'), d('observability'), d('error tracking'),
     d('metrics'), d('logging'), i('logs'), d('telemetry'), d('uptime'),
-    i('analytics'),
   ],
   'agent-framework': [
     i('agent'), i('agents'), d('agentic'), i('multi-step'), d('orchestrat'),
