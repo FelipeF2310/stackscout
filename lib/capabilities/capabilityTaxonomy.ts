@@ -97,6 +97,12 @@ export const CAPABILITY_TAXONOMY: Capability[] = [
     description: 'Full-text search and faceted filtering for application content',
     category: 'data',
   },
+  {
+    capability_id: 'web-scraping',
+    name: 'Web Scraping',
+    description: 'Extracting and collecting structured data from websites and web pages.',
+    category: 'data',
+  },
 ]
 
 export function getCapabilityById(id: string): Capability | undefined {

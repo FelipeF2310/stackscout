@@ -440,5 +440,31 @@
     "production_ready": true,
     "managed": true,
     "ecosystems": ["typescript"]
+  },
+  {
+    "tool_id": "firecrawl",
+    "repository_name": "mendableai/firecrawl",
+    "github_url": "https://github.com/mendableai/firecrawl",
+    "capability_ids": ["web-scraping"],
+    "maintenance_score": 0.9,
+    "maturity_score": 0.75,
+    "documentation_score": 0.9,
+    "beginner_friendly": true,
+    "production_ready": true,
+    "managed": true,
+    "ecosystems": ["typescript", "python"]
+  },
+  {
+    "tool_id": "crawlee",
+    "repository_name": "apify/crawlee",
+    "github_url": "https://github.com/apify/crawlee",
+    "capability_ids": ["web-scraping"],
+    "maintenance_score": 0.9,
+    "maturity_score": 0.85,
+    "documentation_score": 0.9,
+    "beginner_friendly": false,
+    "production_ready": true,
+    "managed": false,
+    "ecosystems": ["typescript", "python"]
   }
 ]

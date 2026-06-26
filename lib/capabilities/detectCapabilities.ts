@@ -127,6 +127,11 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     i('marketplace platform'),
   ],
   search: [d('full-text search'), d('faceted'), d('search bar'), i('filtering')],
+  'web-scraping': [
+    d('web scraping'), d('web scraper'), d('scraper'), d('scrape'),
+    d('crawler'), d('crawling'), d('crawl websites'),
+    d('extract data from websites'), i('scrape job postings'),
+  ],
 }
 
 // Detection with evidence: per-capability matched signals and origin. Powers

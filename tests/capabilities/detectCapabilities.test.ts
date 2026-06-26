@@ -100,3 +100,31 @@ describe('detectCapabilities (keyword cleanup)', () => {
     expect(result).toContain('payments')
   })
 })
+
+// Web Scraping capability (PR #21). Detection stays independent: a scraper prompt
+// detects web-scraping (and llm-api when it summarizes) but must NOT force-fire
+// Database, Scheduling, or Monitoring — those come only from their own signals.
+// The ecosystem fit (scrape → schedule → store → summarize) lives in relationships.
+describe('detectCapabilities (web scraping)', () => {
+  const ids = (prompt: string) =>
+    detectCapabilities(prompt).map((c) => c.capability_id)
+
+  it('detects web-scraping for a scraper prompt without forcing storage/scheduling/monitoring', () => {
+    const result = ids(
+      'Build a web scraper that monitors job postings and summarizes new roles'
+    )
+    expect(result).toContain('web-scraping')
+    expect(result).toContain('llm-api') // existing 'summar' keyword
+    expect(result).not.toContain('database')
+    expect(result).not.toContain('scheduling')
+    expect(result).not.toContain('monitoring')
+  })
+
+  it('detects web-scraping from a precise scrape keyword', () => {
+    expect(ids('scrape product prices from websites')).toContain('web-scraping')
+  })
+
+  it('does not over-fire web-scraping for an observability prompt', () => {
+    expect(ids('Build an uptime monitoring dashboard')).not.toContain('web-scraping')
+  })
+})

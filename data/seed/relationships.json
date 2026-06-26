@@ -366,5 +366,45 @@
     "relationship_type": "commonly-used-with",
     "confidence_score": 0.8,
     "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-047",
+    "source_tool_id": "firecrawl",
+    "target_tool_id": "openai-sdk",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-048",
+    "source_tool_id": "firecrawl",
+    "target_tool_id": "anthropic-sdk",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-049",
+    "source_tool_id": "firecrawl",
+    "target_tool_id": "inngest",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.8,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-050",
+    "source_tool_id": "firecrawl",
+    "target_tool_id": "supabase",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.8,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-051",
+    "source_tool_id": "firecrawl",
+    "target_tool_id": "crawlee",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
   }
 ]
