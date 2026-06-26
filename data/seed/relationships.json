@@ -254,5 +254,117 @@
     "relationship_type": "commonly-used-with",
     "confidence_score": 0.85,
     "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-033",
+    "source_tool_id": "llamaindex",
+    "target_tool_id": "qdrant",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-034",
+    "source_tool_id": "llamaindex",
+    "target_tool_id": "openai-sdk",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-035",
+    "source_tool_id": "llamaindex",
+    "target_tool_id": "pinecone",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-036",
+    "source_tool_id": "llamaindex",
+    "target_tool_id": "chroma",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-037",
+    "source_tool_id": "llamaindex",
+    "target_tool_id": "weaviate",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-038",
+    "source_tool_id": "llamaindex",
+    "target_tool_id": "anthropic-sdk",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-039",
+    "source_tool_id": "langchain",
+    "target_tool_id": "qdrant",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-040",
+    "source_tool_id": "langchain",
+    "target_tool_id": "pinecone",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-041",
+    "source_tool_id": "langchain",
+    "target_tool_id": "chroma",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-042",
+    "source_tool_id": "langchain",
+    "target_tool_id": "weaviate",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-043",
+    "source_tool_id": "langchain",
+    "target_tool_id": "openai-sdk",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-044",
+    "source_tool_id": "langchain",
+    "target_tool_id": "anthropic-sdk",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-045",
+    "source_tool_id": "llamaindex",
+    "target_tool_id": "unstructured",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.8,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-046",
+    "source_tool_id": "langchain",
+    "target_tool_id": "unstructured",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.8,
+    "source_of_truth": "manual"
   }
 ]
