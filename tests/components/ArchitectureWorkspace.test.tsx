@@ -72,4 +72,58 @@ describe('ArchitectureWorkspace (canonical submitted state)', () => {
     expect(html).not.toContain('AI customer support agent')
     expect(html).not.toContain('Internal analytics dashboard')
   })
+
+  it('surfaces relationships / pairs-with when the explanation data provides them', async () => {
+    const result = await recommendArchitecture(PROMPT)
+    const withFit = result.explanations.find((e) => e.fits_with)
+    // The enriched RAG vertical produces real pairings for this prompt.
+    expect(withFit).toBeDefined()
+
+    const html = await renderWorkspace()
+    // the relationship sentence renders verbatim (already a complete sentence,
+    // e.g. "Commonly used with llamaindex.") — no redundant label wrapping it
+    expect(html).toContain(htmlEscape(withFit!.fits_with as string))
+  })
+
+  it('renders alternatives with their reasons, not bare names', async () => {
+    const result = await recommendArchitecture(PROMPT)
+    const altWithReason = result.alternatives
+      .flatMap((a) => a.alternatives)
+      .find((a) => a.reason_not_selected && a.reason_not_selected.trim().length > 0)
+    expect(altWithReason).toBeDefined()
+
+    const html = await renderWorkspace()
+    expect(html).toContain('Alternatives:')
+    // the alternative's reason text appears, not just its id
+    expect(html).toContain(htmlEscape(altWithReason!.reason_not_selected))
+  })
+
+  it('de-duplicates multi-capability tool rows (grouped, not repeated)', async () => {
+    const result = await recommendArchitecture(PROMPT)
+    const html = await renderWorkspace()
+
+    // One capability→tool row per unique recommended tool, fewer than the
+    // capability count because a multi-capability tool is grouped into one row.
+    const rows = html.match(/data-brief-row="/g) ?? []
+    const uniqueTools = new Set(result.explanations.map((e) => e.tool_id)).size
+    expect(rows).toHaveLength(uniqueTools)
+    expect(rows.length).toBeLessThan(result.architecture.capabilities.length)
+
+    // The grouped row lists both capabilities the shared tool covers.
+    expect(html).toContain('Retrieval, Document Parsing')
+    // ...and the shared tool's "simple" sentence renders only once.
+    const multi = result.explanations.find((e) => e.capability_ids.length > 1)!
+    const occurrences = html.split(htmlEscape(multi.simple)).length - 1
+    expect(occurrences).toBe(1)
+  })
 })
+
+// react-dom escapes text content; match the rendered form, not the raw string.
+function htmlEscape(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+}
