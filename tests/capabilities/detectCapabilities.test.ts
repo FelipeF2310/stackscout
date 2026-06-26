@@ -90,4 +90,13 @@ describe('detectCapabilities (keyword cleanup)', () => {
   it('still detects monitoring for genuine observability prompts', () => {
     expect(ids('Add error tracking and uptime monitoring')).toContain('monitoring')
   })
+
+  it('detects a frontend for a marketplace app without dropping its other capabilities', () => {
+    const result = ids('Build a marketplace app where users can list items and accept payments')
+    expect(result).toContain('frontend-framework')
+    // PR #18/#19 behavior is preserved alongside the new frontend signal.
+    expect(result).toContain('auth')
+    expect(result).toContain('database')
+    expect(result).toContain('payments')
+  })
 })
