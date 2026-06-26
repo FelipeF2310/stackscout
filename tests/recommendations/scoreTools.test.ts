@@ -72,3 +72,15 @@ describe('database slot uses a real database tool, not the auth product', () => 
     expect(ids).toContain('supabase-auth')
   })
 })
+
+// The new web-scraping capability (PR #21) is backed by real curated tools.
+describe('web-scraping capability has real tools', () => {
+  const { tools } = getCorpus()
+
+  it('scores firecrawl and crawlee for the web-scraping capability', () => {
+    const ids = scoreTools(tools, 'web-scraping', {}, []).map((s) => s.tool_id)
+    expect(ids.length).toBeGreaterThan(0)
+    expect(ids).toContain('firecrawl')
+    expect(ids).toContain('crawlee')
+  })
+})

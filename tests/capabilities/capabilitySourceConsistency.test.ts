@@ -37,6 +37,7 @@ const EXPECTED_IDS = [
   'api-layer',
   'frontend-framework',
   'search',
+  'web-scraping',
 ]
 
 const onlyFields = (c: {
@@ -54,9 +55,9 @@ const byId = (a: { capability_id: string }, b: { capability_id: string }) =>
   a.capability_id.localeCompare(b.capability_id)
 
 describe('capability source of truth (corpus reads the taxonomy)', () => {
-  it('getAllCapabilities() returns the same 16 capabilities as the taxonomy', () => {
+  it('getAllCapabilities() returns the same 17 capabilities as the taxonomy', () => {
     const corpus = getAllCapabilities()
-    expect(corpus).toHaveLength(16)
+    expect(corpus).toHaveLength(17)
     expect(corpus.map((c) => c.capability_id).sort()).toEqual([...EXPECTED_IDS].sort())
     // Same records as the canonical taxonomy.
     expect(corpus.map(onlyFields).sort(byId)).toEqual(

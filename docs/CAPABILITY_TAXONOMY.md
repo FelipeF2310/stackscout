@@ -16,6 +16,7 @@ The canonical list of system capabilities StackScout supports.
 | `vector-storage` | Vector Storage | Embedding storage and similarity search for AI applications |
 | `file-storage` | File Storage | Blob and file storage for user uploads and assets |
 | `search` | Search | Full-text search and faceted filtering for application content |
+| `web-scraping` | Web Scraping | Extracting and collecting structured data from websites and web pages. |
 
 ## AI
 
