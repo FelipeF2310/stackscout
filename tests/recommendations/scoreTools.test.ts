@@ -40,3 +40,35 @@ describe('scoreTools (deterministic baseline)', () => {
     )
   })
 })
+
+// `supabase-auth` models the Supabase Auth product, not the full Supabase
+// platform (the separate `supabase` tool covers database/file-storage). It must
+// remain a valid Auth candidate but must not fill the Database slot. These
+// assertions are corpus-tagging contracts, not hardcoded tool winners.
+describe('database slot uses a real database tool, not the auth product', () => {
+  const { tools } = getCorpus()
+  const DATABASE_TOOLS = ['supabase', 'neon', 'planetscale']
+
+  it('does not consider supabase-auth eligible for the database capability', () => {
+    const ids = scoreTools(tools, 'database', {}, []).map((s) => s.tool_id)
+    expect(ids).not.toContain('supabase-auth')
+  })
+
+  it('picks a genuine database tool as the top database result (even after clerk is selected)', () => {
+    // clerk pre-selected for auth previously pulled supabase-auth to the top of
+    // the database slot via the clerk -> supabase-auth pairing.
+    const top = scoreTools(tools, 'database', {}, ['clerk'])[0]
+    expect(top).toBeDefined()
+    expect(top.tool_id).not.toBe('supabase-auth')
+
+    const winner = tools.find((t) => t.tool_id === top.tool_id)!
+    expect(winner.capability_ids).toContain('database')
+    // A real database tool wins — no single hardcoded winner required.
+    expect(DATABASE_TOOLS).toContain(top.tool_id)
+  })
+
+  it('keeps supabase-auth as a valid auth candidate', () => {
+    const ids = scoreTools(tools, 'auth', {}, []).map((s) => s.tool_id)
+    expect(ids).toContain('supabase-auth')
+  })
+})
