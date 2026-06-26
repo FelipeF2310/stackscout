@@ -29,7 +29,7 @@
     "tool_id": "supabase-auth",
     "repository_name": "supabase/supabase",
     "github_url": "https://github.com/supabase/supabase",
-    "capability_ids": ["auth", "database", "file-storage"],
+    "capability_ids": ["auth"],
     "maintenance_score": 0.95,
     "maturity_score": 0.9,
     "documentation_score": 0.9,
