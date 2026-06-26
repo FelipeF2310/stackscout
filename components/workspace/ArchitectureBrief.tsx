@@ -42,6 +42,26 @@ export default function ArchitectureBrief({
   // One tradeoff per unique recommended tool (avoid repeating for multi-capability tools).
   const seenTradeoff = new Set<string>()
 
+  // Group capabilities by their recommended tool so a multi-capability tool isn't
+  // rendered as duplicate identical rows. Capability-first order is preserved;
+  // each row lists the capabilities that tool covers. Capabilities with no tool
+  // fall through to a neutral gap row.
+  const toolOrder: string[] = []
+  const toolGroups = new Map<string, { explanation: ToolExplanation; capNames: string[] }>()
+  const gapCapNames: string[] = []
+  for (const cap of capabilities) {
+    const e = explanationFor(cap.capability_id)
+    if (!e) {
+      gapCapNames.push(cap.name)
+      continue
+    }
+    if (!toolGroups.has(e.tool_id)) {
+      toolGroups.set(e.tool_id, { explanation: e, capNames: [] })
+      toolOrder.push(e.tool_id)
+    }
+    toolGroups.get(e.tool_id)!.capNames.push(cap.name)
+  }
+
   return (
     <section className="overflow-auto bg-background">
       <div className="max-w-[640px] p-6 md:p-8 space-y-7">
@@ -101,26 +121,36 @@ export default function ArchitectureBrief({
             Capabilities → recommended tool
           </h2>
           <div className="border rounded-lg divide-y">
-            {capabilities.map((cap) => {
-              const e = explanationFor(cap.capability_id)
+            {toolOrder.map((toolId) => {
+              const group = toolGroups.get(toolId)!
               return (
-                <div key={cap.capability_id} className="grid grid-cols-[150px_1fr] gap-3 p-3 items-baseline">
-                  <span className="text-sm text-muted-foreground">{cap.name}</span>
+                <div
+                  key={toolId}
+                  data-brief-row={toolId}
+                  className="grid grid-cols-[150px_1fr] gap-3 p-3 items-baseline"
+                >
+                  <span className="text-sm text-muted-foreground">{group.capNames.join(', ')}</span>
                   <span className="text-sm">
-                    {e ? (
-                      <>
-                        <Link href={`/tools/${e.tool_id}`} className="font-mono font-medium hover:underline">
-                          {e.tool_id}
-                        </Link>
-                        {e.simple && <span className="text-muted-foreground"> — {e.simple}</span>}
-                      </>
-                    ) : (
-                      <span className="text-[hsl(var(--faint))]">No tool in the curated corpus yet.</span>
+                    <Link href={`/tools/${toolId}`} className="font-mono font-medium hover:underline">
+                      {toolId}
+                    </Link>
+                    {group.explanation.simple && (
+                      <span className="text-muted-foreground"> — {group.explanation.simple}</span>
                     )}
                   </span>
                 </div>
               )
             })}
+            {gapCapNames.map((name) => (
+              <div
+                key={name}
+                data-brief-row="gap"
+                className="grid grid-cols-[150px_1fr] gap-3 p-3 items-baseline"
+              >
+                <span className="text-sm text-muted-foreground">{name}</span>
+                <span className="text-sm text-[hsl(var(--faint))]">No tool in the curated corpus yet.</span>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -144,10 +174,10 @@ export default function ArchitectureBrief({
           </p>
         </section>
 
-        {/* tradeoffs & alternatives */}
+        {/* pairings, tradeoffs & alternatives */}
         <section className="space-y-3">
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-            Tradeoffs &amp; alternatives
+            Pairings, tradeoffs &amp; alternatives
           </h2>
           <div className="space-y-3">
             {explanations.map((e) => {
@@ -159,21 +189,32 @@ export default function ArchitectureBrief({
                 seenAlt.has(a.tool_id) ? false : (seenAlt.add(a.tool_id), true)
               )
               return (
-                <div key={e.tool_id} className="text-sm">
-                  <span className="font-mono font-medium">{e.tool_id}</span>
-                  <span className="text-muted-foreground"> — {e.tradeoff}</span>
+                <div key={e.tool_id} className="text-sm space-y-1">
+                  <div>
+                    <span className="font-mono font-medium">{e.tool_id}</span>
+                    <span className="text-muted-foreground"> — {e.tradeoff}</span>
+                  </div>
+                  {e.fits_with && (
+                    <div className="text-muted-foreground">
+                      <span aria-hidden className="text-[hsl(var(--accent))]">
+                        ↔
+                      </span>{' '}
+                      {e.fits_with}
+                    </div>
+                  )}
                   {uniqueAlts.length > 0 && (
-                    <span className="text-muted-foreground">
-                      {' '}Alternatives:{' '}
+                    <div className="text-muted-foreground">
+                      <span className="font-medium">Alternatives:</span>{' '}
                       {uniqueAlts.map((a, idx) => (
                         <span key={a.tool_id}>
-                          {idx > 0 && ', '}
+                          {idx > 0 && '; '}
                           <Link href={`/tools/${a.tool_id}`} className="font-mono hover:underline">
                             {a.tool_id}
                           </Link>
+                          {a.reason_not_selected && <span> — {a.reason_not_selected}</span>}
                         </span>
                       ))}
-                    </span>
+                    </div>
                   )}
                 </div>
               )
