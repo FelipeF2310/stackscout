@@ -53,3 +53,41 @@ describe('detectCapabilities (deterministic baseline)', () => {
     expect(result.map((c) => c.capability_id)).not.toEqual(['frontend-framework'])
   })
 })
+
+// Detector keyword cleanup (PR #18): removes the ambiguous Monitoring triggers
+// ('monitor', 'analytics') that mis-detected observability/Sentry for analytics
+// dashboards and scrapers, and adds precise Database signals for analytics
+// dashboards and marketplace/listings. Existing capabilities only.
+describe('detectCapabilities (keyword cleanup)', () => {
+  const ids = (prompt: string) =>
+    detectCapabilities(prompt).map((c) => c.capability_id)
+
+  it('detects an analytics dashboard as a data app, not observability', () => {
+    const result = ids('Build an internal analytics dashboard for city operations')
+    expect(result).toContain('database')
+    expect(result).toContain('frontend-framework')
+    expect(result).not.toContain('monitoring')
+    // 'internal' already maps to auth in the baseline detector — no new change.
+    expect(result).toContain('auth')
+  })
+
+  it('does not mis-detect observability for a scraper that "monitors" job postings', () => {
+    const result = ids(
+      'Build a web scraper that monitors job postings and summarizes new roles'
+    )
+    expect(result).not.toContain('monitoring')
+  })
+
+  it('detects database for a marketplace with listings and payments', () => {
+    const result = ids(
+      'Build a marketplace app where users can list items and accept payments'
+    )
+    expect(result).toContain('database')
+    expect(result).toContain('payments')
+    expect(result).toContain('auth')
+  })
+
+  it('still detects monitoring for genuine observability prompts', () => {
+    expect(ids('Add error tracking and uptime monitoring')).toContain('monitoring')
+  })
+})
