@@ -61,7 +61,9 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
   auth: [
     d('auth'), d('login'), d('log in'), d('sign in'), d('sign-in'), d('sign up'),
     d('account'), d('accounts'), i('user'), i('users'), d('session'),
-    d('permission'), d('permissions'), i('role'), i('roles'), d('rbac'),
+    d('permission'), d('permissions'), d('rbac'), d('role-based access'),
+    d('role based access'), d('role-based access control'),
+    d('role based access control'), i('user roles'), i('roles and permissions'),
     i('admin'), i('internal'), d('multi-tenant'), d('tenant'), i('members'),
     i('team'), i('saas'),
   ],
