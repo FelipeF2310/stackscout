@@ -128,3 +128,33 @@ describe('detectCapabilities (web scraping)', () => {
     expect(ids('Build an uptime monitoring dashboard')).not.toContain('web-scraping')
   })
 })
+
+// Auth keyword precision (PR #22): bare 'role'/'roles' were ambiguous — job-role
+// language ("new roles") wrongly triggered Auth. Replaced with precise RBAC
+// phrases so real auth/RBAC still detects while job-role prose does not.
+describe('detectCapabilities (auth role keywords)', () => {
+  const ids = (prompt: string) =>
+    detectCapabilities(prompt).map((c) => c.capability_id)
+
+  it('does not trigger auth from job-role language in a scraper prompt', () => {
+    const result = ids(
+      'Build a web scraper that monitors job postings and summarizes new roles'
+    )
+    expect(result).toContain('web-scraping')
+    expect(result).toContain('llm-api')
+    expect(result).not.toContain('auth')
+    expect(result).not.toContain('database')
+    expect(result).not.toContain('scheduling')
+    expect(result).not.toContain('monitoring')
+  })
+
+  it('still detects auth for user roles (independent of permissions)', () => {
+    const result = ids('Build an admin dashboard with user roles')
+    expect(result).toContain('auth')
+    expect(result).toContain('frontend-framework')
+  })
+
+  it('still detects auth for role-based access control', () => {
+    expect(ids('Add role-based access control to a SaaS app')).toContain('auth')
+  })
+})
