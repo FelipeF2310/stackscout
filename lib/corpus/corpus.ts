@@ -58,6 +58,10 @@ const toolSchema = z.object({
   production_ready: z.boolean().optional(),
   managed: z.boolean().optional(),
   ecosystems: z.array(z.string()).optional(),
+  // Product-fit notes (manually curated, optional): short phrases for the
+  // product/use-cases a tool suits, and when to consider something else.
+  best_for: z.array(z.string()).optional(),
+  avoid_if: z.array(z.string()).optional(),
 })
 
 const relationshipSchema = z.object({

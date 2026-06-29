@@ -194,6 +194,18 @@ export default function ArchitectureBrief({
                     <span className="font-mono font-medium">{e.tool_id}</span>
                     <span className="text-muted-foreground"> — {e.tradeoff}</span>
                   </div>
+                  {e.best_for.length > 0 && (
+                    <div className="text-muted-foreground">
+                      <span className="font-medium">Good fit when:</span>{' '}
+                      {e.best_for.join('; ')}
+                    </div>
+                  )}
+                  {e.avoid_if.length > 0 && (
+                    <div className="text-muted-foreground">
+                      <span className="font-medium">Consider another option if:</span>{' '}
+                      {e.avoid_if.join('; ')}
+                    </div>
+                  )}
                   {e.fits_with && (
                     <div className="text-muted-foreground">
                       <span aria-hidden className="text-[hsl(var(--accent))]">

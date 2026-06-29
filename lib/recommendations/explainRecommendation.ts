@@ -27,6 +27,9 @@ export interface ToolExplanation {
   tradeoff: string
   /** When to consider an alternative, naming one (null when none exist). */
   consider_alternative: string | null
+  /** Tool-level product-fit notes (curated, optional) — NOT archetype-matched. */
+  best_for: string[]
+  avoid_if: string[]
 }
 
 // Deterministic explanation layer (Phase 1 baseline). Builds advisor-style,
@@ -55,6 +58,8 @@ export function explainRecommendation(architecture: GeneratedArchitecture): Tool
         ? tradeoff(tool)
         : 'Review the alternatives for this capability to compare tradeoffs.',
       consider_alternative: firstConsiderAlternative(selected.tool_id, selected.capability_ids),
+      best_for: tool?.best_for ?? [],
+      avoid_if: tool?.avoid_if ?? [],
     }
   })
 }
