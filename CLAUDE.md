@@ -17,13 +17,18 @@ The primary object is a **capability** (e.g., Authentication, Vector Storage, Sc
 
 ## Key Rules
 
-Read `.claude/CLAUDE.md` for the full Claude Code collaboration guide.
+Read `.claude/CLAUDE.md` for the full Claude Code collaboration guide. Before
+proposing feature work, read `docs/STACKSCOUT_PROJECT_ALIGNMENT.md`,
+`docs/NEXT_STEPS.md`, and `docs/ARCHITECTURE.md`; those files define the current
+roadmap. `docs/PRD.md` is broad product vision, not the current implementation
+queue.
 
 Critical constraints:
 - Capabilities are first-class. Never design around repositories.
 - Every recommendation must include reasoning (why this, why not alternatives, tradeoffs).
 - MVP scope is strict — see `.claude/rules/mvp-non-goals.md` before adding features.
 - Confidence is not correctness — never imply a recommendation is guaranteed correct.
+- Use Matty's skills where helpful for TypeScript, tests, schemas, safe refactors, and reviews.
 
 ## Docs
 
@@ -40,9 +45,10 @@ Current (wired in the Phase 1 baseline):
 - Vitest for testing
 - Tailwind CSS for styling
 
-Planned (designed for, but intentionally NOT wired yet):
-- Anthropic SDK (claude-sonnet-4-6) for capability detection and architecture generation — currently deterministic placeholders in `lib/`
-- Drizzle ORM + Neon (PostgreSQL) for persistence — not yet decided/wired
-- GitHub metadata fetching for maintenance signals — not yet wired
+Deferred until explicitly scoped:
+- Live LLM calls for capability detection or architecture generation
+- Drizzle/Neon or other persistence
+- GitHub metadata fetching or ingestion
+- Paid product features and browser extensions
 
 See `.claude/CLAUDE.md` for the Phase 1 baseline status.

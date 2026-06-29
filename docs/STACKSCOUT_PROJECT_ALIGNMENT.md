@@ -9,7 +9,7 @@ This is a durable orientation document, not a spec and not a backlog. When a
 detail here goes stale, update it in a small docs PR rather than letting drift
 accumulate.
 
-_Last updated: 2026-06-24._
+_Last updated: 2026-06-29._
 
 ---
 
@@ -99,6 +99,8 @@ Already built and merged — **do not redo**:
   - `capabilityTaxonomy.ts` is the canonical capability registry.
   - `tools.json` and `relationships.json` remain seed/corpus data.
   - `data/seed/capabilities.json` **removed** (was a duplicate).
+- **Legacy results UI cleanup** — orphaned pre-workspace prompt/results
+  components and their dead tests were removed; the live flow is the workspace.
 
 ---
 
@@ -113,8 +115,11 @@ Already built and merged — **do not redo**:
 - `detectCapabilities()` — remains the **compatibility wrapper** that drives
   recommendation behavior; output is unchanged from before the evidence model.
 - **Tool detail pages are currently seed/static** (no live data).
+- **Current trusted data:** the canonical capability taxonomy plus the curated
+  seed corpus (`tools.json`, `relationships.json`). Runtime recommendations use
+  this trusted structured data.
 - **Deferred (not built):** live GitHub ingestion, database, auth, runtime LLMs,
-  RAG, and agents.
+  RAG, agents, paid features, and browser extensions.
 
 ---
 
@@ -135,6 +140,9 @@ This is how work happens on StackScout. It is not optional:
 
 When in doubt: narrower PR, explicit deferral, ask before expanding scope.
 
+Use Matty's skills where they help: TypeScript correctness, focused test quality,
+schema design, safe refactor discipline, and review rigor.
+
 ---
 
 ## 8. Deferred / revisit items (parked — not in progress)
@@ -154,6 +162,8 @@ or accidentally started:
 - **Evidence objects** (first-class, referenceable evidence).
 - **Agent-assisted ingestion.**
 - **RAG / retrieval layer.**
+- **Paid version** — deferred until the free product proves value.
+- **Browser extension** — deferred until the core audit/report artifact is useful.
 - **ECC** (introduce later, when agent workflows become heavier).
 - Cleanup of the leftover local `docs/ux-flow-findings` branch and untracked
   design/skill files, when useful.
@@ -187,13 +197,27 @@ not current state.
 
 ---
 
-## 10. Near-term direction
+## 10. Current roadmap
 
-**Decided (2026-06-24): the canonical UX — a landing page → guided two-pane
-workspace with a capability-first Stack Map as the right-pane artifact.** See
-[`UX_CANONICAL_DIRECTION.md`](./UX_CANONICAL_DIRECTION.md) for the authoritative
-description, the visual-target prototypes, and the phased path. The old stacked
-results-page is **scrapped**.
+Current product direction is **free product first**. Paid plans and browser
+extensions are deferred until the free architecture-advisor experience proves
+value and the core audit/report artifact is useful.
+
+Near-term PR order:
+
+1. **Activate `RefinementContext` in the live workspace flow.** The model already
+   supports context; the live workspace needs to pass it deliberately.
+2. **Improve alternatives from capability peers.** Alternatives should be useful
+   same-capability choices, not generic tool lists.
+3. **Backfill `best_for` / `avoid_if` fit metadata.** Grow decision quality in
+   the free product before adding new systems.
+4. **Improve scoring structure if proven necessary** — for example
+   `primary_capability` or per-capability tool role, only after recommendation
+   review shows a concrete need.
+5. **Design evidence/audit/report schemas later.** Do not start this until the
+   recommendation foundation is stronger.
+6. **Add RAG/self-learning later still**, only after evidence objects and review
+   boundaries exist.
 
 Still parked (not the current focus):
 
@@ -201,6 +225,5 @@ Still parked (not the current focus):
   [`REPO_MEMORY_AND_LEARNING.md`](./REPO_MEMORY_AND_LEARNING.md), not implemented.
 - **Keyword cleanup** after real prompt testing.
 
-This document does **not** prescribe implementation. Each phase of the canonical
-UX gets its own planning pass, then the smallest safe PR — per the phased
-discipline above.
+This document does **not** prescribe implementation. Each phase gets its own
+planning pass, then the smallest safe PR — per the phased discipline above.

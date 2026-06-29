@@ -13,8 +13,9 @@ git status                # working tree
 npm test && npm run build # current test/build status
 ```
 
-Authoritative product direction/vision: `STACKSCOUT_PROJECT_ALIGNMENT.md`,
-`REPO_MEMORY_AND_LEARNING.md`, `ARCHITECTURE.md`.
+Authoritative current roadmap: `STACKSCOUT_PROJECT_ALIGNMENT.md`,
+`NEXT_STEPS.md`, and `ARCHITECTURE.md`. `PRD.md` is broad product vision, not the
+active implementation queue.
 
 ## Where StackScout is
 
@@ -36,11 +37,26 @@ PRs #15–#28:
   golden-set regression tests over 6 canonical prompts
   (`tests/recommendations/goldenRecommendationSet.test.ts`).
 
-## In flight
+## Current queue
 
-- **PR #28 — Astro as the first frontend-framework alternative.** Confirm via
-  `gh pr list` whether it's merged. Astro is an `alternative-to nextjs` only
-  (no compat edges); Next.js stays the selected frontend.
+1. **Next feature PR: activate `RefinementContext` in the live workspace flow.**
+   The recommendation pipeline accepts context already; the workspace does not
+   pass it yet.
+2. **Then: alternatives from capability peers.** Make alternatives more useful
+   by grounding them in same-capability choices.
+3. **Then: fit metadata backfill.** Expand `best_for` / `avoid_if` coverage in
+   the free product before adding heavier systems.
+4. **Then: scoring structure improvements if justified.** Examples:
+   `primary_capability` or per-capability role, only after recommendation review
+   shows a concrete need.
+5. **Later: evidence/audit/report schemas.** Design after the recommendation
+   foundation is stronger.
+6. **Later still: RAG/self-learning.** Requires evidence objects and explicit
+   review boundaries first.
+
+Free product comes first. Paid plans are deferred until the free product proves
+value. Browser extensions are deferred until the core audit/report artifact is
+useful.
 
 ## Deferred backlog (with rationale — the why matters)
 
@@ -63,6 +79,8 @@ PRs #15–#28:
 - **Deeper scoring refinement:** latent only — `capabilityFit` is flat 1 and
   compatibility is slot-blind. Touch ONLY when a 2nd "wrong tool wins" output
   proves it necessary (the supabase-auth case was fixed via corpus, not scoring).
+- **Persistence / GitHub ingestion / agents / RAG / paid / browser extension:**
+  deferred. None is part of the refinement-context PR or peer-alternatives PR.
 
 ## Hard-won guardrails (don't relearn these the hard way)
 

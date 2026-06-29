@@ -1,18 +1,23 @@
 # Data Model Rules
 
-Rules governing the database schema and seed data.
+Rules governing the current seed data and future data model. Current trusted
+runtime data is the canonical capability taxonomy plus the curated seed corpus;
+database persistence is deferred.
 
 ---
 
-## Core Entities
+## Current Core Entities
 
-The data model has five core entities. Do not add entities without updating `docs/DATA_MODEL.md`.
+Do not add entities without updating the relevant docs.
 
 1. **Capability** — a system requirement (auth, database, vector storage)
 2. **Tool** — an implementation of one or more capabilities
 3. **Relationship** — a typed connection between two tools
-4. **Architecture** — a saved collection of capability + tool selections
-5. **ArchitectureOutcome** — user-reported outcome after 14 days
+
+Deferred persistence concepts:
+
+4. **Architecture** — a future saved collection of capability + tool selections
+5. **ArchitectureOutcome** — a future user-reported outcome after follow-up
 
 ---
 
@@ -45,6 +50,9 @@ The data model has five core entities. Do not add entities without updating `doc
 
 ## Architectures
 
+Architecture persistence is deferred. Do not add saved architecture storage,
+saved lists, or outcome collection unless that work is explicitly scoped.
+
 - `project_description` stores the original user input verbatim — do not sanitize or truncate.
 - `recommendation_rationale` is a per-tool map (`tool_id → string`), not a single string.
 - Architecture IDs are UUIDs generated at creation time.
@@ -53,7 +61,7 @@ The data model has five core entities. Do not add entities without updating `doc
 
 ## Architecture Outcomes
 
-- Outcomes are recorded 14 days after architecture creation.
+- Outcome collection is future work, after persistence and review boundaries are scoped.
 - Valid status values: `using-as-recommended`, `modified-slightly`, `replaced-multiple`, `abandoned`.
 - `modifications` and `replaced_tools` are nullable — only populated on modification/abandonment.
 
@@ -63,5 +71,5 @@ The data model has five core entities. Do not add entities without updating `doc
 
 - Phase 1 seed data lives in `data/seed/` (`tools.json`, `relationships.json`). Capabilities are **not** seed data — they come from the canonical taxonomy (see Capabilities above).
 - Target: 50–100 tools covering core capabilities.
-- Tool and relationship seed data is the source of truth for the MVP corpus. The database is populated from it.
-- Do not hardcode tool data in application code — always reference from seed/db.
+- Tool and relationship seed data is the source of truth for the MVP corpus. There is no database population step today.
+- Do not hardcode tool data in application code — always reference the seed corpus.

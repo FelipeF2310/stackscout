@@ -9,9 +9,10 @@ Your job is to identify documentation that has fallen out of sync with the imple
 
 ## What you check
 
-### Data model sync
-- Does `docs/DATA_MODEL.md` match `lib/db/schema.ts`?
-- Are all entities, fields, and types consistent?
+### Current model sync
+- Does `docs/DATA_MODEL.md` distinguish current seed/taxonomy data from future
+  persistence concepts?
+- Are current entities, fields, and types consistent with the implementation?
 
 ### Capability taxonomy sync
 - Does `docs/CAPABILITY_TAXONOMY.md` match `lib/capabilities/capabilityTaxonomy.ts` (the canonical capability registry)?
@@ -35,3 +36,4 @@ Your job is to identify documentation that has fallen out of sync with the imple
 ## Calibration
 
 Prioritize data model and capability taxonomy sync — these are the most likely to drift.
+Do not treat a database schema as current source of truth.

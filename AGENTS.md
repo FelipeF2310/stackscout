@@ -1,8 +1,11 @@
 # StackScout Agent Guide
 
 This file defines the default working rules for Codex and other coding agents in
-this repository. Use `CLAUDE.md` and `docs/PRD.md` as the product source of
-truth. Consult the relevant documents under `docs/` and `.claude/rules/` before
+this repository. Before proposing work, read
+`docs/STACKSCOUT_PROJECT_ALIGNMENT.md`, `docs/NEXT_STEPS.md`, and
+`docs/ARCHITECTURE.md` for the current roadmap and implementation state. Use
+`docs/PRD.md` as broad product vision, not as the active implementation queue.
+Consult the relevant documents under `docs/` and `.claude/rules/` before
 changing domain behavior.
 
 ## Product purpose
@@ -50,6 +53,15 @@ Keep changes within the architecture-advisor experience:
 - Recommendation explanations, tradeoffs, and alternatives
 - Refinement context supported by the existing domain model
 
+Current roadmap discipline:
+
+- Prioritize the free product until it proves user value.
+- The next feature PR should activate `RefinementContext` in the live workspace.
+- The following PR should improve alternatives from capability peers.
+- Backfill fit metadata and improve scoring structure before audit/report work.
+- Defer paid features, browser extensions, persistence, GitHub ingestion,
+  runtime agents, RAG, and audit/report/evidence schemas until explicitly scoped.
+
 The Phase 1 corpus should remain small and curated: roughly 50–100 tools,
 15–20 capabilities, and 30–50 relationships. Relationship quality matters more
 than breadth.
@@ -62,6 +74,7 @@ Do not implement the following unless the user explicitly requests that scope:
 - Persistence or API routes
 - Authentication or user accounts
 - Saved architectures, saved-architecture lists, or outcome persistence
+- Paid tiers, pricing, or monetization features
 
 Also keep the PRD's MVP non-goals out of scope: code generation, IDE or browser
 extensions, trend feeds, workflow execution, team collaboration, enterprise
@@ -102,6 +115,10 @@ relevant domain documentation.
 7. Run the focused tests while iterating, then run the full required checks.
 8. Review the final diff for scope expansion, stale copy, generated artifacts,
    and unrelated edits.
+
+When available, use Matty's skills throughout development where they help with
+TypeScript correctness, focused test quality, schema design, safe refactor
+discipline, and review rigor.
 
 Do not add packages unless the task explicitly requires them. Avoid broad UI
 redesigns when a domain or pipeline change is sufficient.

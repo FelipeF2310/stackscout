@@ -1,16 +1,28 @@
 # MVP Scope
 
-## In Scope
+This file describes the **current free MVP scope**, not the whole PRD. The PRD
+is broad product vision; the current implementation queue lives in
+`STACKSCOUT_PROJECT_ALIGNMENT.md`, `NEXT_STEPS.md`, and `ARCHITECTURE.md`.
+
+## In Scope Now
 
 - Natural language project input (text prompt, 10–2000 chars)
-- Capability detection from project description (AI)
+- Deterministic capability detection from project description
 - Tool recommendations per capability
 - Recommendation explanations (simple + technical depth)
 - Tradeoff and alternative surfacing
 - Refinement options: skill level, project stage, hosting, ecosystem, model preference
-- Architecture saving
-- Saved architecture list
-- 14-day outcome survey
+- Capability-peer alternatives
+- Fit metadata (`best_for` / `avoid_if`) that improves free recommendation quality
+
+## Deferred
+
+- Architecture persistence, saved architecture lists, and outcome follow-up
+- Audit/report/evidence schemas
+- RAG and self-learning
+- GitHub ingestion and runtime agents
+- Paid features
+- Browser extensions
 
 ## Out of Scope
 
@@ -30,10 +42,10 @@ Summary:
 
 | Phase | Focus |
 |---|---|
-| 1 (MVP) | Architecture Advisor — this document |
-| 2 | Architecture Learning — drift analysis, recommendation improvement |
-| 3 | Architecture Library — community patterns, templates |
-| 4 | Architecture Intelligence — automated discovery, monitoring |
+| 1 (Free MVP) | Architecture Advisor — deterministic, seed-backed recommendations |
+| 2 | Recommendation Foundation — refinement context, peer alternatives, fit metadata, scoring structure |
+| 3 | Evidence & Review — audit/report/evidence schemas and review boundaries |
+| 4 | Learning & Intelligence — RAG/self-learning over reviewed knowledge |
 
 ## Corpus Size
 

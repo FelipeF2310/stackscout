@@ -15,8 +15,11 @@ Core entities:
 - Capability: canonical system requirement, stable slug ID
 - Tool: implementation of ≥1 capability, linked to GitHub repo
 - Relationship: typed connection between tools with confidence score
-- Architecture: saved collection of capability + tool selections
-- ArchitectureOutcome: user-reported 14-day outcome
+- Architecture: future saved collection of capability + tool selections
+- ArchitectureOutcome: future user-reported outcome
+
+Architecture persistence and outcome collection are deferred. Do not model them
+as current implementation targets unless explicitly scoped.
 
 ## What you check
 

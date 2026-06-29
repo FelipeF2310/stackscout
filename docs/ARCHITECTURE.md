@@ -67,10 +67,11 @@ scores would still drive selection — see below.)
 
 ### Data Flow — Seed Data
 
-The seed data in `data/seed/` (`tools.json`, `relationships.json`) is the
-authoritative corpus. It is loaded **into memory from the JSON files at request
-time** (`lib/corpus/corpus.ts`); loading the corpus also populates the
-in-memory relationship graph. There is no database and no migration step.
+The seed data in `data/seed/` (`tools.json`, `relationships.json`) plus the
+canonical capability taxonomy are the current trusted data. The seed corpus is
+loaded **into memory from the JSON files at request time**
+(`lib/corpus/corpus.ts`); loading the corpus also populates the in-memory
+relationship graph. There is no database and no migration step.
 
 ### Key Files
 
@@ -110,9 +111,10 @@ GitHub." The governing principle (from `REPO_MEMORY_AND_LEARNING.md`):
 - **Review / trust boundary** — a proposal becomes part of StackScout's memory
   only after an explicit review path (human or tightly-scoped validation).
   Storage is the line between "a model said so" and "StackScout knows."
-- **Persistence / trusted repo intelligence** — a database (e.g. Drizzle + a
-  Postgres host) storing the **reviewed, structured repo intelligence** plus
-  saved architectures and outcome surveys; the corpus also moves out of flat JSON.
+- **Persistence / trusted repo intelligence** — later, after the free product and
+  review boundaries justify it, a database could store **reviewed, structured
+  repo intelligence** plus saved architectures and outcomes; the corpus could
+  also move out of flat JSON.
 - **Product-fit recommendation modeling** — the runtime reads trusted structured
   data and explains **product fit, pairings, tradeoffs, and alternatives** — not
   broad repo dumping and not generic model output.
@@ -125,8 +127,12 @@ the final selection come from reviewed, structured data. That boundary (not the
 absence of AI) is what keeps recommendations accountable. The deterministic engine
 today is the trustworthy base that layer builds on.
 
-The immediate next step is a **codebase alignment audit focused on product-fit
-recommendation modeling**. See
-[`STACKSCOUT_PROJECT_ALIGNMENT.md`](./STACKSCOUT_PROJECT_ALIGNMENT.md) and
+The immediate next feature step is **activating `RefinementContext` in the live
+workspace flow**, followed by capability-peer alternatives, fit metadata
+backfill, and only then scoring-structure improvements if recommendation review
+proves they are needed. Evidence/audit/report schemas come later; RAG and
+self-learning come later still, after evidence objects and review boundaries
+exist. See [`STACKSCOUT_PROJECT_ALIGNMENT.md`](./STACKSCOUT_PROJECT_ALIGNMENT.md),
+[`NEXT_STEPS.md`](./NEXT_STEPS.md), and
 [`REPO_MEMORY_AND_LEARNING.md`](./REPO_MEMORY_AND_LEARNING.md) for the full
 vision and phasing.

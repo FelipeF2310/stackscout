@@ -1,5 +1,9 @@
 # Security Rules
 
+API routes, AI calls, GitHub integration, and database guidance below is
+future/conditional. It is not permission to implement those systems in the
+current free MVP; add them only when explicitly scoped.
+
 ---
 
 ## Input Validation
@@ -12,7 +16,7 @@
 
 ---
 
-## API Routes
+## API Routes (Future / Conditional)
 
 - All API routes must validate request body with the corresponding Zod schema.
 - Return 400 for validation errors with a structured error response.
@@ -21,7 +25,7 @@
 
 ---
 
-## AI Prompts
+## AI Prompts (Future / Conditional)
 
 - Use system prompts to constrain model behavior — do not rely on user-facing instructions.
 - Do not include user input in system prompts.
@@ -30,7 +34,7 @@
 
 ---
 
-## GitHub Integration
+## GitHub Integration (Future / Conditional)
 
 - GitHub API calls are read-only (metadata only).
 - Use a personal access token scoped to `public_repo:read` only.
@@ -42,4 +46,5 @@
 
 - Architecture IDs in URLs are UUIDs — validate format before querying.
 - Do not expose `tool_id` or `capability_id` internals in public API responses if not needed.
-- Outcome survey responses must be associated with a valid architecture_id.
+- Outcome responses are future persistence work and must be associated with a
+  valid architecture_id if that system is later built.

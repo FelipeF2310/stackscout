@@ -23,7 +23,7 @@ output.
 3. **Evaluate** a specific repo — is it a missing puzzle piece, what does it pair
    with, what does it replace, and when is it worth using?
 
-_Last updated: 2026-06-24._
+_Last updated: 2026-06-29._
 
 ---
 
@@ -287,23 +287,28 @@ the canonical capability taxonomy and a seed relationship graph. That's it.
 
 A phased path, smallest-justifiable-step first (each its own planning + PR cycle):
 
-1. **Strengthen relationship memory in the existing corpus** — start with the
-   current `data/seed/relationships.json` shape, enrich relationship types
-   carefully, and add validation/tests before considering new storage. No DB.
-   (Closest, lowest-risk.)
-2. **Define the evidence object schema** — design first, as a doc; then a small
-   structural PR.
+First strengthen the free recommendation foundation: activate refinement context,
+improve alternatives from capability peers, backfill `best_for` / `avoid_if`, and
+only then improve scoring structure if review shows a concrete need.
+
+After that foundation:
+
+1. **Define evidence/audit/report schemas** — design first, as docs; then small
+   structural PRs.
+2. **Define review boundaries** — make clear how proposed facts become trusted
+   knowledge.
 3. **Define the outcome model** — states + reason codes as a schema, before any
    collection.
 4. **Add agent-assisted ingestion** — propose-only workers writing to a review
-   path, once the schemas above exist.
+   path, once schemas and review boundaries exist.
 5. **Add RAG** — retrieval over trusted memory to support (not replace) the
    recommender.
 6. **Add selective agentic behavior** — Tier 3/4, only where ambiguity or trust
    needs justify it.
 
 Earlier phases unlock later ones. Skipping ahead (e.g. agents before schemas, RAG
-before relationship memory) is the failure mode this document exists to prevent.
+before evidence/review boundaries) is the failure mode this document exists to
+prevent.
 
 ---
 
