@@ -406,5 +406,13 @@
     "relationship_type": "alternative-to",
     "confidence_score": 0.85,
     "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-052",
+    "source_tool_id": "nextjs",
+    "target_tool_id": "astro",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
   }
 ]
