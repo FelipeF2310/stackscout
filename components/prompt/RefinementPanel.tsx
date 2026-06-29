@@ -6,9 +6,15 @@ interface Props {
   value: RefinementContext
   onChange: (next: RefinementContext) => void
   disabled?: boolean
+  showModelPreference?: boolean
 }
 
-export default function RefinementPanel({ value, onChange, disabled }: Props) {
+export default function RefinementPanel({
+  value,
+  onChange,
+  disabled,
+  showModelPreference = true,
+}: Props) {
   function update(patch: Partial<RefinementContext>) {
     onChange({ ...value, ...patch })
   }
@@ -84,22 +90,24 @@ export default function RefinementPanel({ value, onChange, disabled }: Props) {
           </select>
         </label>
 
-        <label className="space-y-1 col-span-2">
-          <span className="text-xs text-muted-foreground">Model preference</span>
-          <select
-            value={value.modelPreference ?? ''}
-            onChange={(e) =>
-              update({ modelPreference: e.target.value as RefinementContext['modelPreference'] || undefined })
-            }
-            disabled={disabled}
-            className="w-full rounded border p-2 text-sm"
-          >
-            <option value="">No preference</option>
-            <option value="anthropic">Anthropic</option>
-            <option value="openai">OpenAI</option>
-            <option value="open-source">Open Source</option>
-          </select>
-        </label>
+        {showModelPreference ? (
+          <label className="space-y-1 col-span-2">
+            <span className="text-xs text-muted-foreground">Model preference</span>
+            <select
+              value={value.modelPreference ?? ''}
+              onChange={(e) =>
+                update({ modelPreference: e.target.value as RefinementContext['modelPreference'] || undefined })
+              }
+              disabled={disabled}
+              className="w-full rounded border p-2 text-sm"
+            >
+              <option value="">No preference</option>
+              <option value="anthropic">Anthropic</option>
+              <option value="openai">OpenAI</option>
+              <option value="open-source">Open Source</option>
+            </select>
+          </label>
+        ) : null}
       </div>
     </div>
   )

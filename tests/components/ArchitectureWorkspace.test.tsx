@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 import { recommendArchitecture } from '../../lib/recommendations/recommendArchitecture'
 import { detectCapabilitiesWithEvidence } from '../../lib/capabilities/detectCapabilities'
+import type { RefinementContext } from '../../lib/recommendations/generateArchitecture'
 
 // The canonical submitted state must be the two-pane workspace, never the old
 // stacked-results shell. These tests render the workspace from real deterministic
@@ -15,12 +16,23 @@ vi.mock('next/link', () => ({
   ),
 }))
 
+const navigationMocks = vi.hoisted(() => ({
+  replace: vi.fn(),
+  searchParams: new URLSearchParams('idea=Build+a+PDF+chatbot'),
+}))
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ replace: navigationMocks.replace }),
+  usePathname: () => '/workspace',
+  useSearchParams: () => navigationMocks.searchParams,
+}))
+
 import ArchitectureWorkspace from '../../components/workspace/ArchitectureWorkspace'
 
 const PROMPT = 'Build a PDF chatbot for internal company documents'
 
-async function renderWorkspace(): Promise<string> {
-  const result = await recommendArchitecture(PROMPT)
+async function renderWorkspace(context: RefinementContext = {}): Promise<string> {
+  const result = await recommendArchitecture(PROMPT, context)
   const evidence = detectCapabilitiesWithEvidence(PROMPT)
   vi.stubGlobal('React', React)
   try {
@@ -32,6 +44,7 @@ async function renderWorkspace(): Promise<string> {
         alternatives={result.alternatives}
         rationale={result.architecture.architecture_rationale}
         evidence={evidence}
+        refinementContext={context}
       />
     )
   } finally {
@@ -127,6 +140,17 @@ describe('ArchitectureWorkspace (canonical submitted state)', () => {
     expect(html).toContain('Consider another option if:')
     // the actual curated phrase renders, not a generic label
     expect(html).toContain(htmlEscape(withFit.best_for[0]))
+  })
+
+  it('renders URL-backed refinement controls without model-provider scoring controls', async () => {
+    const html = await renderWorkspace({ hostingPreference: 'self-hosted' })
+
+    expect(html).toContain('Refine recommendations')
+    expect(html).toContain('Skill level')
+    expect(html).toContain('Project stage')
+    expect(html).toContain('Hosting')
+    expect(html).toContain('Ecosystem')
+    expect(html).not.toContain('Model preference')
   })
 })
 

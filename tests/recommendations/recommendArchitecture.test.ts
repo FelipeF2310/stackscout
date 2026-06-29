@@ -118,4 +118,28 @@ describe('recommendArchitecture (end-to-end, deterministic)', () => {
       }
     }
   })
+
+  it('uses refinement context to change the auth recommendation while preserving defaults', async () => {
+    const prompt = 'Build authentication with login and sessions'
+
+    const defaultResult = await recommendArchitecture(prompt)
+    const selfHostedResult = await recommendArchitecture(prompt, {
+      hostingPreference: 'self-hosted',
+    })
+
+    expect(selectedToolForCapability(defaultResult, 'auth')).toBe('clerk')
+    expect(selectedToolForCapability(selfHostedResult, 'auth')).toBe('authjs')
+    expect(selfHostedResult.architecture.architecture_rationale).toMatch(/self-hosted/i)
+  })
 })
+
+type Result = Awaited<ReturnType<typeof recommendArchitecture>>
+
+function selectedToolForCapability(
+  result: Result,
+  capabilityId: string
+): string | undefined {
+  return result.architecture.selected_tools.find((tool) =>
+    tool.capability_ids.includes(capabilityId)
+  )?.tool_id
+}

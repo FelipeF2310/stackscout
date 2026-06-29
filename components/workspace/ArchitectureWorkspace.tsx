@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Capability } from '@/lib/capabilities/capabilityTypes'
 import type { CapabilityEvidence } from '@/lib/capabilities/detectCapabilities'
 import type { ToolExplanation } from '@/lib/recommendations/explainRecommendation'
+import type { RefinementContext } from '@/lib/recommendations/generateArchitecture'
 import type { CapabilityAlternatives } from '@/lib/recommendations/recommendArchitecture'
 import ConversationPane from './ConversationPane'
 import ArchitectureBrief from './ArchitectureBrief'
@@ -13,6 +14,7 @@ export interface ArchitectureWorkspaceProps {
   alternatives: CapabilityAlternatives[]
   rationale: string
   evidence: CapabilityEvidence[]
+  refinementContext: RefinementContext
 }
 
 // Canonical submitted state: a two-pane conversational workspace.
@@ -26,6 +28,7 @@ export default function ArchitectureWorkspace({
   alternatives,
   rationale,
   evidence,
+  refinementContext,
 }: ArchitectureWorkspaceProps) {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -42,7 +45,12 @@ export default function ArchitectureWorkspace({
       </header>
 
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[minmax(0,42fr)_minmax(0,58fr)] min-h-0">
-        <ConversationPane idea={idea} capabilities={capabilities} evidence={evidence} />
+        <ConversationPane
+          idea={idea}
+          capabilities={capabilities}
+          evidence={evidence}
+          refinementContext={refinementContext}
+        />
         <ArchitectureBrief
           idea={idea}
           capabilities={capabilities}

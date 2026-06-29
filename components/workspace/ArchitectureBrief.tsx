@@ -111,7 +111,7 @@ export default function ArchitectureBrief({
             </ul>
           </div>
           <p className="sm:col-span-2 text-xs text-[hsl(var(--faint))]">
-            Scope shown as safe defaults — refine them in the conversation (coming next).
+            Scope shown as safe defaults — refine them in the conversation.
           </p>
         </section>
 

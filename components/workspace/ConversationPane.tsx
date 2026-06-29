@@ -1,18 +1,26 @@
+import { Suspense } from 'react'
 import type { Capability } from '@/lib/capabilities/capabilityTypes'
 import type { CapabilityEvidence } from '@/lib/capabilities/detectCapabilities'
+import type { RefinementContext } from '@/lib/recommendations/generateArchitecture'
 import DetectionTransparency from '../architecture/DetectionTransparency'
+import RefinementControls from './RefinementControls'
 
 interface Props {
   idea: string
   capabilities: Capability[]
   evidence: CapabilityEvidence[]
+  refinementContext: RefinementContext
 }
 
-// Left pane: the guided conversation. Foundation = non-interactive — it reflects
-// what was understood (echoed idea, Architecture Mode, detected capabilities) and
-// shows a review/understanding card. Interactive clarifying questions and real
-// refinement are deferred (no RefinementContext changes here).
-export default function ConversationPane({ idea, capabilities, evidence }: Props) {
+// Left pane: the guided conversation. It reflects what was understood (echoed
+// idea, Architecture Mode, detected capabilities), exposes URL-backed
+// refinement controls, and shows a review/understanding card.
+export default function ConversationPane({
+  idea,
+  capabilities,
+  evidence,
+  refinementContext,
+}: Props) {
   const count = capabilities.length
 
   return (
@@ -45,7 +53,11 @@ export default function ConversationPane({ idea, capabilities, evidence }: Props
         {/* reflected capabilities */}
         <DetectionTransparency evidence={evidence} />
 
-        {/* non-interactive review / understanding card */}
+        <Suspense fallback={null}>
+          <RefinementControls value={refinementContext} />
+        </Suspense>
+
+        {/* review / understanding card */}
         <div className="rounded-xl border p-4 space-y-2">
           <div className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">
             Review
@@ -55,8 +67,8 @@ export default function ConversationPane({ idea, capabilities, evidence }: Props
             {count === 1 ? 'capability' : 'capabilities'}. A draft Architecture Brief is on the right.
           </p>
           <p className="text-xs text-[hsl(var(--faint))]">
-            Clarifying questions &amp; refinement are coming next — this draft uses StackScout&apos;s
-            deterministic analysis as a starting point.
+            Refine the context to update this draft through StackScout&apos;s deterministic analysis.
+            Clarifying questions are still later.
           </p>
         </div>
       </div>
