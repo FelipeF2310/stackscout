@@ -63,10 +63,9 @@ Cursor's brand, colors, typography, or IDE chrome.
 ## Scrapped direction (must not guide implementation)
 
 The **old stacked results-page** is scrapped: a single page that, after input,
-renders `ArchitectureSummary` + capability chips + `RecommendedStack` +
-`AlternativeTools` stacked vertically in functional MVP styling. It is **not** the
-product. Do not build toward it, and do not treat the current `app/page.tsx`
-layout as the target.
+renders summary, capability chips, stack, and alternatives vertically in
+functional MVP styling. It is **not** the product. Do not build toward it, and do
+not treat the current `app/page.tsx` layout as the target.
 
 ---
 

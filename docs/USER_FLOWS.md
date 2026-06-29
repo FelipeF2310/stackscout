@@ -16,7 +16,7 @@
 ### Step 1: Homepage
 User lands on `/`. Sees the prompt: "What are you building?"
 
-Component: `components/prompt/ProjectPrompt.tsx`
+Component: removed legacy prompt UI.
 
 ### Step 2: Submit Project Description
 User types a project description and submits.
@@ -34,12 +34,12 @@ The system:
 3. Generates rationale and explanations
 
 User sees:
-- `ArchitectureSummary` — overall architecture rationale
+- overall architecture rationale
 - `CapabilityList` — detected capabilities
-- `RecommendedStack` — tools per capability
-- `ToolRecommendationCard` — per tool: name, simple explanation, tradeoffs
-- `AlternativeTools` — alternatives per capability
-- `TradeoffExplainer` — opt-in technical depth
+- tools per capability
+- per-tool name, simple explanation, and tradeoffs
+- alternatives per capability
+- opt-in technical depth
 
 ### Step 4: Optional Refinement
 User can refine via `RefinementPanel`:

@@ -65,10 +65,10 @@ describe('ArchitectureWorkspace (canonical submitted state)', () => {
 
   it('does NOT render the old stacked results shell', async () => {
     const html = await renderWorkspace()
-    expect(html).not.toContain('Architecture for') // old ArchitectureSummary
-    expect(html).not.toContain('Recommended stack') // old RecommendedStack
-    expect(html).not.toContain('Alternatives to consider') // old AlternativeTools
-    // old ProjectPrompt example chips
+    expect(html).not.toContain('Architecture for') // old results summary heading
+    expect(html).not.toContain('Recommended stack') // old stack heading
+    expect(html).not.toContain('Alternatives to consider') // old alternatives heading
+    // old prompt example chips
     expect(html).not.toContain('AI customer support agent')
     expect(html).not.toContain('Internal analytics dashboard')
   })
