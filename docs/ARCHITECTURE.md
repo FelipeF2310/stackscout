@@ -32,24 +32,28 @@ Everything below is **deterministic**. The entry point is
 `/workspace` server component.
 
 ```
-Prompt (?idea=…)
+Prompt (?idea=… + optional refinement params)
   → Capability detection      (lib/capabilities/detectCapabilities.ts)
       keyword/synonym matching against the canonical taxonomy, with evidence
   → Tool scoring per capability (lib/recommendations/scoreTools.ts)
-      deterministic score: capability fit, context fit, compatibility, maintenance
+      deterministic score: capability fit, URL-backed context fit,
+      compatibility, maintenance
   → Architecture assembly      (lib/recommendations/generateArchitecture.ts)
       picks the top-scored tool per capability; one card per tool
   → Explanations               (lib/recommendations/explainRecommendation.ts
                                 + lib/recommendations/explanationCopy.ts)
       deterministic, templated simple/why/tradeoff/fits-with copy
   → Alternatives               (lib/recommendations/alternatives.ts)
-      same-capability peers via the relationship graph, each with a reason
+      relationship-backed alternatives plus same-capability peer fallback,
+      each with a reason
   → Client render              (Architecture Brief in the two-pane workspace)
 ```
 
 Capabilities come from the canonical taxonomy
 (`lib/capabilities/capabilityTaxonomy.ts`); there is no separate capability seed
 file. Zod schemas in `lib/validation/` define the input/output shapes.
+The live workspace passes parsed URL refinement params into
+`recommendArchitecture`; absent refinement params preserve the default path.
 
 ### Separation of Concerns
 
@@ -60,6 +64,10 @@ Today, **all selection and explanation is deterministic**:
   chosen, so neighbouring choices influence later ones.
 - **Templated copy** produces the simple/why/tradeoff/fits-with/alternative
   text — generated from corpus data, not from a model.
+- **Product-fit metadata** (`best_for` / `avoid_if`) helps explanations and
+  alternative reasons express when a tool fits or when another peer may be
+  preferable. Current local `main` includes a focused PDF/RAG peer metadata
+  slice.
 
 No model output is used as a score, and no model is called at all in the current
 build. (In the future direction, an LLM would *explain* and help *detect*, but
@@ -127,12 +135,13 @@ the final selection come from reviewed, structured data. That boundary (not the
 absence of AI) is what keeps recommendations accountable. The deterministic engine
 today is the trustworthy base that layer builds on.
 
-The immediate next feature step is **activating `RefinementContext` in the live
-workspace flow**, followed by capability-peer alternatives, fit metadata
-backfill, and only then scoring-structure improvements if recommendation review
-proves they are needed. Evidence/audit/report schemas come later; RAG and
-self-learning come later still, after evidence objects and review boundaries
-exist. See [`STACKSCOUT_PROJECT_ALIGNMENT.md`](./STACKSCOUT_PROJECT_ALIGNMENT.md),
+Current local `main` already includes refinement-context activation,
+capability-peer alternatives, and focused RAG peer fit metadata. The default next
+product slice is deployment/runtime metadata; scoring-structure changes should
+wait for concrete wrong-winner evidence. Evidence/audit/report schemas come
+later; RAG and self-learning come later still, after evidence objects and review
+boundaries exist. See
+[`STACKSCOUT_PROJECT_ALIGNMENT.md`](./STACKSCOUT_PROJECT_ALIGNMENT.md),
 [`NEXT_STEPS.md`](./NEXT_STEPS.md), and
 [`REPO_MEMORY_AND_LEARNING.md`](./REPO_MEMORY_AND_LEARNING.md) for the full
 vision and phasing.

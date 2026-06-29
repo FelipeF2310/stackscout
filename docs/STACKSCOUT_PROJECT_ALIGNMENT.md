@@ -83,9 +83,9 @@ State this plainly to resist drift:
 
 ---
 
-## 5. Current completed milestones (landed on `main`)
+## 5. Current completed milestones (current local `main`)
 
-Already built and merged — **do not redo**:
+Already present in current branch history — **do not redo**:
 
 - **Deterministic recommendation foundation** — capability detection → tool
   scoring → architecture generation → explanations, all deterministic.
@@ -101,6 +101,12 @@ Already built and merged — **do not redo**:
   - `data/seed/capabilities.json` **removed** (was a duplicate).
 - **Legacy results UI cleanup** — orphaned pre-workspace prompt/results
   components and their dead tests were removed; the live flow is the workspace.
+- **Refinement-context activation** — the live workspace passes URL-backed
+  refinement context into deterministic recommendations.
+- **Capability-peer alternatives** — alternatives now fall back to
+  same-capability peers when explicit alternative relationships are missing.
+- **Focused RAG peer fit metadata** — `best_for` / `avoid_if` coverage was
+  strengthened for the PDF/RAG document workflow slice.
 
 ---
 
@@ -203,20 +209,21 @@ Current product direction is **free product first**. Paid plans and browser
 extensions are deferred until the free architecture-advisor experience proves
 value and the core audit/report artifact is useful.
 
+Recent local `main` commits completed three recommendation-foundation slices:
+URL-backed refinement context, capability-peer alternatives, and focused RAG
+peer `best_for` / `avoid_if` metadata.
+
 Near-term PR order:
 
-1. **Activate `RefinementContext` in the live workspace flow.** The model already
-   supports context; the live workspace needs to pass it deliberately.
-2. **Improve alternatives from capability peers.** Alternatives should be useful
-   same-capability choices, not generic tool lists.
-3. **Backfill `best_for` / `avoid_if` fit metadata.** Grow decision quality in
-   the free product before adding new systems.
-4. **Improve scoring structure if proven necessary** — for example
+1. **Default next product PR: deployment/runtime metadata slice.** Continue
+   strengthening free recommendation quality through focused product-fit
+   metadata and explanation improvements.
+2. **Improve scoring structure only if proven necessary** — for example
    `primary_capability` or per-capability tool role, only after recommendation
-   review shows a concrete need.
-5. **Design evidence/audit/report schemas later.** Do not start this until the
+   review shows concrete wrong-winner evidence.
+3. **Design evidence/audit/report schemas later.** Do not start this until the
    recommendation foundation is stronger.
-6. **Add RAG/self-learning later still**, only after evidence objects and review
+4. **Add RAG/self-learning later still**, only after evidence objects and review
    boundaries exist.
 
 Still parked (not the current focus):

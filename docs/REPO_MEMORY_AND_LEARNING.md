@@ -287,9 +287,11 @@ the canonical capability taxonomy and a seed relationship graph. That's it.
 
 A phased path, smallest-justifiable-step first (each its own planning + PR cycle):
 
-First strengthen the free recommendation foundation: activate refinement context,
-improve alternatives from capability peers, backfill `best_for` / `avoid_if`, and
-only then improve scoring structure if review shows a concrete need.
+The free recommendation foundation has recently been strengthened in local
+`main` by activating refinement context, improving alternatives from capability
+peers, and backfilling focused `best_for` / `avoid_if` metadata. Continue with
+deployment/runtime metadata next by default; improve scoring structure only if
+recommendation review shows concrete wrong-winner evidence.
 
 After that foundation:
 

@@ -51,14 +51,19 @@ Keep changes within the architecture-advisor experience:
 - Tool recommendations per capability
 - Compatibility-aware architecture assembly
 - Recommendation explanations, tradeoffs, and alternatives
-- Refinement context supported by the existing domain model
+- URL-backed refinement context in the live workspace
+- Same-capability peer alternatives
+- Product-fit metadata (`best_for` / `avoid_if`) for explanation quality
 
 Current roadmap discipline:
 
 - Prioritize the free product until it proves user value.
-- The next feature PR should activate `RefinementContext` in the live workspace.
-- The following PR should improve alternatives from capability peers.
-- Backfill fit metadata and improve scoring structure before audit/report work.
+- Recent local commits activated refinement context, added capability-peer
+  alternatives, and backfilled focused RAG peer fit metadata; do not redo those
+  slices.
+- The next likely product PR is a deployment/runtime metadata slice.
+- Scoring review should be evidence-driven and only follow concrete
+  wrong-winner cases.
 - Defer paid features, browser extensions, persistence, GitHub ingestion,
   runtime agents, RAG, and audit/report/evidence schemas until explicitly scoped.
 

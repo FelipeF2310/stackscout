@@ -21,37 +21,44 @@ active implementation queue.
 
 Deterministic, seed-based, capability-first advisor — **no LLM / DB / network at
 request time** (deliberate trust boundary, not the end state). Built through
-PRs #15–#28:
+PRs #15–#28 plus recent local `main` commits:
 
 - **Flow:** Start (`/`) → two-pane Workspace (`/workspace?idea=…`) → living
   Architecture Brief. Legacy `/?q=` redirects into the workspace; the old
   stacked results shell is gone.
-- **Pipeline (deterministic):** detect capabilities (with evidence) → score per
-  capability → assemble (top tool per slot) → explain → alternatives. Engine in
-  `lib/`, corpus in `data/seed/`. Capabilities come from
+- **Pipeline (deterministic):** detect capabilities (with evidence) → parse
+  URL-backed refinement context → score per capability → assemble (top tool per
+  slot) → explain → alternatives. Engine in `lib/`, corpus in `data/seed/`.
+  Capabilities come from
   `lib/capabilities/capabilityTaxonomy.ts` (canonical; 17 incl. `web-scraping`).
+- **Refinement context:** current local `main` passes URL-backed refinement
+  params from the live workspace into `recommendArchitecture`; no params still
+  means the default deterministic recommendation path.
+- **Alternatives:** relationship-backed alternatives remain preferred, with
+  same-capability peer fallback when explicit alternative edges are missing.
 - **Product-fit layer:** optional `best_for` / `avoid_if` on tools, surfaced in
   the Brief and on `/tools/[id]` as "Good fit when:" / "Consider another option
   if:"; alternative reasons are fit-aware (use the alternative's `best_for`).
+  Recent local commits include a focused PDF/RAG peer metadata backfill.
 - **Guardrails:** GitHub Actions CI (`npm ci → test → build`) on every PR/push;
   golden-set regression tests over 6 canonical prompts
   (`tests/recommendations/goldenRecommendationSet.test.ts`).
 
 ## Current queue
 
-1. **Next feature PR: activate `RefinementContext` in the live workspace flow.**
-   The recommendation pipeline accepts context already; the workspace does not
-   pass it yet.
-2. **Then: alternatives from capability peers.** Make alternatives more useful
-   by grounding them in same-capability choices.
-3. **Then: fit metadata backfill.** Expand `best_for` / `avoid_if` coverage in
-   the free product before adding heavier systems.
-4. **Then: scoring structure improvements if justified.** Examples:
+Current local `main` already includes refinement-context activation,
+same-capability peer alternatives, and focused RAG peer fit metadata. Do not
+redo those slices.
+
+1. **Default next product PR: deployment/runtime metadata slice.** Keep it
+   focused on product-fit metadata and explanation quality for deployment/runtime
+   peers; do not add new systems.
+2. **Scoring structure review only if justified.** Examples:
    `primary_capability` or per-capability role, only after recommendation review
-   shows a concrete need.
-5. **Later: evidence/audit/report schemas.** Design after the recommendation
+   shows concrete wrong-winner evidence.
+3. **Later: evidence/audit/report schemas.** Design after the recommendation
    foundation is stronger.
-6. **Later still: RAG/self-learning.** Requires evidence objects and explicit
+4. **Later still: RAG/self-learning.** Requires evidence objects and explicit
    review boundaries first.
 
 Free product comes first. Paid plans are deferred until the free product proves
@@ -80,7 +87,8 @@ useful.
   compatibility is slot-blind. Touch ONLY when a 2nd "wrong tool wins" output
   proves it necessary (the supabase-auth case was fixed via corpus, not scoring).
 - **Persistence / GitHub ingestion / agents / RAG / paid / browser extension:**
-  deferred. None is part of the refinement-context PR or peer-alternatives PR.
+  deferred. None is part of the near product metadata work unless explicitly
+  scoped.
 
 ## Hard-won guardrails (don't relearn these the hard way)
 
