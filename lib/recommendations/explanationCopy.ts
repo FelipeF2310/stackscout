@@ -140,6 +140,14 @@ export function alternativeReason(
   const alt = getToolById(alternativeId)
   const capName = capabilityName(capabilityId).toLowerCase()
   if (alt) {
+    // Fit-aware reason from curated product-fit metadata (tool-level, not
+    // project-matched). Preferred over the generic trait fallback so an
+    // alternative reads as "when you'd pick this instead", not a lookalike list.
+    // best_for only keeps the inline alternatives line concise; avoid_if stays
+    // on the selected-tool block and the tool page.
+    const bestFor = alt.best_for?.[0]
+    if (bestFor) return `Good fit when: ${bestFor}.`
+
     const traits: string[] = [alt.managed ? 'managed' : 'self-hosted']
     if (alt.production_ready) traits.push('production-ready')
     else if (alt.beginner_friendly) traits.push('beginner-friendly')
