@@ -70,6 +70,29 @@ export default async function ToolPage({ params }: Props) {
         </p>
       </section>
 
+      {(data.best_for.length > 0 || data.avoid_if.length > 0) && (
+        <section className="space-y-2">
+          <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            Product fit
+          </h2>
+          {data.best_for.length > 0 && (
+            <p className="text-sm">
+              <span className="font-medium">Good fit when: </span>
+              {data.best_for.join('; ')}
+            </p>
+          )}
+          {data.avoid_if.length > 0 && (
+            <p className="text-sm text-muted-foreground">
+              <span className="font-medium">Consider another option if: </span>
+              {data.avoid_if.join('; ')}
+            </p>
+          )}
+          <p className="text-xs text-muted-foreground">
+            Tool-level fit notes — not matched to your specific project.
+          </p>
+        </section>
+      )}
+
       {data.notes.length > 0 && (
         <section className="space-y-2">
           <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">

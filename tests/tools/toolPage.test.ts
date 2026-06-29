@@ -54,6 +54,20 @@ describe('buildToolPageData', () => {
   it('returns null for an unknown toolId (build-safe 404 handling)', () => {
     expect(buildToolPageData('does-not-exist')).toBeNull()
   })
+
+  it('carries product-fit notes for tools that have them', () => {
+    for (const id of ['supabase', 'firecrawl']) {
+      const data = buildToolPageData(id)!
+      expect(data.best_for.length).toBeGreaterThan(0)
+      expect(data.avoid_if.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('exposes empty fit-note arrays for tools without metadata (render-safe)', () => {
+    const data = buildToolPageData('authjs')!
+    expect(data.best_for).toEqual([])
+    expect(data.avoid_if).toEqual([])
+  })
 })
 
 describe('getAllToolIds', () => {

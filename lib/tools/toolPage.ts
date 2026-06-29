@@ -39,6 +39,9 @@ export interface ToolPageData {
     documentation: number
   }
   notes: string[]
+  /** Curated tool-level product-fit notes (optional; empty when none). */
+  best_for: string[]
+  avoid_if: string[]
 }
 
 /** Build the tool-page view model, or null when the id is unknown (404-safe). */
@@ -90,6 +93,8 @@ export function buildToolPageData(toolId: string): ToolPageData | null {
       documentation: tool.documentation_score,
     },
     notes,
+    best_for: tool.best_for ?? [],
+    avoid_if: tool.avoid_if ?? [],
   }
 }
 
