@@ -106,4 +106,15 @@ describe('alternative reason quality', () => {
       }
     }
   })
+
+  it('surfaces fit-aware peer alternative reasons for document workflows', async () => {
+    const { alternatives } = await recommendArchitecture(
+      'Build a PDF chatbot for internal company documents'
+    )
+    const documentParsing = alternatives.find((group) => group.capability_id === 'document-parsing')
+    const unstructured = documentParsing?.alternatives.find((alt) => alt.tool_id === 'unstructured')
+
+    expect(unstructured).toBeDefined()
+    expect(unstructured?.reason_not_selected).toContain('Good fit when:')
+  })
 })

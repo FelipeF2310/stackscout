@@ -30,6 +30,18 @@ describe('alternativeReason (fit-aware)', () => {
     expect(reason).toContain(getToolById('neon')!.best_for![0])
   })
 
+  it('uses best_for for document-parsing peer alternatives without alternative-to edges', () => {
+    const reason = alternativeReason('llamaindex', 'unstructured', 'document-parsing')
+    expect(reason).toContain('Good fit when:')
+    expect(reason).toContain(getToolById('unstructured')!.best_for![0])
+  })
+
+  it('uses best_for for vector-storage peer alternatives without alternative-to edges', () => {
+    const reason = alternativeReason('qdrant', 'weaviate', 'vector-storage')
+    expect(reason).toContain('Good fit when:')
+    expect(reason).toContain(getToolById('weaviate')!.best_for![0])
+  })
+
   it('preserves relationship-specific reasons over best_for (typesense→algolia is self-hosted-alternative)', () => {
     const reason = alternativeReason('typesense', 'algolia', 'search')
     expect(reason).toMatch(/managed, hosted option/)

@@ -71,6 +71,12 @@ describe('buildToolPageData', () => {
     }
   })
 
+  it('carries product-fit notes for newly enriched RAG peer alternatives', () => {
+    const data = buildToolPageData('unstructured')!
+    expect(data.best_for.length).toBeGreaterThan(0)
+    expect(data.avoid_if.length).toBeGreaterThan(0)
+  })
+
   it('exposes empty fit-note arrays for tools without metadata (render-safe)', () => {
     const data = buildToolPageData('authjs')!
     expect(data.best_for).toEqual([])
