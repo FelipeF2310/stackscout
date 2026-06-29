@@ -51,6 +51,14 @@ describe('buildToolPageData', () => {
     expect(data.compatible_with).not.toContain('clerk')
   })
 
+  it('surfaces same-capability peer alternatives on tool pages', () => {
+    const data = buildToolPageData('vercel')!
+    const altIds = data.alternatives.map((a) => a.tool_id)
+
+    expect(altIds).toEqual(expect.arrayContaining(['railway', 'fly-io']))
+    expect(altIds).not.toContain('vercel')
+  })
+
   it('returns null for an unknown toolId (build-safe 404 handling)', () => {
     expect(buildToolPageData('does-not-exist')).toBeNull()
   })

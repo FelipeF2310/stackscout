@@ -1,10 +1,10 @@
 import {
   getToolById,
   getRelationshipsBetween,
-  getAlternativesForTool,
   getCapabilityById,
   type CorpusTool,
 } from '../corpus/corpus'
+import { getAlternativeCandidatesForCapability } from './alternativeCandidates'
 
 // Deterministic copy builders for the recommendation experience (Phase 1).
 //
@@ -71,10 +71,9 @@ export function tradeoff(tool: CorpusTool): string {
 
 /** Alternatives that serve the SAME capability (keeps suggestions capability-first). */
 export function sameCapabilityAlternatives(selectedToolId: string, capabilityId: string): string[] {
-  return getAlternativesForTool(selectedToolId)
-    .filter((tool) => tool.tool_id !== selectedToolId)
-    .filter((tool) => tool.capability_ids.includes(capabilityId))
-    .map((tool) => tool.tool_id)
+  return getAlternativeCandidatesForCapability(selectedToolId, capabilityId).map(
+    ({ tool }) => tool.tool_id
+  )
 }
 
 /** One-line "when would I switch?" naming a concrete same-capability alternative. */
@@ -105,10 +104,10 @@ export function considerAlternative(selectedToolId: string, capabilityId: string
   const alt = getToolById(alts[0])
   if (selected && alt && selected.managed !== alt.managed) {
     return alt.managed
-      ? `you would prefer a managed option — try ${alts[0]}.`
-      : `you would prefer to self-host — try ${alts[0]}.`
+      ? `you want to compare a managed peer option — try ${alts[0]}.`
+      : `you want to compare a self-hosted peer option — try ${alts[0]}.`
   }
-  return `you want to compare options — ${alts[0]} is a close alternative.`
+  return `you want to compare peer options — try ${alts[0]}.`
 }
 
 /** Reason an alternative wasn't the primary pick — directional edge or trait contrast. */
@@ -151,9 +150,9 @@ export function alternativeReason(
     const traits: string[] = [alt.managed ? 'managed' : 'self-hosted']
     if (alt.production_ready) traits.push('production-ready')
     else if (alt.beginner_friendly) traits.push('beginner-friendly')
-    return `A ${joinList(traits)} option for ${capName}.`
+    return `A ${joinList(traits)} peer option for ${capName}.`
   }
-  return `Another option for ${capName}.`
+  return `Another peer option for ${capName}.`
 }
 
 // --- small helpers ---

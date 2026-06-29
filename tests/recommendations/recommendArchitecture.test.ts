@@ -64,13 +64,24 @@ describe('recommendArchitecture (end-to-end, deterministic)', () => {
     }
   })
 
-  it('surfaces at least one alternative from the relationship graph', async () => {
+  it('surfaces at least one alternative from relationships or same-capability peers', async () => {
     const result = await recommendArchitecture(PDF_CHATBOT_PROMPT)
     const totalAlternatives = result.alternatives.reduce(
       (sum, a) => sum + a.alternatives.length,
       0
     )
     expect(totalAlternatives).toBeGreaterThan(0)
+  })
+
+  it('surfaces peer alternatives for PDF chatbot capabilities without alternative-to edges', async () => {
+    const result = await recommendArchitecture(PDF_CHATBOT_PROMPT)
+
+    expect(alternativeIdsForCapability(result, 'llm-api')).toEqual(
+      expect.arrayContaining(['vercel-ai-sdk', 'anthropic-sdk'])
+    )
+    expect(alternativeIdsForCapability(result, 'document-parsing')).toEqual(
+      expect.arrayContaining(['llamaparse', 'unstructured'])
+    )
   })
 
   it('builds a multi-tool architecture for an internal dashboard (not just Next.js)', async () => {
@@ -142,4 +153,12 @@ function selectedToolForCapability(
   return result.architecture.selected_tools.find((tool) =>
     tool.capability_ids.includes(capabilityId)
   )?.tool_id
+}
+
+function alternativeIdsForCapability(result: Result, capabilityId: string): string[] {
+  return (
+    result.alternatives
+      .find((group) => group.capability_id === capabilityId)
+      ?.alternatives.map((alternative) => alternative.tool_id) ?? []
+  )
 }

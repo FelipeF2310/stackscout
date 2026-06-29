@@ -1,4 +1,4 @@
-import { getAlternativesForTool } from '../corpus/corpus'
+import { getAlternativeCandidatesForCapability } from './alternativeCandidates'
 import { alternativeReason } from './explanationCopy'
 
 export interface AlternativeTool {
@@ -13,12 +13,10 @@ export function getAlternativesForCapability(
   selectedToolId: string,
   capabilityId: string
 ): AlternativeTool[] {
-  return getAlternativesForTool(selectedToolId)
-    .filter((tool) => tool.tool_id !== selectedToolId)
-    .filter((tool) => tool.capability_ids.includes(capabilityId))
-    .slice(0, 3)
-    .map((tool) => ({
+  return getAlternativeCandidatesForCapability(selectedToolId, capabilityId).map(
+    ({ tool }) => ({
       tool_id: tool.tool_id,
       reason_not_selected: alternativeReason(selectedToolId, tool.tool_id, capabilityId),
-    }))
+    })
+  )
 }

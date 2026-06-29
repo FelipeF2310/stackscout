@@ -81,6 +81,17 @@ describe('per-tool explanation quality', () => {
     expect(llamaindex?.simple).toMatch(/retrieval/)
     expect(llamaindex?.simple).toMatch(/document parsing/)
   })
+
+  it('names a concrete peer alternative when same-capability fallback is used', async () => {
+    const { explanations } = await recommendArchitecture(
+      'Build a PDF chatbot for internal company documents'
+    )
+    const openai = explanations.find((e) => e.tool_id === 'openai-sdk')
+
+    expect(openai).toBeDefined()
+    expect(openai?.capability_ids).toContain('llm-api')
+    expect(openai?.consider_alternative).toMatch(/try (vercel-ai-sdk|anthropic-sdk)/)
+  })
 })
 
 describe('alternative reason quality', () => {
