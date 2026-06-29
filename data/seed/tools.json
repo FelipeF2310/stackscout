@@ -502,5 +502,20 @@
     "production_ready": true,
     "managed": false,
     "ecosystems": ["typescript", "python"]
+  },
+  {
+    "tool_id": "astro",
+    "repository_name": "withastro/astro",
+    "github_url": "https://github.com/withastro/astro",
+    "best_for": ["content-driven sites like marketing pages, docs, blogs, and mostly static experiences"],
+    "avoid_if": ["you need a heavily interactive full-stack app with complex application state"],
+    "capability_ids": ["frontend-framework"],
+    "maintenance_score": 0.9,
+    "maturity_score": 0.85,
+    "documentation_score": 0.9,
+    "beginner_friendly": true,
+    "production_ready": true,
+    "managed": false,
+    "ecosystems": ["typescript"]
   }
 ]
