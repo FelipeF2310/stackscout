@@ -116,6 +116,18 @@ describe('ArchitectureWorkspace (canonical submitted state)', () => {
     const occurrences = html.split(htmlEscape(multi.simple)).length - 1
     expect(occurrences).toBe(1)
   })
+
+  it('surfaces product-fit notes (best_for / avoid_if) for tools that have them', async () => {
+    const result = await recommendArchitecture(PROMPT)
+    const withFit = result.explanations.find((e) => e.best_for.length > 0)!
+    expect(withFit).toBeDefined() // PDF stack tools carry fit notes
+
+    const html = await renderWorkspace()
+    expect(html).toContain('Good fit when:')
+    expect(html).toContain('Consider another option if:')
+    // the actual curated phrase renders, not a generic label
+    expect(html).toContain(htmlEscape(withFit.best_for[0]))
+  })
 })
 
 // react-dom escapes text content; match the rendered form, not the raw string.
