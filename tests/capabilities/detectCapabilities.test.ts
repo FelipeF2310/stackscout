@@ -124,6 +124,14 @@ describe('detectCapabilities (web scraping)', () => {
     expect(ids('scrape product prices from websites')).toContain('web-scraping')
   })
 
+  it('detects web-scraping from crawling websites language', () => {
+    const result = ids(
+      'Build an AI research assistant that crawls websites and answers questions from sources'
+    )
+    expect(result).toContain('web-scraping')
+    expect(result).toContain('llm-api')
+  })
+
   it('does not over-fire web-scraping for an observability prompt', () => {
     expect(ids('Build an uptime monitoring dashboard')).not.toContain('web-scraping')
   })
@@ -156,5 +164,38 @@ describe('detectCapabilities (auth role keywords)', () => {
 
   it('still detects auth for role-based access control', () => {
     expect(ids('Add role-based access control to a SaaS app')).toContain('auth')
+  })
+})
+
+describe('detectCapabilities (search and audit precision)', () => {
+  const ids = (prompt: string) =>
+    detectCapabilities(prompt).map((c) => c.capability_id)
+
+  it('detects product search intent without relying on the frontend fallback', () => {
+    const result = ids('Build a product search experience with filters and typo tolerance')
+    expect(result).toContain('search')
+  })
+
+  it('does not treat documentation sites as document parsing', () => {
+    const result = ids('Build a developer documentation site with search and analytics')
+    expect(result).toContain('search')
+    expect(result).not.toContain('document-parsing')
+  })
+
+  it('keeps PDF document parsing detection intact', () => {
+    const result = ids('Build a PDF chatbot for internal company documents')
+    expect(result).toContain('document-parsing')
+  })
+
+  it('does not treat audit logs as observability monitoring', () => {
+    const result = ids('Build a multi-tenant admin dashboard with role-based access and audit logs')
+    expect(result).toContain('auth')
+    expect(result).toContain('frontend-framework')
+    expect(result).toContain('database')
+    expect(result).not.toContain('monitoring')
+  })
+
+  it('keeps genuine logging and monitoring prompts mapped to monitoring', () => {
+    expect(ids('Add application logging and uptime monitoring')).toContain('monitoring')
   })
 })

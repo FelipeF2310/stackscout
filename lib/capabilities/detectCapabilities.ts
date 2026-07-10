@@ -54,9 +54,8 @@ interface TaggedKeyword {
 const d = (match: string): TaggedKeyword => ({ match, type: 'direct' })
 const i = (match: string): TaggedKeyword => ({ match, type: 'inferred' })
 
-// Keyword map — identical keywords and order to the prior baseline, now tagged.
-// `direct` = the phrase names the capability; `inferred` = implication or an
-// audit-flagged ambiguous keyword (defaulted to inferred for this phase).
+// Keyword map. `direct` = the phrase names the capability; `inferred` =
+// implication or an audit-flagged ambiguous keyword.
 const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
   auth: [
     d('auth'), d('login'), d('log in'), d('sign in'), d('sign-in'), d('sign up'),
@@ -74,6 +73,7 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     i('inventory'), i('tickets'), i('submissions'), i('entries'), i('catalog'),
     i('saas'), i('analytics dashboard'), i('analytics dashboards'),
     i('marketplace'), i('listing'), i('listings'), i('list items'),
+    i('audit logs'), i('audit records'),
   ],
   'vector-storage': [
     d('vector'), d('embedding'), d('embeddings'), d('similarity'), d('semantic'),
@@ -90,7 +90,8 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
   ],
   monitoring: [
     d('monitoring'), d('observability'), d('error tracking'),
-    d('metrics'), d('logging'), i('logs'), d('telemetry'), d('uptime'),
+    d('metrics'), d('logging'), i('application logs'), i('error logs'),
+    d('telemetry'), d('uptime'),
   ],
   'agent-framework': [
     i('agent'), i('agents'), d('agentic'), i('multi-step'), d('orchestrat'),
@@ -106,7 +107,7 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     d('question answering'), d('ask questions'),
   ],
   'document-parsing': [
-    d('pdf'), d('document'), d('documents'), d('parse'), i('extract'),
+    d('pdf'), d(' document '), d(' documents '), d('parse'), i('extract'),
     d('docx'), d('ocr'), d('word file'), d('spreadsheet'),
   ],
   email: [
@@ -128,17 +129,21 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     d('portal'), d('admin panel'), d('landing page'), i('marketplace app'),
     i('marketplace platform'),
   ],
-  search: [d('full-text search'), d('faceted'), d('search bar'), i('filtering')],
+  search: [
+    d('full-text search'), d('product search'), d('search experience'),
+    d('site with search'), d('search bar'), d('typo tolerance'),
+    d('faceted'), i('filtering'),
+  ],
   'web-scraping': [
     d('web scraping'), d('web scraper'), d('scraper'), d('scrape'),
-    d('crawler'), d('crawling'), d('crawl websites'),
-    d('extract data from websites'), i('scrape job postings'),
+    d('crawler'), d('crawling'), d('crawl websites'), d('crawls websites'),
+    d('crawling websites'), d('crawls web pages'), d('extract data from websites'),
+    i('scrape job postings'),
   ],
 }
 
 // Detection with evidence: per-capability matched signals and origin. Powers
-// the detection-transparency UI. Matching logic and ordering match the legacy
-// detector exactly, so `detectCapabilities` (below) is unchanged.
+// the detection-transparency UI.
 export function detectCapabilitiesWithEvidence(
   projectDescription: string
 ): CapabilityEvidence[] {
@@ -172,9 +177,8 @@ export function detectCapabilitiesWithEvidence(
   return evidence
 }
 
-// Compatibility wrapper. Returns the same Capability[] (same membership and
-// order) as the prior baseline detector, so the recommendation pipeline and all
-// existing tests are unchanged.
+// Compatibility wrapper. Keeps the public output shape stable for the
+// recommendation pipeline.
 export function detectCapabilities(projectDescription: string): Capability[] {
   return detectCapabilitiesWithEvidence(projectDescription).map((e) => e.capability)
 }
