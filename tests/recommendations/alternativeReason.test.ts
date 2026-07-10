@@ -42,6 +42,16 @@ describe('alternativeReason (fit-aware)', () => {
     expect(reason).toContain(getToolById('weaviate')!.best_for![0])
   })
 
+  it('uses best_for for deployment peer alternatives without alternative-to edges', () => {
+    const railwayReason = alternativeReason('vercel', 'railway', 'deployment')
+    const flyReason = alternativeReason('vercel', 'fly-io', 'deployment')
+
+    expect(railwayReason).toContain('Good fit when:')
+    expect(railwayReason).toContain(getToolById('railway')!.best_for![0])
+    expect(flyReason).toContain('Good fit when:')
+    expect(flyReason).toContain(getToolById('fly-io')!.best_for![0])
+  })
+
   it('preserves relationship-specific reasons over best_for (typesense→algolia is self-hosted-alternative)', () => {
     const reason = alternativeReason('typesense', 'algolia', 'search')
     expect(reason).toMatch(/managed, hosted option/)

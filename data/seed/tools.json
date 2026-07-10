@@ -154,7 +154,9 @@
     "beginner_friendly": true,
     "production_ready": true,
     "managed": true,
-    "ecosystems": ["typescript"]
+    "ecosystems": ["typescript"],
+    "best_for": ["frontend-first Next.js or React apps with managed previews and serverless defaults"],
+    "avoid_if": ["you need long-running services, heavy background jobs, or strong infrastructure portability"]
   },
   {
     "tool_id": "railway",
@@ -167,7 +169,9 @@
     "beginner_friendly": true,
     "production_ready": true,
     "managed": true,
-    "ecosystems": ["typescript", "python", "mixed"]
+    "ecosystems": ["typescript", "python", "mixed"],
+    "best_for": ["full-stack apps that need managed services, databases, workers, or backend processes"],
+    "avoid_if": ["you want frontend-first edge hosting or strict infrastructure control"]
   },
   {
     "tool_id": "fly-io",
@@ -180,7 +184,9 @@
     "beginner_friendly": false,
     "production_ready": true,
     "managed": true,
-    "ecosystems": ["typescript", "python", "mixed"]
+    "ecosystems": ["typescript", "python", "mixed"],
+    "best_for": ["containerized apps that need runtime control, global regions, or long-running services"],
+    "avoid_if": ["you want the simplest beginner path or fully managed platform defaults"]
   },
   {
     "tool_id": "inngest",

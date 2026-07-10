@@ -117,4 +117,15 @@ describe('alternative reason quality', () => {
     expect(unstructured).toBeDefined()
     expect(unstructured?.reason_not_selected).toContain('Good fit when:')
   })
+
+  it('surfaces fit-aware peer alternative reasons for deployment workflows', async () => {
+    const { alternatives } = await recommendArchitecture(SAAS_PROMPT)
+    const deployment = alternatives.find((group) => group.capability_id === 'deployment')
+    const deploymentPeer = deployment?.alternatives.find((alt) =>
+      ['railway', 'fly-io'].includes(alt.tool_id)
+    )
+
+    expect(deploymentPeer).toBeDefined()
+    expect(deploymentPeer?.reason_not_selected).toContain('Good fit when:')
+  })
 })

@@ -24,6 +24,17 @@ describe('product-fit metadata (best_for / avoid_if)', () => {
     }
   })
 
+  it('covers the focused deployment peer metadata slice', () => {
+    const { tools } = getCorpus()
+    const targetIds = ['vercel', 'railway', 'fly-io']
+
+    for (const toolId of targetIds) {
+      const tool = tools.find((t) => t.tool_id === toolId)!
+      expect(tool.best_for?.length ?? 0).toBeGreaterThan(0)
+      expect(tool.avoid_if?.length ?? 0).toBeGreaterThan(0)
+    }
+  })
+
   it('treats the fields as optional — tools without them still load', () => {
     const { tools } = getCorpus()
     const authjs = tools.find((t) => t.tool_id === 'authjs')!

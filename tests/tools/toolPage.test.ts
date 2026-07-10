@@ -77,6 +77,14 @@ describe('buildToolPageData', () => {
     expect(data.avoid_if.length).toBeGreaterThan(0)
   })
 
+  it('carries product-fit notes for newly enriched deployment peers', () => {
+    for (const id of ['vercel', 'railway', 'fly-io']) {
+      const data = buildToolPageData(id)!
+      expect(data.best_for.length).toBeGreaterThan(0)
+      expect(data.avoid_if.length).toBeGreaterThan(0)
+    }
+  })
+
   it('exposes empty fit-note arrays for tools without metadata (render-safe)', () => {
     const data = buildToolPageData('authjs')!
     expect(data.best_for).toEqual([])
