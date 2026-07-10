@@ -141,4 +141,16 @@ describe('alternative reason quality', () => {
     expect(yjs).toBeDefined()
     expect(yjs?.reason_not_selected).toContain('Good fit when:')
   })
+
+  it('surfaces fit-aware peer alternative reasons for scheduling workflows', async () => {
+    const { alternatives } = await recommendArchitecture(
+      'Build a background job system that sends reminders and retries failed tasks'
+    )
+    const scheduling = alternatives.find((group) => group.capability_id === 'scheduling')
+    const triggerDev = scheduling?.alternatives.find((alt) => alt.tool_id === 'trigger-dev')
+
+    expect(triggerDev).toBeDefined()
+    expect(triggerDev?.reason_not_selected).toContain('Good fit when:')
+    expect(triggerDev?.reason_not_selected).not.toContain('peer option for scheduling')
+  })
 })

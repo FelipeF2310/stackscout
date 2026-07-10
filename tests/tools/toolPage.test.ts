@@ -96,6 +96,14 @@ describe('buildToolPageData', () => {
     expect(liveblocks.alternatives.map((a) => a.tool_id)).toContain('yjs')
   })
 
+  it('carries product-fit notes for scheduling peers', () => {
+    for (const id of ['inngest', 'trigger-dev']) {
+      const data = buildToolPageData(id)!
+      expect(data.best_for.length).toBeGreaterThan(0)
+      expect(data.avoid_if.length).toBeGreaterThan(0)
+    }
+  })
+
   it('exposes empty fit-note arrays for tools without metadata (render-safe)', () => {
     const data = buildToolPageData('authjs')!
     expect(data.best_for).toEqual([])

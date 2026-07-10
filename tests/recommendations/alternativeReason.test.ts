@@ -59,6 +59,13 @@ describe('alternativeReason (fit-aware)', () => {
     expect(reason).toContain(getToolById('yjs')!.best_for![0])
   })
 
+  it('uses best_for for scheduling alternatives', () => {
+    const reason = alternativeReason('inngest', 'trigger-dev', 'scheduling')
+
+    expect(reason).toContain('Good fit when:')
+    expect(reason).toContain(getToolById('trigger-dev')!.best_for![0])
+  })
+
   it('preserves relationship-specific reasons over best_for (typesense→algolia is self-hosted-alternative)', () => {
     const reason = alternativeReason('typesense', 'algolia', 'search')
     expect(reason).toMatch(/managed, hosted option/)
