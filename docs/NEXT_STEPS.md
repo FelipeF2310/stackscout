@@ -71,10 +71,9 @@ useful.
   Next.js mainly by language/ecosystem (Svelte/Vue) = *preference*, not product
   fit. Add only with a clear product-fit contrast. (Astro went first because
   content/SSG vs full-stack app is a real architecture decision.)
-- **Realtime / collaboration capability:** needs a NEW capability (taxonomy +
-  curated tools, e.g. Liveblocks/Yjs/PartyKit, + relationships + precise
-  detector). The "realtime collaborative whiteboard" prompt is the known thin
-  case (only Frontend today).
+- **Realtime / collaboration capability:** first focused slice covers
+  Liveblocks/Yjs with precise detector coverage. Keep future expansion small;
+  do not broaden into generic WebSocket/pubsub or whiteboard UI libraries.
 - **Reconcile `REPO_MEMORY_AND_LEARNING.md` wording:** it still says "never raw
   model output at request time"; align with the PR #27-era framing —
   *unreviewed* model output is never authoritative for facts/scores/selection,

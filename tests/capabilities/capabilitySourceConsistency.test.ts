@@ -27,6 +27,7 @@ const EXPECTED_IDS = [
   'file-storage',
   'deployment',
   'scheduling',
+  'realtime-collaboration',
   'monitoring',
   'agent-framework',
   'llm-api',
@@ -55,9 +56,9 @@ const byId = (a: { capability_id: string }, b: { capability_id: string }) =>
   a.capability_id.localeCompare(b.capability_id)
 
 describe('capability source of truth (corpus reads the taxonomy)', () => {
-  it('getAllCapabilities() returns the same 17 capabilities as the taxonomy', () => {
+  it('getAllCapabilities() returns the same 18 capabilities as the taxonomy', () => {
     const corpus = getAllCapabilities()
-    expect(corpus).toHaveLength(17)
+    expect(corpus).toHaveLength(18)
     expect(corpus.map((c) => c.capability_id).sort()).toEqual([...EXPECTED_IDS].sort())
     // Same records as the canonical taxonomy.
     expect(corpus.map(onlyFields).sort(byId)).toEqual(
@@ -73,6 +74,14 @@ describe('capability source of truth (corpus reads the taxonomy)', () => {
       expect(fromCorpus).toEqual(fromTaxonomy)
     }
     expect(corpusGetCapabilityById('does-not-exist')).toBeUndefined()
+  })
+
+  it('includes realtime collaboration as an infrastructure capability', () => {
+    const capability = taxonomyGetCapabilityById('realtime-collaboration')
+
+    expect(capability).toBeDefined()
+    expect(capability?.name).toBe('Realtime Collaboration')
+    expect(capability?.category).toBe('infrastructure')
   })
 })
 

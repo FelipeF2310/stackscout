@@ -42,6 +42,24 @@ describe('detectCapabilitiesWithEvidence', () => {
     expect(agentSignal!.type).toBe('inferred')
   })
 
+  it('returns a direct signal for realtime collaboration phrases', () => {
+    const realtime = evidenceFor(
+      'Build a realtime collaborative whiteboard',
+      'realtime-collaboration'
+    )
+
+    expect(realtime).toBeDefined()
+    expect(realtime!.origin).toBe('matched')
+    expect(realtime!.signals).toContainEqual({
+      phrase: 'realtime collaborative',
+      type: 'direct',
+    })
+    expect(realtime!.signals).toContainEqual({
+      phrase: 'collaborative whiteboard',
+      type: 'direct',
+    })
+  })
+
   it('merges multiple matching keywords under a single capability', () => {
     const ev = detectCapabilitiesWithEvidence('PDF document')
     const dp = ev.filter((e) => e.capability.capability_id === 'document-parsing')

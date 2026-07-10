@@ -52,6 +52,13 @@ describe('alternativeReason (fit-aware)', () => {
     expect(flyReason).toContain(getToolById('fly-io')!.best_for![0])
   })
 
+  it('uses best_for for realtime collaboration alternatives', () => {
+    const reason = alternativeReason('liveblocks', 'yjs', 'realtime-collaboration')
+
+    expect(reason).toContain('Good fit when:')
+    expect(reason).toContain(getToolById('yjs')!.best_for![0])
+  })
+
   it('preserves relationship-specific reasons over best_for (typesense→algolia is self-hosted-alternative)', () => {
     const reason = alternativeReason('typesense', 'algolia', 'search')
     expect(reason).toMatch(/managed, hosted option/)

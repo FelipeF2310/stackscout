@@ -128,4 +128,17 @@ describe('alternative reason quality', () => {
     expect(deploymentPeer).toBeDefined()
     expect(deploymentPeer?.reason_not_selected).toContain('Good fit when:')
   })
+
+  it('surfaces fit-aware peer alternative reasons for realtime collaboration workflows', async () => {
+    const { alternatives } = await recommendArchitecture(
+      'Build a realtime collaborative whiteboard'
+    )
+    const realtime = alternatives.find(
+      (group) => group.capability_id === 'realtime-collaboration'
+    )
+    const yjs = realtime?.alternatives.find((alt) => alt.tool_id === 'yjs')
+
+    expect(yjs).toBeDefined()
+    expect(yjs?.reason_not_selected).toContain('Good fit when:')
+  })
 })

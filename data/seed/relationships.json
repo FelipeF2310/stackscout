@@ -414,5 +414,21 @@
     "relationship_type": "alternative-to",
     "confidence_score": 0.85,
     "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-053",
+    "source_tool_id": "liveblocks",
+    "target_tool_id": "yjs",
+    "relationship_type": "alternative-to",
+    "confidence_score": 0.9,
+    "source_of_truth": "manual"
+  },
+  {
+    "relationship_id": "rel-054",
+    "source_tool_id": "liveblocks",
+    "target_tool_id": "nextjs",
+    "relationship_type": "commonly-used-with",
+    "confidence_score": 0.85,
+    "source_of_truth": "manual"
   }
 ]

@@ -88,6 +88,16 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     d('schedule'), d('scheduling'), d('cron'), d('background job'), i('jobs'),
     d('queue'), i('worker'), d('recurring'), d('reminders'),
   ],
+  'realtime-collaboration': [
+    d('realtime collaborative'), d('real-time collaborative'),
+    d('realtime collaboration'), d('real-time collaboration'),
+    d('collaborative whiteboard'), d('realtime whiteboard'),
+    d('multiplayer whiteboard'), d('collaborative editor'),
+    d('collaborative editing'), d('multiplayer'), d('shared cursor'),
+    d('shared cursors'), d('live collaboration'), d('collaborative presence'),
+    d('multiplayer presence'), i('co-edit'), i('coediting'),
+    i('shared document'), i('multi-user editing'),
+  ],
   monitoring: [
     d('monitoring'), d('observability'), d('error tracking'),
     d('metrics'), d('logging'), i('application logs'), i('error logs'),
@@ -127,7 +137,7 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     d('frontend'), d('front-end'), d('web app'), d('webapp'), d('dashboard'),
     d('dashboards'), d('website'), i('saas'), i('interface'), d(' ui '),
     d('portal'), d('admin panel'), d('landing page'), i('marketplace app'),
-    i('marketplace platform'),
+    i('marketplace platform'), i('whiteboard'),
   ],
   search: [
     d('full-text search'), d('product search'), d('search experience'),

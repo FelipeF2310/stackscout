@@ -38,6 +38,12 @@ export const CAPABILITY_TAXONOMY: Capability[] = [
     category: 'infrastructure',
   },
   {
+    capability_id: 'realtime-collaboration',
+    name: 'Realtime Collaboration',
+    description: 'Presence, multiplayer state sync, shared cursors, and collaborative editing for live multi-user applications',
+    category: 'infrastructure',
+  },
+  {
     capability_id: 'monitoring',
     name: 'Monitoring',
     description: 'Error tracking, performance monitoring, and observability',

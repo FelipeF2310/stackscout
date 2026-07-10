@@ -137,6 +137,44 @@ describe('detectCapabilities (web scraping)', () => {
   })
 })
 
+describe('detectCapabilities (realtime collaboration)', () => {
+  const ids = (prompt: string) =>
+    detectCapabilities(prompt).map((c) => c.capability_id)
+
+  it('detects realtime collaboration for a collaborative whiteboard', () => {
+    const result = ids('Build a realtime collaborative whiteboard')
+    expect(result).toContain('realtime-collaboration')
+    expect(result).toContain('frontend-framework')
+  })
+
+  it('detects collaborative editors and shared cursors', () => {
+    expect(ids('Build a collaborative editor for product docs')).toContain(
+      'realtime-collaboration'
+    )
+    expect(ids('Add shared cursors to a design review surface')).toContain(
+      'realtime-collaboration'
+    )
+  })
+
+  it('does not trigger from broad realtime or live wording alone', () => {
+    expect(ids('Build a realtime analytics dashboard')).not.toContain(
+      'realtime-collaboration'
+    )
+    expect(ids('Build a dashboard with live updates')).not.toContain(
+      'realtime-collaboration'
+    )
+  })
+
+  it('does not trigger from email notifications or generic team collaboration', () => {
+    expect(ids('Send email notifications for product updates')).not.toContain(
+      'realtime-collaboration'
+    )
+    expect(ids('Build a team collaboration dashboard')).not.toContain(
+      'realtime-collaboration'
+    )
+  })
+})
+
 // Auth keyword precision (PR #22): bare 'role'/'roles' were ambiguous — job-role
 // language ("new roles") wrongly triggered Auth. Replaced with precise RBAC
 // phrases so real auth/RBAC still detects while job-role prose does not.

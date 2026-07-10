@@ -518,6 +518,36 @@
     "ecosystems": ["typescript", "python"]
   },
   {
+    "tool_id": "liveblocks",
+    "repository_name": "liveblocks/liveblocks",
+    "github_url": "https://github.com/liveblocks/liveblocks",
+    "best_for": ["managed collaborative app features like presence, comments, notifications, and multiplayer state"],
+    "avoid_if": ["you need fully self-hosted CRDT control or a lower-level sync primitive"],
+    "capability_ids": ["realtime-collaboration"],
+    "maintenance_score": 0.9,
+    "maturity_score": 0.85,
+    "documentation_score": 0.9,
+    "beginner_friendly": true,
+    "production_ready": true,
+    "managed": true,
+    "ecosystems": ["typescript"]
+  },
+  {
+    "tool_id": "yjs",
+    "repository_name": "yjs/yjs",
+    "github_url": "https://github.com/yjs/yjs",
+    "best_for": ["CRDT-based collaborative editing and local-first shared document state"],
+    "avoid_if": ["you want a managed collaboration platform with product-ready features"],
+    "capability_ids": ["realtime-collaboration"],
+    "maintenance_score": 0.9,
+    "maturity_score": 0.9,
+    "documentation_score": 0.85,
+    "beginner_friendly": false,
+    "production_ready": true,
+    "managed": false,
+    "ecosystems": ["typescript"]
+  },
+  {
     "tool_id": "astro",
     "repository_name": "withastro/astro",
     "github_url": "https://github.com/withastro/astro",

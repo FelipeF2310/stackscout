@@ -67,13 +67,10 @@ const GOLDEN: GoldenCase[] = [
   {
     name: 'realtime collaborative whiteboard',
     prompt: 'Build a realtime collaborative whiteboard',
-    // KNOWN GAP: realtime/collaboration is not yet a capability, so this prompt
-    // currently resolves to just the frontend. Captured as current behavior —
-    // expected to change when a realtime capability lands.
-    requiredCaps: ['frontend-framework'],
+    requiredCaps: ['realtime-collaboration', 'frontend-framework'],
     forbiddenCaps: ['web-scraping'],
-    expectedTools: ['nextjs'],
-    forbiddenTools: [],
+    expectedTools: ['liveblocks', 'nextjs'],
+    forbiddenTools: ['astro'],
   },
   {
     name: 'AI customer support agent (SaaS)',

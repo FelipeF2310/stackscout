@@ -70,6 +70,12 @@ describe('tool <-> capability mapping', () => {
     }
   })
 
+  it('maps realtime collaboration to its focused peer tools', () => {
+    const toolIds = getToolsForCapability('realtime-collaboration').map((t) => t.tool_id)
+
+    expect(toolIds).toEqual(expect.arrayContaining(['liveblocks', 'yjs']))
+  })
+
   it('maps a tool to the capabilities it implements', () => {
     const capabilityIds = getCapabilitiesForTool('llamaindex').map((c) => c.capability_id)
     expect(capabilityIds).toEqual(
