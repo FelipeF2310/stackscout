@@ -3,6 +3,21 @@
 Status: **audit only — no code or runtime changes.** Prepared to scope the
 "What StackScout detected" (detection transparency) feature.
 
+> **Addendum (detector hardening, July 2026).** The substring matcher described
+> in Section 1 and the boundary-guard candidates in Section 4 are **superseded**:
+> the detector now compiles each keyword into a word-boundary regex (multi-word
+> phrases match across whitespace, normal keywords accept a trailing plural 's',
+> and explicit `stem: true` keywords match word continuations like
+> `summar` → "summarizes"). Hand-padded entries (`' ai '`, `' ui '`,
+> `' document '`, `'rest '`) were removed. Keyword changes in that pass:
+> `rest ` replaced with `rest api`/`restful`/`rest endpoint`; `team` removed
+> from auth; recall-compensation added for auth (`authentication`,
+> `authenticate`, `authenticated`, `authorization`, `oauth`) and deployment
+> (`hosted`). `internal` → auth was deliberately retained pending the
+> project-shape inference decision. Evidence phrases now report the actual
+> matched text rather than the keyword. The direct/inferred tagging model and
+> Sections 2–3 remain accurate.
+
 Scope reminder: agents may help author/review keyword tags **during
 development**. The production detector stays **deterministic** — no runtime LLM,
 no agent scoring/classification/inference. This audit proposes how to expose the

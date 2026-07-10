@@ -23,15 +23,18 @@ describe('detectCapabilitiesWithEvidence', () => {
     expect(dp!.signals).toContainEqual({ phrase: 'pdf', type: 'direct' })
   })
 
-  it('returns inferred signals for implication-only phrases (internal/team)', () => {
+  it('returns inferred signals for implication-only phrases (internal)', () => {
     const auth = evidenceFor('an internal tool for the team', 'auth')
     expect(auth).toBeDefined()
     // Every signal is an assumption — none should be presented as direct.
     expect(auth!.signals.length).toBeGreaterThan(0)
     expect(auth!.signals.every((s) => s.type === 'inferred')).toBe(true)
     expect(auth!.signals.map((s) => s.phrase)).toEqual(
-      expect.arrayContaining(['internal', 'team'])
+      expect.arrayContaining(['internal'])
     )
+    // 'team' was removed as an auth trigger (detector hardening) — too soft on
+    // its own. 'internal' is retained pending the shape-inference decision.
+    expect(auth!.signals.map((s) => s.phrase)).not.toContain('team')
   })
 
   it('surfaces audit-flagged ambiguous keywords as inferred, never direct (agent)', () => {
@@ -98,6 +101,22 @@ describe('detectCapabilitiesWithEvidence', () => {
     expect(aiSignal!.type).toBe('direct')
     // Padding must not leak into the display phrase.
     expect(llm!.signals.some((s) => s.phrase === ' ai ')).toBe(false)
+  })
+
+  it('reports the actual matched text for stem keywords, not the stem', () => {
+    const llm = evidenceFor('summarize weekly reports', 'llm-api')
+    expect(llm).toBeDefined()
+    // The keyword is the stem 'summar'; the evidence phrase must be the real
+    // word that matched so the transparency UI never shows a stump.
+    expect(llm!.signals).toContainEqual({ phrase: 'summarize', type: 'inferred' })
+    expect(llm!.signals.some((s) => s.phrase === 'summar')).toBe(false)
+  })
+
+  it('still matches keywords containing special characters', () => {
+    expect(evidenceFor('build a q&a page for the handbook', 'retrieval')).toBeDefined()
+    expect(evidenceFor('send an e-mail receipt', 'email')).toBeDefined()
+    expect(evidenceFor('a multi-step research workflow', 'agent-framework')).toBeDefined()
+    expect(evidenceFor('rebuild the front-end', 'frontend-framework')).toBeDefined()
   })
 
   it('returns capabilities in keyword-map order', () => {

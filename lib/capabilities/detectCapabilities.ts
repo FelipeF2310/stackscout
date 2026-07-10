@@ -10,9 +10,17 @@ import type { Capability } from './capabilityTypes'
 // detector will replace this later — the signatures here stay stable so the
 // swap is isolated to this file.
 //
-// Matching is plain substring containment over the lower-cased description,
-// padded with spaces so tokens like ' ai ' and ' ui ' don't match inside
-// words such as "email" or "build".
+// Matching (detector hardening)
+// -----------------------------
+// Each keyword is compiled once at module load into a word-boundary regex:
+//   - multi-word phrases match across any whitespace,
+//   - normal keywords also match a trailing plural 's',
+//   - keywords flagged `stem: true` match any word continuation
+//     (e.g. 'summar' → "summarize", "summary"; 'deploy' → "deploying").
+// This replaces the earlier raw substring containment, which produced false
+// positives like "authors" → auth and required fragile hand-padded entries
+// (' ai ', ' document ') to dodge collisions. See
+// docs/CAPABILITY_DETECTION_AUDIT.md (addendum) for the before/after audit.
 //
 // Detection evidence (PR 1 / feature/detection-evidence-model)
 // ------------------------------------------------------------
@@ -21,17 +29,15 @@ import type { Capability } from './capabilityTypes'
 //   - 'direct'   — the phrase names or clearly describes the capability.
 //   - 'inferred' — the phrase implies the capability but does not ask for it.
 // Keywords the audit flagged 'ambiguous' (broad / substring-prone) are tagged
-// 'inferred' for now so a shaky match is never presented as confirmed. See
-// docs/CAPABILITY_DETECTION_AUDIT.md. This change is behavior-preserving: the
-// keyword set, matching logic, and output order are unchanged. No keyword was
-// added, removed, reworded, or reordered.
+// 'inferred' so a shaky match is never presented as confirmed. See
+// docs/CAPABILITY_DETECTION_AUDIT.md.
 
 export type SignalType = 'direct' | 'inferred'
 export type CapabilityOrigin = 'matched' | 'assumed-floor'
 
 export interface DetectionSignal {
-  // The trigger that matched, trimmed of any matching padding for display
-  // (e.g. ' ai ' surfaces as 'ai').
+  // The actual text that matched in the (lower-cased) description — for stem
+  // keywords this is the full matched word (e.g. 'summarize', never 'summar').
   phrase: string
   type: SignalType
 }
@@ -45,47 +51,66 @@ export interface CapabilityEvidence {
 }
 
 interface TaggedKeyword {
-  // `match` is the exact string used for substring matching, including any
-  // intentional space padding. Display uses `match.trim()`.
+  // The keyword or phrase to match at word boundaries. With `stem: true` the
+  // keyword matches any continuation ('deploy' → deploying/deployed/deployment).
   match: string
   type: SignalType
+  stem?: boolean
 }
 
-const d = (match: string): TaggedKeyword => ({ match, type: 'direct' })
-const i = (match: string): TaggedKeyword => ({ match, type: 'inferred' })
+const d = (match: string, opts?: { stem: true }): TaggedKeyword => ({
+  match,
+  type: 'direct',
+  stem: opts?.stem,
+})
+const i = (match: string, opts?: { stem: true }): TaggedKeyword => ({
+  match,
+  type: 'inferred',
+  stem: opts?.stem,
+})
 
 // Keyword map. `direct` = the phrase names the capability; `inferred` =
 // implication or an audit-flagged ambiguous keyword.
+//
+// Note on 'internal' (auth): deliberately retained. "Internal tool implies
+// gated access" is a product-shape judgment, not a matching bug — its fate
+// belongs to the project-shape inference work, and removing it here would
+// regress golden outputs (internal PDF chatbot, internal analytics dashboard).
+// 'team' was removed: too soft on its own, no golden dependency.
 const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
   auth: [
-    d('auth'), d('login'), d('log in'), d('sign in'), d('sign-in'), d('sign up'),
-    d('account'), d('accounts'), i('user'), i('users'), d('session'),
-    d('permission'), d('permissions'), d('rbac'), d('role-based access'),
-    d('role based access'), d('role-based access control'),
-    d('role based access control'), i('user roles'), i('roles and permissions'),
-    i('admin'), i('internal'), d('multi-tenant'), d('tenant'), i('members'),
-    i('team'), i('saas'),
+    d('auth'), d('authentication'), d('authenticate'), d('authenticated'),
+    d('authorization'), d('oauth'), d('login'), d('log in'), d('sign in'),
+    d('sign-in'), d('sign up'), d('account'), d('accounts'), i('user'),
+    i('users'), d('session'), d('permission'), d('permissions'), d('rbac'),
+    d('role-based access'), d('role based access'),
+    d('role-based access control'), d('role based access control'),
+    i('user roles'), i('roles and permissions'), i('admin', { stem: true }),
+    i('internal'), d('multi-tenant'), d('tenant'), i('members'), i('saas'),
   ],
   database: [
-    d('database'), d('persist'), d('postgres'), d('sql'), i('records'),
-    i('record'), d('crud'), d('store data'), i('data'), i('tracking'),
-    i('track'), i('requests'), i('request'), i('reports'), i('reporting'),
-    i('inventory'), i('tickets'), i('submissions'), i('entries'), i('catalog'),
-    i('saas'), i('analytics dashboard'), i('analytics dashboards'),
-    i('marketplace'), i('listing'), i('listings'), i('list items'),
-    i('audit logs'), i('audit records'),
+    d('database'), d('persist', { stem: true }), d('postgres'), d('sql'),
+    i('records'), i('record'), d('crud'), d('store data'), i('data'),
+    i('tracking'), i('track'), i('requests'), i('request'), i('reports'),
+    i('reporting'), i('inventory'), i('tickets'), i('submissions'),
+    i('entries'), i('catalog'), i('saas'), i('analytics dashboard'),
+    i('analytics dashboards'), i('marketplace'), i('listing'), i('listings'),
+    i('list items'), i('audit logs'), i('audit records'),
   ],
   'vector-storage': [
     d('vector'), d('embedding'), d('embeddings'), d('similarity'), d('semantic'),
     d('rag'), i('chatbot'), i('search documents'),
   ],
   'file-storage': [
-    d('upload'), d('uploads'), d('file storage'), i('images'), i('assets'),
+    d('upload', { stem: true }), d('file storage'), i('images'), i('assets'),
     d('blob'), d('attachments'),
   ],
-  deployment: [d('deploy'), d('deployment'), d('hosting'), i('host'), d('ship it')],
+  deployment: [
+    d('deploy', { stem: true }), d('hosting'), i('host'), i('hosted'),
+    d('ship it'),
+  ],
   scheduling: [
-    d('schedule'), d('scheduling'), d('cron'), d('background job'), i('jobs'),
+    d('schedul', { stem: true }), d('cron'), d('background job'), i('jobs'),
     d('queue'), i('worker'), d('recurring'), d('reminders'),
   ],
   'realtime-collaboration': [
@@ -95,7 +120,7 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     d('multiplayer whiteboard'), d('collaborative editor'),
     d('collaborative editing'), d('multiplayer'), d('shared cursor'),
     d('shared cursors'), d('live collaboration'), d('collaborative presence'),
-    d('multiplayer presence'), i('co-edit'), i('coediting'),
+    d('multiplayer presence'), i('co-edit', { stem: true }), i('coediting'),
     i('shared document'), i('multi-user editing'),
   ],
   monitoring: [
@@ -104,12 +129,13 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     d('telemetry'), d('uptime'),
   ],
   'agent-framework': [
-    i('agent'), i('agents'), d('agentic'), i('multi-step'), d('orchestrat'),
-    d('tool calling'), d('autonomous'),
+    i('agent'), i('agents'), d('agentic'), i('multi-step'),
+    d('orchestrat', { stem: true }), d('tool calling'), d('autonomous'),
   ],
   'llm-api': [
-    d('llm'), d(' ai '), d('gpt'), d('claude'), i('chatbot'), i('assistant'),
-    i('summar'), d('generate text'), d('nlp'), i('conversational'), d('copilot'),
+    d('llm'), d('ai'), d('gpt'), d('claude'), i('chatbot'), i('assistant'),
+    i('summar', { stem: true }), d('generate text'), d('nlp'),
+    i('conversational'), d('copilot'),
   ],
   retrieval: [
     d('rag'), d('retrieval'), i('search documents'), d('knowledge base'),
@@ -117,7 +143,7 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     d('question answering'), d('ask questions'),
   ],
   'document-parsing': [
-    d('pdf'), d(' document '), d(' documents '), d('parse'), i('extract'),
+    d('pdf'), d('document'), d('documents'), d('parse'), i('extract', { stem: true }),
     d('docx'), d('ocr'), d('word file'), d('spreadsheet'),
   ],
   email: [
@@ -130,12 +156,12 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     d('paywall'),
   ],
   'api-layer': [
-    i('api'), d('endpoint'), d('endpoints'), i('rest '), d('graphql'), d('rpc'),
-    d('webhooks'),
+    i('api'), d('endpoint'), d('endpoints'), d('rest api'), d('restful'),
+    d('rest endpoint'), d('graphql'), d('rpc'), d('webhooks'),
   ],
   'frontend-framework': [
     d('frontend'), d('front-end'), d('web app'), d('webapp'), d('dashboard'),
-    d('dashboards'), d('website'), i('saas'), i('interface'), d(' ui '),
+    d('dashboards'), d('website'), i('saas'), i('interface'), d('ui'),
     d('portal'), d('admin panel'), d('landing page'), i('marketplace app'),
     i('marketplace platform'), i('whiteboard'),
   ],
@@ -152,19 +178,47 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
   ],
 }
 
+// --- keyword compilation (once, at module load) ---
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function compileKeyword(keyword: TaggedKeyword): RegExp {
+  const tokens = keyword.match.trim().split(/\s+/).map(escapeRegExp)
+  const body = tokens.join('\\s+')
+  // Stems match any word continuation; normal keywords also accept a plural 's'.
+  return keyword.stem
+    ? new RegExp(`\\b${body}\\w*`)
+    : new RegExp(`\\b${body}(?:s)?\\b`)
+}
+
+interface CompiledKeyword {
+  regex: RegExp
+  type: SignalType
+}
+
+const COMPILED_KEYWORD_MAP: [string, CompiledKeyword[]][] = Object.entries(
+  KEYWORD_MAP
+).map(([capabilityId, keywords]) => [
+  capabilityId,
+  keywords.map((kw) => ({ regex: compileKeyword(kw), type: kw.type })),
+])
+
 // Detection with evidence: per-capability matched signals and origin. Powers
 // the detection-transparency UI.
 export function detectCapabilitiesWithEvidence(
   projectDescription: string
 ): CapabilityEvidence[] {
-  const text = ` ${projectDescription.toLowerCase()} `
+  const text = projectDescription.toLowerCase()
   const evidence: CapabilityEvidence[] = []
 
-  for (const [capabilityId, keywords] of Object.entries(KEYWORD_MAP)) {
+  for (const [capabilityId, keywords] of COMPILED_KEYWORD_MAP) {
     const signals: DetectionSignal[] = []
     for (const kw of keywords) {
-      if (text.includes(kw.match)) {
-        signals.push({ phrase: kw.match.trim(), type: kw.type })
+      const match = kw.regex.exec(text)
+      if (match) {
+        signals.push({ phrase: match[0], type: kw.type })
       }
     }
     if (signals.length > 0) {

@@ -205,6 +205,100 @@ describe('detectCapabilities (auth role keywords)', () => {
   })
 })
 
+// Boundary-safe matching (detector hardening). The matcher moved from raw
+// substring containment to word-boundary regexes with explicit stems and
+// optional plurals. These tests pin the false positives that motivated the
+// change, the true positives that must survive it, and the inflection matches
+// the old substring matcher provided by accident.
+describe('detectCapabilities (boundary matching)', () => {
+  const ids = (prompt: string) =>
+    detectCapabilities(prompt).map((c) => c.capability_id)
+
+  // --- false positives the substring matcher produced ---
+
+  it('does not detect auth from "authors"', () => {
+    expect(ids('A blog about famous authors and their books')).not.toContain('auth')
+  })
+
+  it('does not detect api-layer from the literal word "rest"', () => {
+    const result = ids('parse the rest of my sparse notes')
+    expect(result).not.toContain('api-layer')
+    // "parse" is genuinely in the prompt — document-parsing stays.
+    expect(result).toContain('document-parsing')
+  })
+
+  it('does not detect auth from "team" alone', () => {
+    expect(ids('a tool to track inventory for our team')).not.toContain('auth')
+  })
+
+  it('does not detect api-layer inside "therapist"', () => {
+    expect(ids('the therapist app')).not.toContain('api-layer')
+  })
+
+  it('does not detect deployment inside "ghost"', () => {
+    expect(ids('ghost stories site')).not.toContain('deployment')
+  })
+
+  it('does not detect monitoring inside "blogs"', () => {
+    expect(ids('our blogs')).not.toContain('monitoring')
+  })
+
+  it('does not detect document-parsing for documentation wording', () => {
+    expect(ids('write documentation for my API')).not.toContain('document-parsing')
+    expect(ids('Build a developer documentation site')).not.toContain('document-parsing')
+  })
+
+  it('does not detect realtime-collaboration from broad live/collaboration wording', () => {
+    expect(ids('live updates dashboard')).not.toContain('realtime-collaboration')
+    expect(ids('collaboration dashboard')).not.toContain('realtime-collaboration')
+    expect(ids('email notifications')).not.toContain('realtime-collaboration')
+  })
+
+  // --- true positives that must survive boundary matching ---
+
+  it('preserves core auth detection', () => {
+    expect(ids('login and user accounts')).toContain('auth')
+    expect(ids('role-based access')).toContain('auth')
+    expect(ids('authentication')).toContain('auth')
+    expect(ids('OAuth login')).toContain('auth')
+  })
+
+  it('preserves api-layer detection for real API wording', () => {
+    expect(ids('API endpoint')).toContain('api-layer')
+    expect(ids('REST API')).toContain('api-layer')
+  })
+
+  it('preserves document-parsing detection', () => {
+    expect(ids('PDF chatbot')).toContain('document-parsing')
+    expect(ids('parse uploaded PDFs')).toContain('document-parsing')
+  })
+
+  it('preserves search detection without reviving document-parsing', () => {
+    const result = ids('developer documentation site with search')
+    expect(result).toContain('search')
+    expect(result).not.toContain('document-parsing')
+    expect(ids('product search with filters and typo tolerance')).toContain('search')
+  })
+
+  it('preserves realtime-collaboration and scheduling detection', () => {
+    expect(ids('realtime collaborative whiteboard')).toContain('realtime-collaboration')
+    expect(ids('shared cursors')).toContain('realtime-collaboration')
+    expect(ids('background jobs with retries')).toContain('scheduling')
+  })
+
+  // --- inflection pins: matches the old substring matcher gave for free ---
+
+  it('preserves inflected verb and plural matches via stems and optional plurals', () => {
+    expect(ids('deploying my app')).toContain('deployment')
+    expect(ids('uploading files')).toContain('file-storage')
+    expect(ids('user sessions')).toContain('auth')
+    expect(ids('summarize weekly reports')).toContain('llm-api')
+    expect(ids('administrator dashboard')).toContain('auth')
+    expect(ids('scheduled reminders')).toContain('scheduling')
+    expect(ids('a self-hosted app')).toContain('deployment')
+  })
+})
+
 describe('detectCapabilities (search and audit precision)', () => {
   const ids = (prompt: string) =>
     detectCapabilities(prompt).map((c) => c.capability_id)
