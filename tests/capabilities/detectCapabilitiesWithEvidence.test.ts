@@ -131,6 +131,64 @@ describe('detectCapabilitiesWithEvidence', () => {
   })
 })
 
+// Project-shape inference evidence (first slice). Shape signals are ordinary
+// inferred signals carrying the matched cue and an authored rationale, so the
+// existing transparency UI renders them as assumptions with zero changes.
+describe('detectCapabilitiesWithEvidence (project-shape inference)', () => {
+  it('shape signals carry the cue phrase, inferred type, and a rationale', () => {
+    const db = evidenceFor(
+      'Build a support inbox that uses AI to summarize customer emails',
+      'database'
+    )
+    expect(db).toBeDefined()
+    expect(db!.origin).toBe('matched')
+    expect(db!.signals).toHaveLength(1)
+    expect(db!.signals[0].phrase).toBe('support inbox')
+    expect(db!.signals[0].type).toBe('inferred')
+    expect(db!.signals[0].rationale).toBeTruthy()
+  })
+
+  it('appends shape-only capabilities after all keyword-detected capabilities', () => {
+    const ids = detectCapabilitiesWithEvidence(
+      'Build a support inbox that uses AI to summarize customer emails'
+    ).map((e) => e.capability.capability_id)
+    // Keyword detections (llm-api, email) keep their positions; the two
+    // shape-only capabilities follow in rule order.
+    expect(ids).toEqual(['llm-api', 'email', 'frontend-framework', 'database'])
+  })
+
+  it('merges shape signals into an existing keyword-detected capability in place', () => {
+    const ids = detectCapabilitiesWithEvidence(
+      'Build a developer documentation site with search and analytics'
+    ).map((e) => e.capability.capability_id)
+    expect(ids).toEqual(['search', 'frontend-framework'])
+  })
+
+  it('a bare documentation site is a matched shape detection, not the assumed floor', () => {
+    const ev = detectCapabilitiesWithEvidence('documentation site')
+    expect(ev).toHaveLength(1)
+    expect(ev[0].capability.capability_id).toBe('frontend-framework')
+    expect(ev[0].origin).toBe('matched')
+    expect(ev[0].signals).toHaveLength(1)
+    expect(ev[0].signals[0].phrase).toBe('documentation site')
+    expect(ev[0].signals[0].rationale).toBeTruthy()
+  })
+
+  it('keyword-detected capabilities gain no shape rationale when no rule fires', () => {
+    // retrieval fires via the 'chatbot' keyword; the source-grounding rule must
+    // not add a signal without source language.
+    const retrieval = evidenceFor('a chatbot that answers questions', 'retrieval')
+    expect(retrieval).toBeDefined()
+    expect(retrieval!.signals.every((s) => s.rationale === undefined)).toBe(true)
+
+    // database fires via the soft 'requests' keyword; the admin-review rule
+    // must not add a signal for code-review wording.
+    const database = evidenceFor('a code review tool for pull requests', 'database')
+    expect(database).toBeDefined()
+    expect(database!.signals.every((s) => s.rationale === undefined)).toBe(true)
+  })
+})
+
 describe('backward compatibility (behavior-preserving)', () => {
   const PROMPTS = [
     'Build a PDF chatbot for internal company documents',

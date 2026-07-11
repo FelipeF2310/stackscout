@@ -331,3 +331,92 @@ describe('detectCapabilities (search and audit precision)', () => {
     expect(ids('Add application logging and uptime monitoring')).toContain('monitoring')
   })
 })
+
+// Project-shape inference (first slice). Product nouns that entail supporting
+// capabilities — a docs site is a rendered surface, an inbox stores threads —
+// now add those capabilities with evidenced assumptions. Rules live in
+// lib/capabilities/projectShapes.ts; these tests cover the end-to-end effect.
+describe('detectCapabilities (project-shape inference)', () => {
+  const ids = (prompt: string) =>
+    detectCapabilities(prompt).map((c) => c.capability_id)
+
+  // --- the four approved weak prompts improve ---
+
+  it('documentation site implies a frontend surface (search retained)', () => {
+    const result = ids('Build a developer documentation site with search and analytics')
+    expect(result).toContain('search')
+    expect(result).toContain('frontend-framework')
+    expect(result).not.toContain('document-parsing')
+  })
+
+  it('support inbox implies stored state and an operator surface', () => {
+    const result = ids('Build a support inbox that uses AI to summarize customer emails')
+    expect(result).toContain('llm-api')
+    expect(result).toContain('email')
+    expect(result).toContain('database')
+    expect(result).toContain('frontend-framework')
+  })
+
+  it('admin review implies persisted review state', () => {
+    const result = ids('Build a file upload portal for clients with authentication and admin review')
+    expect(result).toContain('auth')
+    expect(result).toContain('file-storage')
+    expect(result).toContain('frontend-framework')
+    expect(result).toContain('database')
+  })
+
+  it('answering from sources implies retrieval but never vector-storage', () => {
+    const result = ids(
+      'Build an AI research assistant that crawls websites and answers questions from sources'
+    )
+    expect(result).toContain('llm-api')
+    expect(result).toContain('web-scraping')
+    expect(result).toContain('retrieval')
+    expect(result).not.toContain('vector-storage')
+  })
+
+  // --- deliberately unchanged behavior ---
+
+  it('product search alone stays search-only (no shape-added frontend)', () => {
+    expect(ids('a product search experience with filters')).toEqual(['search'])
+  })
+
+  // --- shape negatives: verbs and lookalikes must not fire ---
+
+  it('email verbs do not become an inbox', () => {
+    for (const prompt of [
+      'summarize an email for me',
+      'send support emails when a ticket closes',
+      'email notifications for new posts',
+    ]) {
+      const result = ids(prompt)
+      expect(result).not.toContain('database')
+      expect(result).not.toContain('frontend-framework')
+    }
+  })
+
+  it('documentation verbs do not become a docs site', () => {
+    const write = ids('write documentation for my API')
+    expect(write).not.toContain('frontend-framework')
+    expect(write).not.toContain('document-parsing')
+
+    const parse = ids('parse documentation from PDFs')
+    expect(parse).toContain('document-parsing')
+    expect(parse).not.toContain('frontend-framework')
+  })
+
+  it('non-admin review wording does not imply a database', () => {
+    expect(ids('a review of my essay')).not.toContain('database')
+    expect(ids('design review meeting notes')).not.toContain('database')
+  })
+
+  it('preserves the pre-existing keyword behavior for code review tools', () => {
+    // 'requests' (a soft database keyword) already fires here — the shape rule
+    // must neither remove nor duplicate that.
+    expect(ids('a code review tool for pull requests')).toContain('database')
+  })
+
+  it('question answering without sources does not imply retrieval', () => {
+    expect(ids('answers questions about the weather')).not.toContain('retrieval')
+  })
+})

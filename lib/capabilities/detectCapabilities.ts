@@ -1,5 +1,7 @@
 import { getCapabilityById } from './capabilityTaxonomy'
 import type { Capability } from './capabilityTypes'
+import { compilePhrase } from './keywordMatcher'
+import { evaluateProjectShapes } from './projectShapes'
 
 // Deterministic capability detection (Phase 1 baseline).
 //
@@ -21,6 +23,13 @@ import type { Capability } from './capabilityTypes'
 // positives like "authors" → auth and required fragile hand-padded entries
 // (' ai ', ' document ') to dodge collisions. See
 // docs/CAPABILITY_DETECTION_AUDIT.md (addendum) for the before/after audit.
+// The compiler lives in keywordMatcher.ts, shared with project-shape inference.
+//
+// Project-shape inference (projectShapes.ts) runs after keyword matching:
+// product artifacts like "support inbox" entail supporting capabilities
+// (database, frontend) that no keyword states. Shape signals merge into
+// existing entries; shape-only capabilities append after keyword detections
+// so explicit signals always anchor downstream tool selection.
 //
 // Detection evidence (PR 1 / feature/detection-evidence-model)
 // ------------------------------------------------------------
@@ -40,6 +49,10 @@ export interface DetectionSignal {
   // keywords this is the full matched word (e.g. 'summarize', never 'summar').
   phrase: string
   type: SignalType
+  // Authored explanation, present only on project-shape inference signals
+  // (e.g. 'an inbox stores threads, status, and assignment'). Not rendered in
+  // the UI yet; carried so shape assumptions are reviewable from day one.
+  rationale?: string
 }
 
 export interface CapabilityEvidence {
@@ -180,19 +193,6 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
 
 // --- keyword compilation (once, at module load) ---
 
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
-
-function compileKeyword(keyword: TaggedKeyword): RegExp {
-  const tokens = keyword.match.trim().split(/\s+/).map(escapeRegExp)
-  const body = tokens.join('\\s+')
-  // Stems match any word continuation; normal keywords also accept a plural 's'.
-  return keyword.stem
-    ? new RegExp(`\\b${body}\\w*`)
-    : new RegExp(`\\b${body}(?:s)?\\b`)
-}
-
 interface CompiledKeyword {
   regex: RegExp
   type: SignalType
@@ -202,7 +202,10 @@ const COMPILED_KEYWORD_MAP: [string, CompiledKeyword[]][] = Object.entries(
   KEYWORD_MAP
 ).map(([capabilityId, keywords]) => [
   capabilityId,
-  keywords.map((kw) => ({ regex: compileKeyword(kw), type: kw.type })),
+  keywords.map((kw) => ({
+    regex: compilePhrase(kw.match, { stem: kw.stem }),
+    type: kw.type,
+  })),
 ])
 
 // Detection with evidence: per-capability matched signals and origin. Powers
@@ -229,8 +232,26 @@ export function detectCapabilitiesWithEvidence(
     }
   }
 
+  // Merge project-shape inferences: shape signals join an already-detected
+  // capability in place (position unchanged); shape-only capabilities append
+  // after all keyword detections so inferences never displace explicit
+  // signals in the greedy tool-selection order.
+  const shapeSignals = evaluateProjectShapes(projectDescription)
+  for (const [capabilityId, signals] of shapeSignals) {
+    const existing = evidence.find((e) => e.capability.capability_id === capabilityId)
+    if (existing) {
+      existing.signals.push(...signals)
+    } else {
+      const capability = getCapabilityById(capabilityId)
+      if (capability) {
+        evidence.push({ capability, signals, origin: 'matched' })
+      }
+    }
+  }
+
   // Any buildable product needs somewhere to render — provide a sensible floor,
-  // surfaced as an explicit assumption rather than a silent default.
+  // surfaced as an explicit assumption rather than a silent default. Fires only
+  // when both keyword and shape evidence are empty.
   if (evidence.length === 0) {
     const floor = getCapabilityById('frontend-framework')
     if (floor) {
