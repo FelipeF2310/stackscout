@@ -135,10 +135,11 @@ the final selection come from reviewed, structured data. That boundary (not the
 absence of AI) is what keeps recommendations accountable. The deterministic engine
 today is the trustworthy base that layer builds on.
 
-Current local `main` already includes refinement-context activation,
-capability-peer alternatives, and focused RAG peer fit metadata. The default next
-product slice is deployment/runtime metadata; scoring-structure changes should
-wait for concrete wrong-winner evidence. Evidence/audit/report schemas come
+`main` already includes refinement-context activation, capability-peer
+alternatives, focused RAG peer fit metadata, boundary-safe detector matching,
+and the project-shape inference first slice. The default next product slice is
+the `internal → auth` shape-rule migration (see `NEXT_STEPS.md`);
+scoring-structure changes should wait for concrete wrong-winner evidence. Evidence/audit/report schemas come
 later; RAG and self-learning come later still, after evidence objects and review
 boundaries exist. See
 [`STACKSCOUT_PROJECT_ALIGNMENT.md`](./STACKSCOUT_PROJECT_ALIGNMENT.md),

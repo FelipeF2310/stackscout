@@ -287,11 +287,13 @@ the canonical capability taxonomy and a seed relationship graph. That's it.
 
 A phased path, smallest-justifiable-step first (each its own planning + PR cycle):
 
-The free recommendation foundation has recently been strengthened in local
-`main` by activating refinement context, improving alternatives from capability
-peers, and backfilling focused `best_for` / `avoid_if` metadata. Continue with
-deployment/runtime metadata next by default; improve scoring structure only if
-recommendation review shows concrete wrong-winner evidence.
+The free recommendation foundation has been strengthened on `main` by
+activating refinement context, improving alternatives from capability peers,
+backfilling focused `best_for` / `avoid_if` metadata, hardening the detector
+with boundary-safe matching, and adding the project-shape inference first
+slice. Continue with the `internal → auth` shape-rule migration next (see
+`NEXT_STEPS.md`); improve scoring structure only if recommendation review shows
+concrete wrong-winner evidence.
 
 After that foundation:
 

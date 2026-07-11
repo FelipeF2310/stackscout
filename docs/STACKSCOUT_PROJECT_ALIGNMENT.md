@@ -160,8 +160,6 @@ or accidentally started:
   TypeScript taxonomy (later optional pass).
 - Review the **10-character input gate** / short low-signal prompt behavior
   (should very short prompts show the assumed-floor state or nothing?).
-- **PR 3 keyword cleanup** / false positives in the detector keyword map
-  (behavior-changing; its own PR with recommendation-diff review).
 - **Stack Map** artifact (capability-first ecosystem view).
 - **Repo memory / ecosystem learning** architecture.
 - **Outcome memory / feedback loop.**
@@ -209,15 +207,18 @@ Current product direction is **free product first**. Paid plans and browser
 extensions are deferred until the free architecture-advisor experience proves
 value and the core audit/report artifact is useful.
 
-Recent local `main` commits completed three recommendation-foundation slices:
-URL-backed refinement context, capability-peer alternatives, and focused RAG
-peer `best_for` / `avoid_if` metadata.
+Completed recommendation-foundation slices on `main`: URL-backed refinement
+context, capability-peer alternatives, focused RAG peer `best_for` / `avoid_if`
+metadata, the realtime-collaboration capability slice, scheduling fit metadata,
+detector boundary-matching hardening, and the project-shape inference first
+slice.
 
 Near-term PR order:
 
-1. **Default next product PR: deployment/runtime metadata slice.** Continue
-   strengthening free recommendation quality through focused product-fit
-   metadata and explanation improvements.
+1. **Default next product PR: `internal → auth` migration (plan first).**
+   Replace the bare `internal → auth` detector keyword with a deliberate
+   project-shape rule using the `requires` co-occurrence machinery — details
+   and required prompt behavior in [`NEXT_STEPS.md`](./NEXT_STEPS.md).
 2. **Improve scoring structure only if proven necessary** — for example
    `primary_capability` or per-capability tool role, only after recommendation
    review shows concrete wrong-winner evidence.
@@ -230,7 +231,9 @@ Still parked (not the current focus):
 
 - **Repo memory / ecosystem learning** architecture — design captured in
   [`REPO_MEMORY_AND_LEARNING.md`](./REPO_MEMORY_AND_LEARNING.md), not implemented.
-- **Keyword cleanup** after real prompt testing.
+- **Soft-trigger keyword review** (`support`, `requests`, `websites`, `track`,
+  `data`) — after the `internal → auth` migration, once shape rules can take
+  over the principled cases.
 
 This document does **not** prescribe implementation. Each phase gets its own
 planning pass, then the smallest safe PR — per the phased discipline above.

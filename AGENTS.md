@@ -58,10 +58,14 @@ Keep changes within the architecture-advisor experience:
 Current roadmap discipline:
 
 - Prioritize the free product until it proves user value.
-- Recent local commits activated refinement context, added capability-peer
-  alternatives, and backfilled focused RAG peer fit metadata; do not redo those
-  slices.
-- The next likely product PR is a deployment/runtime metadata slice.
+- Completed slices on `main` include refinement-context activation,
+  capability-peer alternatives, focused RAG peer fit metadata, the
+  realtime-collaboration capability, scheduling fit metadata, detector
+  boundary-matching hardening, and the project-shape inference first slice;
+  do not redo those.
+- The next likely product PR is the `internal → auth` migration: replace the
+  bare keyword with a project-shape rule (see `docs/NEXT_STEPS.md`). Plan it
+  before implementing.
 - Scoring review should be evidence-driven and only follow concrete
   wrong-winner cases.
 - Defer paid features, browser extensions, persistence, GitHub ingestion,

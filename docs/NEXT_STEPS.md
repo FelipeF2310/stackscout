@@ -21,19 +21,28 @@ active implementation queue.
 
 Deterministic, seed-based, capability-first advisor — **no LLM / DB / network at
 request time** (deliberate trust boundary, not the end state). Built through
-PRs #15–#28 plus recent local `main` commits:
+PRs #15–#28 plus subsequent slices pushed to `main` (through the project-shape
+inference commit `4849890`):
 
 - **Flow:** Start (`/`) → two-pane Workspace (`/workspace?idea=…`) → living
   Architecture Brief. Legacy `/?q=` redirects into the workspace; the old
   stacked results shell is gone.
-- **Pipeline (deterministic):** detect capabilities (with evidence) → parse
-  URL-backed refinement context → score per capability → assemble (top tool per
-  slot) → explain → alternatives. Engine in `lib/`, corpus in `data/seed/`.
-  Capabilities come from
-  `lib/capabilities/capabilityTaxonomy.ts` (canonical; 17 incl. `web-scraping`).
-- **Refinement context:** current local `main` passes URL-backed refinement
-  params from the live workspace into `recommendArchitecture`; no params still
-  means the default deterministic recommendation path.
+- **Pipeline (deterministic):** detect capabilities (boundary-safe keyword
+  matching + project-shape inference, with evidence) → parse URL-backed
+  refinement context → score per capability → assemble (top tool per slot) →
+  explain → alternatives. Engine in `lib/`, corpus in `data/seed/`.
+  Capabilities come from `lib/capabilities/capabilityTaxonomy.ts` (canonical;
+  18 incl. `web-scraping` and `realtime-collaboration`).
+- **Detection quality:** keyword matching is word-boundary regexes with explicit
+  stems and optional plurals (`lib/capabilities/keywordMatcher.ts`), not raw
+  substrings. Project-shape rules (`lib/capabilities/projectShapes.ts`) infer
+  supporting capabilities from product artifacts (docs site, support inbox,
+  admin review, source-grounded answering) with authored rationale evidence;
+  shape-only capabilities append after keyword detections and the assumed floor
+  fires only when both are empty.
+- **Refinement context:** URL-backed refinement params flow from the live
+  workspace into `recommendArchitecture`; no params still means the default
+  deterministic recommendation path.
 - **Alternatives:** relationship-backed alternatives remain preferred, with
   same-capability peer fallback when explicit alternative edges are missing.
 - **Product-fit layer:** optional `best_for` / `avoid_if` on tools, surfaced in
@@ -46,20 +55,51 @@ PRs #15–#28 plus recent local `main` commits:
 
 ## Current queue
 
-Current local `main` already includes refinement-context activation,
-same-capability peer alternatives, and focused RAG peer fit metadata. Do not
-redo those slices.
+Recently completed and pushed to `origin/main` — do not redo these slices:
 
-1. **Default next product PR: deployment/runtime metadata slice.** Keep it
-   focused on product-fit metadata and explanation quality for deployment/runtime
-   peers; do not add new systems.
-2. **Scoring structure review only if justified.** Examples:
+- Refinement-context activation, same-capability peer alternatives, and focused
+  RAG peer fit metadata (earlier slices).
+- **Realtime/collaboration capability slice** (`realtime-collaboration`,
+  Liveblocks/Yjs; PartyKit deferred).
+- **Scheduling/background-job fit metadata** (Inngest / Trigger.dev
+  `best_for` / `avoid_if` and fit-aware alternative reasoning).
+- **Detector boundary-matching hardening** (`1459f16`): word-boundary/stem/plural
+  matching replaced raw substrings; fixed false positives (authors→auth,
+  "the rest of"→api-layer, team→auth, therapist→api-layer, ghost→deployment).
+  `internal → auth` was deliberately kept, deferred to the migration below.
+- **Project-shape inference first slice** (`4849890`): four entailment-based
+  rules — documentation site → frontend; support inbox → frontend + database;
+  admin review → database; answers-from-sources → retrieval — with authored
+  rationale on each shape signal.
+
+Queue:
+
+1. **Next: PR 2 — `internal → auth` migration (plan before implementing).**
+   Remove/narrow the bare `internal → auth` keyword and replace it with a
+   deliberate project-shape rule using the already-built `requires`
+   co-occurrence machinery: cue `internal` / `staff` / `operator`, requiring a
+   surface/content noun (`tool`, `dashboard`, `portal`, `console`, `app`,
+   `docs`, `documents`). Must preserve auth for the praised/golden internal
+   prompts ("internal company documents", "internal analytics dashboard") and
+   avoid auth for "internal API refactor", "internal logic", and "a tool to
+   track inventory for our team".
+2. **After PR 2: soft-trigger cleanup review.** Broad inferred keywords
+   (`support`, `requests`, `websites`, `track`, `data`) produce right-ish
+   answers for wrong reasons; review them only once shape rules can take over
+   the principled cases.
+3. **Optional later: rationale-display UI slice.** Shape signals already carry
+   authored rationales; surfacing them in DetectionTransparency is a small
+   copy/UI slice.
+4. **Scoring structure review only if justified.** Examples:
    `primary_capability` or per-capability role, only after recommendation review
    shows concrete wrong-winner evidence.
-3. **Later: evidence/audit/report schemas.** Design after the recommendation
+5. **Later: evidence/audit/report schemas.** Design after the recommendation
    foundation is stronger.
-4. **Later still: RAG/self-learning.** Requires evidence objects and explicit
+6. **Later still: RAG/self-learning.** Requires evidence objects and explicit
    review boundaries first.
+
+Known-tool/current-stack evaluation remains Phase 2B — not immediate unless
+Phase 2A recommendation quality is judged strong enough.
 
 Free product comes first. Paid plans are deferred until the free product proves
 value. Browser extensions are deferred until the core audit/report artifact is
@@ -97,8 +137,12 @@ useful.
   `alternative-to`). High maintenance + compat edges are the two ways a newcomer
   flips the top pick. The golden set catches displacement.
 - **Detection precision:** ambiguous keywords cause false positives (fixed:
-  monitor/analytics→Monitoring, roles→Auth). Prefer precise multi-word phrases;
-  add a negative over-fire test for any new keyword.
+  monitor/analytics→Monitoring, roles→Auth, plus the substring class fixed by
+  boundary matching). Prefer precise multi-word phrases; add a negative
+  over-fire test for any new keyword. Shape rules have a stricter bar: product
+  nouns whose definition *entails* the capability, an authored rationale, and
+  negative tests — see the rule-admission checklist in
+  `lib/capabilities/projectShapes.ts`.
 - **`supabase-auth` is auth-only (PR #19):** Database must never resolve to it.
 - **Alternatives surface `best_for` (PR #27):** so corpus growth reads as
   decision support, not a popular-tool list.
