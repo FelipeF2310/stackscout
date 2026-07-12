@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { recommendArchitecture } from '../../lib/recommendations/recommendArchitecture'
+import { getReviewPrompt } from '../fixtures/recommendationReviewPrompts'
 
 // Golden-set regression net for StackScout's canonical prompts (PR #26).
 //
@@ -9,7 +10,9 @@ import { recommendArchitecture } from '../../lib/recommendations/recommendArchit
 // regression-prone tool selections — without hard-coding full capability arrays
 // (capability order is not a product contract). It does not change runtime
 // behavior. If a case ever fails, treat it as a signal to review intent, not to
-// silently "fix" the test.
+// silently "fix" the test. Prompt strings come from the shared 14-prompt
+// review fixture (tests/fixtures/recommendationReviewPrompts.ts) so the
+// enforcement net and the audit corpus can never drift apart.
 
 interface GoldenCase {
   name: string
@@ -30,7 +33,7 @@ interface GoldenCase {
 const GOLDEN: GoldenCase[] = [
   {
     name: 'marketplace',
-    prompt: 'Build a marketplace app where users can list items and accept payments',
+    prompt: getReviewPrompt('marketplace-payments'),
     requiredCaps: ['auth', 'database', 'payments', 'frontend-framework'],
     forbiddenCaps: [],
     expectedTools: ['clerk', 'supabase', 'stripe', 'nextjs'],
@@ -39,7 +42,7 @@ const GOLDEN: GoldenCase[] = [
   },
   {
     name: 'web scraper / job postings',
-    prompt: 'Build a web scraper that monitors job postings and summarizes new roles',
+    prompt: getReviewPrompt('scraper-job-postings'),
     requiredCaps: ['web-scraping', 'llm-api'],
     // PR #18 + PR #22 false-positive guards.
     forbiddenCaps: ['auth', 'database', 'scheduling', 'monitoring'],
@@ -48,7 +51,7 @@ const GOLDEN: GoldenCase[] = [
   },
   {
     name: 'PDF chatbot (RAG)',
-    prompt: 'Build a PDF chatbot for internal company documents',
+    prompt: getReviewPrompt('pdf-chatbot-internal'),
     requiredCaps: ['document-parsing', 'retrieval', 'vector-storage', 'llm-api'],
     forbiddenCaps: [],
     expectedTools: ['qdrant', 'llamaindex', 'openai-sdk'],
@@ -56,7 +59,7 @@ const GOLDEN: GoldenCase[] = [
   },
   {
     name: 'internal analytics dashboard',
-    prompt: 'Build an internal analytics dashboard for city operations',
+    prompt: getReviewPrompt('internal-analytics-dashboard'),
     requiredCaps: ['auth', 'database', 'frontend-framework'],
     // PR #18 guard: "analytics" must not imply observability/Monitoring.
     forbiddenCaps: ['monitoring'],
@@ -66,7 +69,7 @@ const GOLDEN: GoldenCase[] = [
   },
   {
     name: 'realtime collaborative whiteboard',
-    prompt: 'Build a realtime collaborative whiteboard',
+    prompt: getReviewPrompt('realtime-whiteboard'),
     requiredCaps: ['realtime-collaboration', 'frontend-framework'],
     forbiddenCaps: ['web-scraping'],
     expectedTools: ['liveblocks', 'nextjs'],
@@ -74,7 +77,7 @@ const GOLDEN: GoldenCase[] = [
   },
   {
     name: 'AI customer support agent (SaaS)',
-    prompt: 'Build an AI customer support agent for a SaaS product',
+    prompt: getReviewPrompt('support-agent-saas'),
     requiredCaps: ['agent-framework', 'llm-api', 'auth', 'database', 'email'],
     forbiddenCaps: [],
     expectedTools: ['vercel-ai-sdk', 'openai-sdk'],

@@ -86,7 +86,10 @@ Queue:
 2. **After PR 2: soft-trigger cleanup review.** Broad inferred keywords
    (`support`, `requests`, `websites`, `track`, `data`) produce right-ish
    answers for wrong reasons; review them only once shape rules can take over
-   the principled cases.
+   the principled cases. The 14-prompt recommendation review set now lives in
+   `tests/fixtures/recommendationReviewPrompts.ts` (the golden set sources its
+   prompts from it) — include it in every before/after detector and
+   selected-tool diff audit.
 3. **Optional later: rationale-display UI slice.** Shape signals already carry
    authored rationales; surfacing them in DetectionTransparency is a small
    copy/UI slice.
