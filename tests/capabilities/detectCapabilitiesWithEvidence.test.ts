@@ -23,18 +23,21 @@ describe('detectCapabilitiesWithEvidence', () => {
     expect(dp!.signals).toContainEqual({ phrase: 'pdf', type: 'direct' })
   })
 
-  it('returns inferred signals for implication-only phrases (internal)', () => {
+  it('returns inferred shape signals for implication-only phrases (internal tool)', () => {
     const auth = evidenceFor('an internal tool for the team', 'auth')
     expect(auth).toBeDefined()
     // Every signal is an assumption — none should be presented as direct.
     expect(auth!.signals.length).toBeGreaterThan(0)
     expect(auth!.signals.every((s) => s.type === 'inferred')).toBe(true)
+    // auth now comes from the internal-gated-access shape rule: the phrase is
+    // the full matched span and carries an authored rationale. 'team' remains
+    // excluded (detector hardening), and bare 'internal' is no longer a keyword.
     expect(auth!.signals.map((s) => s.phrase)).toEqual(
-      expect.arrayContaining(['internal'])
+      expect.arrayContaining(['internal tool'])
     )
-    // 'team' was removed as an auth trigger (detector hardening) — too soft on
-    // its own. 'internal' is retained pending the shape-inference decision.
+    expect(auth!.signals[0].rationale).toBeTruthy()
     expect(auth!.signals.map((s) => s.phrase)).not.toContain('team')
+    expect(auth!.signals.map((s) => s.phrase)).not.toContain('internal')
   })
 
   it('surfaces audit-flagged ambiguous keywords as inferred, never direct (agent)', () => {
@@ -172,6 +175,29 @@ describe('detectCapabilitiesWithEvidence (project-shape inference)', () => {
     expect(ev[0].signals).toHaveLength(1)
     expect(ev[0].signals[0].phrase).toBe('documentation site')
     expect(ev[0].signals[0].rationale).toBeTruthy()
+  })
+
+  it('internal-gated-access evidence carries the full matched span and rationale', () => {
+    const auth = evidenceFor(
+      'Build an internal analytics dashboard for city operations',
+      'auth'
+    )
+    expect(auth).toBeDefined()
+    expect(auth!.origin).toBe('matched')
+    expect(auth!.signals).toHaveLength(1)
+    expect(auth!.signals[0].phrase).toBe('internal analytics dashboard')
+    expect(auth!.signals[0].type).toBe('inferred')
+    expect(auth!.signals[0].rationale).toBeTruthy()
+  })
+
+  it('shape-migrated auth appends after keyword-detected capabilities', () => {
+    // Documents the deliberate ordering consequence of the migration: auth for
+    // internal-software prompts is now shape-appended, so it anchors greedy
+    // tool selection LAST. Planning verified selected tools are unchanged.
+    const ids = detectCapabilitiesWithEvidence(
+      'Build an internal analytics dashboard for city operations'
+    ).map((e) => e.capability.capability_id)
+    expect(ids).toEqual(['database', 'frontend-framework', 'auth'])
   })
 
   it('keyword-detected capabilities gain no shape rationale when no rule fires', () => {

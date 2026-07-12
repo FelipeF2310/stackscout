@@ -87,8 +87,11 @@ describe('capability source of truth (corpus reads the taxonomy)', () => {
 
 describe('behavior is unchanged after re-sourcing capabilities', () => {
   const PROMPT = 'Build a PDF chatbot for internal company documents'
-  // Pinned detector output for the prompt (key-map order). Unchanged by PR 1.
-  const PROMPT_CAP_IDS = ['auth', 'vector-storage', 'llm-api', 'retrieval', 'document-parsing']
+  // Pinned detector output for the prompt. Keyword detections in key-map
+  // order; auth comes LAST because it is shape-appended by the
+  // internal-gated-access rule ('internal company documents') since the
+  // internal → auth migration.
+  const PROMPT_CAP_IDS = ['vector-storage', 'llm-api', 'retrieval', 'document-parsing', 'auth']
 
   it('detector output is unchanged', () => {
     expect(detectCapabilities(PROMPT).map((c) => c.capability_id)).toEqual(PROMPT_CAP_IDS)

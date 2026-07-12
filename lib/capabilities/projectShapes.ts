@@ -25,23 +25,37 @@ import type { DetectionSignal } from './detectCapabilities'
 //
 // Categories are internal organization only (surface = user/operator-facing
 // interface, state = persisted records/status, source-grounding = answering
-// from retrieved material). They are never user-facing capabilities.
+// from retrieved material, access = gated/restricted usage). They are never
+// user-facing capabilities.
 
-export type ShapeCategory = 'surface' | 'state' | 'source-grounding'
+export type ShapeCategory = 'surface' | 'state' | 'source-grounding' | 'access'
 
 export interface ShapeInference {
   capability_id: string
   rationale: string
 }
 
+// Windowed proximity: the cue must adjectivally qualify one of the nouns —
+// cue first, at most `maxIntervening` words between, then the noun. Chosen
+// over loose co-occurrence (which fired on trap prompts like "refactor the
+// internal logic of our dashboard app") and strict compounds (which missed
+// "internal analytics dashboard"). Cue and nouns must be plain words; the
+// compiled pattern is built locally here, not in keywordMatcher.
+export interface ShapeProximity {
+  cue: string
+  nouns: string[]
+  maxIntervening: number
+}
+
 export interface ShapeRule {
   id: string
   category: ShapeCategory
-  // Any one cue firing activates the rule (boundary-safe, plural-tolerant).
-  cues: string[]
-  // Optional co-occurrence gate: when present, at least one must also match.
-  // Unused by the current rules; reserved for the internal→auth migration.
-  requires?: string[]
+  // Simple cues: any one firing activates the rule (boundary-safe,
+  // plural-tolerant via compilePhrase).
+  cues?: string[]
+  // Windowed proximity matching (see ShapeProximity). A rule uses cues,
+  // proximity, or both; it fires when any of them match.
+  proximity?: ShapeProximity
   infers: ShapeInference[]
 }
 
@@ -101,6 +115,31 @@ export const SHAPE_RULES: ShapeRule[] = [
       },
     ],
   },
+  {
+    // Migrated from the bare 'internal' auth keyword (detector hardening
+    // deferred this policy decision). Fires only when 'internal' adjectivally
+    // qualifies a software/content noun — "internal tool", "internal
+    // analytics dashboard", "internal company documents" — never on internal
+    // code-talk ("internal API refactor", "internal logic"). 'staff' and
+    // 'operator' cues are deliberately deferred until a prompt review
+    // demonstrates a miss. 'team' remains excluded from auth entirely.
+    id: 'internal-gated-access',
+    category: 'access',
+    proximity: {
+      cue: 'internal',
+      nouns: [
+        'tool', 'tools', 'dashboard', 'dashboards', 'portal', 'portals',
+        'console', 'consoles', 'app', 'apps', 'docs', 'document', 'documents',
+      ],
+      maxIntervening: 1,
+    },
+    infers: [
+      {
+        capability_id: 'auth',
+        rationale: 'internal-only software implies gated access',
+      },
+    ],
+  },
 ]
 
 // --- compiled once at module load, same as the keyword map ---
@@ -108,13 +147,21 @@ export const SHAPE_RULES: ShapeRule[] = [
 interface CompiledShapeRule {
   rule: ShapeRule
   cues: RegExp[]
-  requires?: RegExp[]
+  proximity?: RegExp
+}
+
+// Cue word, up to maxIntervening words, then a qualifying noun. The parts are
+// authored plain words, so no regex escaping is needed here.
+function compileProximity(p: ShapeProximity): RegExp {
+  return new RegExp(
+    `\\b${p.cue}(?:\\s+\\w+){0,${p.maxIntervening}}\\s+(?:${p.nouns.join('|')})\\b`
+  )
 }
 
 const COMPILED_RULES: CompiledShapeRule[] = SHAPE_RULES.map((rule) => ({
   rule,
-  cues: rule.cues.map((cue) => compilePhrase(cue)),
-  requires: rule.requires?.map((cue) => compilePhrase(cue)),
+  cues: (rule.cues ?? []).map((cue) => compilePhrase(cue)),
+  proximity: rule.proximity ? compileProximity(rule.proximity) : undefined,
 }))
 
 /**
@@ -130,7 +177,7 @@ export function evaluateProjectShapes(
   const text = projectDescription.toLowerCase()
   const byCapability = new Map<string, DetectionSignal[]>()
 
-  for (const { rule, cues, requires } of COMPILED_RULES) {
+  for (const { rule, cues, proximity } of COMPILED_RULES) {
     let cueText: string | null = null
     for (const cue of cues) {
       const match = cue.exec(text)
@@ -139,8 +186,11 @@ export function evaluateProjectShapes(
         break
       }
     }
+    if (!cueText && proximity) {
+      const match = proximity.exec(text)
+      if (match) cueText = match[0]
+    }
     if (!cueText) continue
-    if (requires && !requires.some((r) => r.test(text))) continue
 
     for (const inference of rule.infers) {
       const signals = byCapability.get(inference.capability_id) ?? []

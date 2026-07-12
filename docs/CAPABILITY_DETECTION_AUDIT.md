@@ -14,9 +14,11 @@ Status: **audit only — no code or runtime changes.** Prepared to scope the
 > from auth; recall-compensation added for auth (`authentication`,
 > `authenticate`, `authenticated`, `authorization`, `oauth`) and deployment
 > (`hosted`). `internal` → auth was deliberately retained pending the
-> project-shape inference decision. Evidence phrases now report the actual
-> matched text rather than the keyword. The direct/inferred tagging model and
-> Sections 2–3 remain accurate.
+> project-shape inference decision — since resolved: the bare keyword was
+> removed and replaced by the `internal-gated-access` project-shape rule
+> (windowed proximity to a software/content noun) in the follow-up migration.
+> Evidence phrases now report the actual matched text rather than the keyword.
+> The direct/inferred tagging model and Sections 2–3 remain accurate.
 
 Scope reminder: agents may help author/review keyword tags **during
 development**. The production detector stays **deterministic** — no runtime LLM,

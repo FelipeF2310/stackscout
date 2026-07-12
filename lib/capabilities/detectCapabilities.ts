@@ -85,11 +85,10 @@ const i = (match: string, opts?: { stem: true }): TaggedKeyword => ({
 // Keyword map. `direct` = the phrase names the capability; `inferred` =
 // implication or an audit-flagged ambiguous keyword.
 //
-// Note on 'internal' (auth): deliberately retained. "Internal tool implies
-// gated access" is a product-shape judgment, not a matching bug — its fate
-// belongs to the project-shape inference work, and removing it here would
-// regress golden outputs (internal PDF chatbot, internal analytics dashboard).
-// 'team' was removed: too soft on its own, no golden dependency.
+// Note on 'internal' (auth): migrated to the internal-gated-access shape rule
+// in projectShapes.ts — auth fires only when 'internal' adjectivally
+// qualifies a software/content noun, never on bare internal code-talk.
+// 'team' was removed earlier (detector hardening): too soft on its own.
 const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
   auth: [
     d('auth'), d('authentication'), d('authenticate'), d('authenticated'),
@@ -99,7 +98,7 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
     d('role-based access'), d('role based access'),
     d('role-based access control'), d('role based access control'),
     i('user roles'), i('roles and permissions'), i('admin', { stem: true }),
-    i('internal'), d('multi-tenant'), d('tenant'), i('members'), i('saas'),
+    d('multi-tenant'), d('tenant'), i('members'), i('saas'),
   ],
   database: [
     d('database'), d('persist', { stem: true }), d('postgres'), d('sql'),

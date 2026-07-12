@@ -67,7 +67,8 @@ describe('detectCapabilities (keyword cleanup)', () => {
     expect(result).toContain('database')
     expect(result).toContain('frontend-framework')
     expect(result).not.toContain('monitoring')
-    // 'internal' already maps to auth in the baseline detector — no new change.
+    // auth comes from the internal-gated-access shape rule (internal +
+    // analytics + dashboard within the proximity window).
     expect(result).toContain('auth')
   })
 
@@ -418,5 +419,50 @@ describe('detectCapabilities (project-shape inference)', () => {
 
   it('question answering without sources does not imply retrieval', () => {
     expect(ids('answers questions about the weather')).not.toContain('retrieval')
+  })
+})
+
+// internal → auth migration (PR 2). The bare 'internal' keyword is gone; auth
+// now comes from the internal-gated-access shape rule, which requires
+// 'internal' to adjectivally qualify a software/content noun within one
+// intervening word. Gated-access inference survives for internal software;
+// internal code-talk no longer implies auth.
+describe('detectCapabilities (internal gated access)', () => {
+  const ids = (prompt: string) =>
+    detectCapabilities(prompt).map((c) => c.capability_id)
+
+  it('retains auth for internal software and content prompts', () => {
+    for (const prompt of [
+      'Build a PDF chatbot for internal company documents',
+      'Build an internal analytics dashboard for city operations',
+      'Build an internal dashboard for tracking city service requests',
+      'internal tool',
+      'an internal tool for the team',
+    ]) {
+      expect(ids(prompt)).toContain('auth')
+    }
+  })
+
+  it('no longer infers auth from bare internal code-talk', () => {
+    for (const prompt of [
+      'internal API refactor',
+      'internal logic',
+      'internal helper function',
+      'refactor the internal logic of our dashboard app',
+      'an internal review of our app',
+    ]) {
+      expect(ids(prompt)).not.toContain('auth')
+    }
+  })
+
+  it('keeps team excluded from auth', () => {
+    expect(ids('a tool to track inventory for our team')).not.toContain('auth')
+    expect(ids('team dashboard')).not.toContain('auth')
+  })
+
+  it('internal docs implies gated access, not document parsing', () => {
+    const result = ids('internal docs')
+    expect(result).toContain('auth')
+    expect(result).not.toContain('document-parsing')
   })
 })
