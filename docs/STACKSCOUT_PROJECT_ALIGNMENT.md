@@ -9,7 +9,7 @@ This is a durable orientation document, not a spec and not a backlog. When a
 detail here goes stale, update it in a small docs PR rather than letting drift
 accumulate.
 
-_Last updated: 2026-06-29._
+_Last updated: 2026-07-12._
 
 ---
 
@@ -107,6 +107,11 @@ Already present in current branch history — **do not redo**:
   same-capability peers when explicit alternative relationships are missing.
 - **Focused RAG peer fit metadata** — `best_for` / `avoid_if` coverage was
   strengthened for the PDF/RAG document workflow slice.
+- **Internal gated-access migration** — bare `internal → auth` detection was
+  replaced by a narrow project-shape rule for internal software and content.
+- **AI-grounding clarification v1** — unresolved AI prompts ask one
+  deterministic, URL-backed grounding question before final recommendation
+  selection; explicit source requirements bypass it.
 
 ---
 
@@ -118,8 +123,11 @@ Already present in current branch history — **do not redo**:
 - `data/seed/relationships.json` — the seed **relationship** corpus.
 - `detectCapabilitiesWithEvidence()` — powers **detection transparency**
   (per-capability signals + origin).
-- `detectCapabilities()` — remains the **compatibility wrapper** that drives
-  recommendation behavior; output is unchanged from before the evidence model.
+- `detectCapabilities()` — remains the compatibility wrapper for callers that
+  need only the initial capability list.
+- `resolveWorkspaceRecommendation()` — resolves eligible URL-backed
+  AI-grounding context before the workspace requests a final recommendation.
+  Final selection remains deterministic and uses trusted structured data.
 - **Tool detail pages are currently seed/static** (no live data).
 - **Current trusted data:** the canonical capability taxonomy plus the curated
   seed corpus (`tools.json`, `relationships.json`). Runtime recommendations use
@@ -207,33 +215,26 @@ Current product direction is **free product first**. Paid plans and browser
 extensions are deferred until the free architecture-advisor experience proves
 value and the core audit/report artifact is useful.
 
-Completed recommendation-foundation slices on `main`: URL-backed refinement
-context, capability-peer alternatives, focused RAG peer `best_for` / `avoid_if`
-metadata, the realtime-collaboration capability slice, scheduling fit metadata,
-detector boundary-matching hardening, and the project-shape inference first
-slice.
+The canonical product and phase sequence lives in
+[`PRODUCT_ROADMAP.md`](./PRODUCT_ROADMAP.md). The short active execution queue
+lives in [`NEXT_STEPS.md`](./NEXT_STEPS.md). AI-grounding clarification v1 and
+the `internal → auth` project-shape migration are complete; neither is pending
+work.
 
-Near-term PR order:
-
-1. **Default next product PR: `internal → auth` migration (plan first).**
-   Replace the bare `internal → auth` detector keyword with a deliberate
-   project-shape rule using the `requires` co-occurrence machinery — details
-   and required prompt behavior in [`NEXT_STEPS.md`](./NEXT_STEPS.md).
-2. **Improve scoring structure only if proven necessary** — for example
-   `primary_capability` or per-capability tool role, only after recommendation
-   review shows concrete wrong-winner evidence.
-3. **Design evidence/audit/report schemas later.** Do not start this until the
-   recommendation foundation is stronger.
-4. **Add RAG/self-learning later still**, only after evidence objects and review
-   boundaries exist.
+The current phase validates the Architecture Advisor decision loop. Detector
+precision work must remain evidence-led and bounded, and another clarification
+question requires an approved policy entry before implementation. Scoring
+structure should change only after recommendation review demonstrates a
+concrete wrong-winner case.
 
 Still parked (not the current focus):
 
 - **Repo memory / ecosystem learning** architecture — design captured in
   [`REPO_MEMORY_AND_LEARNING.md`](./REPO_MEMORY_AND_LEARNING.md), not implemented.
-- **Soft-trigger keyword review** (`support`, `requests`, `websites`, `track`,
-  `data`) — after the `internal → auth` migration, once shape rules can take
-  over the principled cases.
+- **Ambiguous detector policies** (`support`, `requests`, `track`, `data`) —
+  independently deferred unless review evidence demonstrates user harm. The
+  verified `websites → Frontend Framework` target-context issue remains a
+  separate narrow precision slice, not a generic cleanup program.
 
 This document does **not** prescribe implementation. Each phase gets its own
 planning pass, then the smallest safe PR — per the phased discipline above.
