@@ -57,6 +57,13 @@ Brief is revisable through those decisions.
 
 AI-grounding clarification v1 is complete and merged. It asks one deterministic
 question only when an AI product's source-grounding decision remains unresolved.
+Website frontend target precision is also complete: external crawl/scrape targets
+no longer imply a frontend product, while explicitly built websites retain
+Frontend Framework.
+
+[`CLARIFICATION_POLICY_CATALOG.md`](./CLARIFICATION_POLICY_CATALOG.md) governs
+when an ambiguity warrants a question, precision correction, conservative
+default, or deferral.
 
 There is no live LLM, persistence, database, GitHub ingestion, repository
 inspection, runtime agent, or autonomous recommendation loop.
@@ -90,15 +97,14 @@ that materially affect the stack.
 - Validate the decision-loop UX contract against the 14-prompt review corpus
   and representative user journeys.
 - AI-grounding clarification v1 — **completed**.
-- Plan a separate `websites → Frontend Framework` precision slice. This is a
-  narrowly verified detector correction for external crawl targets, not a
-  clarification question or a generic keyword cleanup.
+- `websites → Frontend Framework` target precision — **completed** as a narrow
+  detector correction for external crawl targets, not a clarification question
+  or a generic keyword cleanup.
 - Keep `support`, `requests`, `track`, and `data` as independent deferred
   policies unless evidence demonstrates user harm.
-- Before implementing another question vertical, define a small clarification
-  policy catalog. Each entry must specify eligibility, priority, user-facing
-  question, sensible default, capability/tool effect, explicit-evidence bypass,
-  and negative examples.
+- Use the clarification-policy catalog as the governance gate before planning
+  another question vertical. A candidate must satisfy its evidence gate before
+  promotion; the catalog does not authorize implementation.
 - Improve explanation, comparison, and revision only where review evidence
   shows the decision loop is unclear or unhelpful.
 
@@ -227,6 +233,8 @@ StackScout remains accountable for every final recommendation.
 
 - This file owns strategic phase direction and exit criteria.
 - `NEXT_STEPS.md` owns the short active execution queue.
+- `CLARIFICATION_POLICY_CATALOG.md` governs whether an ambiguity warrants a
+  question, precision correction, conservative default, or deferral.
 - `STACKSCOUT_PROJECT_ALIGNMENT.md` owns the durable thesis and build discipline.
 - `ARCHITECTURE.md` describes implemented technical reality.
 - `PRD.md` remains long-term product vision, not the active queue.
