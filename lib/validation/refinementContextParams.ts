@@ -9,6 +9,7 @@ const refinementParamKeys = [
   'hostingPreference',
   'ecosystem',
   'modelPreference',
+  'aiGrounding',
 ] as const satisfies readonly (keyof RefinementContext)[]
 
 const refinementFieldSchemas = refinementContextSchema.shape
@@ -79,6 +80,11 @@ function assignValidContextValue(
     case 'modelPreference': {
       const parsed = refinementFieldSchemas.modelPreference.safeParse(value)
       if (parsed.success) context.modelPreference = parsed.data
+      break
+    }
+    case 'aiGrounding': {
+      const parsed = refinementFieldSchemas.aiGrounding.safeParse(value)
+      if (parsed.success) context.aiGrounding = parsed.data
       break
     }
   }

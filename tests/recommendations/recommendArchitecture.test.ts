@@ -142,6 +142,27 @@ describe('recommendArchitecture (end-to-end, deterministic)', () => {
     expect(selectedToolForCapability(selfHostedResult, 'auth')).toBe('authjs')
     expect(selfHostedResult.architecture.architecture_rationale).toMatch(/self-hosted/i)
   })
+
+  it('uses an AI-grounding answer to remove chatbot-derived RAG assumptions', async () => {
+    const result = await recommendArchitecture('Build an AI chatbot for a SaaS product', {
+      aiGrounding: 'general-knowledge',
+    })
+    const capabilityIds = result.architecture.capabilities.map((capability) => capability.capability_id)
+
+    expect(capabilityIds).toContain('llm-api')
+    expect(capabilityIds).not.toContain('retrieval')
+    expect(capabilityIds).not.toContain('vector-storage')
+  })
+
+  it('adds retrieval without a broad chatbot-derived vector database for product sources', async () => {
+    const result = await recommendArchitecture('Build an AI chatbot for a SaaS product', {
+      aiGrounding: 'product-sources',
+    })
+    const capabilityIds = result.architecture.capabilities.map((capability) => capability.capability_id)
+
+    expect(capabilityIds).toContain('retrieval')
+    expect(capabilityIds).not.toContain('vector-storage')
+  })
 })
 
 type Result = Awaited<ReturnType<typeof recommendArchitecture>>

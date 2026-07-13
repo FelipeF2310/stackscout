@@ -28,13 +28,18 @@ AI SDK, ORM, or database client wired in.
 ### Request Flow — Architecture Recommendation
 
 Everything below is **deterministic**. The entry point is
-`lib/recommendations/recommendArchitecture.ts`, called from the
-`/workspace` server component.
+`/workspace`, which calls
+`lib/recommendations/resolveWorkspaceRecommendation.ts` to resolve AI-grounding
+context and conditionally call `recommendArchitecture` when a final stack can
+be rendered.
 
 ```
 Prompt (?idea=… + optional refinement params)
   → Capability detection      (lib/capabilities/detectCapabilities.ts)
       keyword/synonym matching against the canonical taxonomy, with evidence
+  → AI-grounding clarification (when the prompt has unresolved AI grounding)
+      one deterministic question; its URL-backed answer resolves inferred
+      retrieval/vector-storage assumptions before the final stack renders
   → Tool scoring per capability (lib/recommendations/scoreTools.ts)
       deterministic score: capability fit, URL-backed context fit,
       compatibility, maintenance
@@ -53,7 +58,9 @@ Capabilities come from the canonical taxonomy
 (`lib/capabilities/capabilityTaxonomy.ts`); there is no separate capability seed
 file. Zod schemas in `lib/validation/` define the input/output shapes.
 The live workspace passes parsed URL refinement params into
-`recommendArchitecture`; absent refinement params preserve the default path.
+`recommendArchitecture`. For unresolved AI prompts, the workspace holds the
+Architecture Brief until the builder answers the grounding question or selects
+the sensible default; the answer is part of that same URL-backed context.
 
 ### Separation of Concerns
 
@@ -87,6 +94,8 @@ relationship graph. There is no database and no migration step.
 |---|---|
 | `lib/capabilities/capabilityTaxonomy.ts` | Canonical capability registry |
 | `lib/capabilities/detectCapabilities.ts` | Deterministic keyword/evidence capability detection |
+| `lib/capabilities/aiGrounding.ts` | Deterministic AI-grounding eligibility, question definition, and capability-evidence resolution |
+| `lib/recommendations/resolveWorkspaceRecommendation.ts` | Workspace orchestration that sanitizes URL context, tracks pending clarification, and conditionally requests a recommendation |
 | `lib/recommendations/recommendArchitecture.ts` | End-to-end deterministic pipeline orchestration |
 | `lib/recommendations/scoreTools.ts` | Deterministic tool scoring |
 | `lib/recommendations/generateArchitecture.ts` | Deterministic architecture assembly (top tool per capability) |
@@ -137,11 +146,11 @@ today is the trustworthy base that layer builds on.
 
 `main` already includes refinement-context activation, capability-peer
 alternatives, focused RAG peer fit metadata, boundary-safe detector matching,
-and the project-shape inference first slice. The default next product slice is
-the `internal → auth` shape-rule migration (see `NEXT_STEPS.md`);
-scoring-structure changes should wait for concrete wrong-winner evidence. Evidence/audit/report schemas come
-later; RAG and self-learning come later still, after evidence objects and review
-boundaries exist. See
+and project-shape inference. The current clarification slice resolves one
+unsettled AI-grounding decision with a deterministic question; scoring-structure
+changes should wait for concrete wrong-winner evidence. Evidence/audit/report
+schemas come later; RAG and self-learning come later still, after evidence
+objects and review boundaries exist. See
 [`STACKSCOUT_PROJECT_ALIGNMENT.md`](./STACKSCOUT_PROJECT_ALIGNMENT.md),
 [`NEXT_STEPS.md`](./NEXT_STEPS.md), and
 [`REPO_MEMORY_AND_LEARNING.md`](./REPO_MEMORY_AND_LEARNING.md) for the full

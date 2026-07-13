@@ -2,14 +2,17 @@ import { Suspense } from 'react'
 import type { Capability } from '@/lib/capabilities/capabilityTypes'
 import type { CapabilityEvidence } from '@/lib/capabilities/detectCapabilities'
 import type { RefinementContext } from '@/lib/recommendations/generateArchitecture'
+import type { AiGroundingQuestion as AiGroundingQuestionData } from '@/lib/capabilities/aiGrounding'
 import DetectionTransparency from '../architecture/DetectionTransparency'
 import RefinementControls from './RefinementControls'
+import AiGroundingQuestion from './AiGroundingQuestion'
 
 interface Props {
   idea: string
   capabilities: Capability[]
   evidence: CapabilityEvidence[]
   refinementContext: RefinementContext
+  clarification: AiGroundingQuestionData | null
 }
 
 // Left pane: the guided conversation. It reflects what was understood (echoed
@@ -20,6 +23,7 @@ export default function ConversationPane({
   capabilities,
   evidence,
   refinementContext,
+  clarification,
 }: Props) {
   const count = capabilities.length
 
@@ -54,6 +58,10 @@ export default function ConversationPane({
         <DetectionTransparency evidence={evidence} />
 
         <Suspense fallback={null}>
+          <AiGroundingQuestion question={clarification} value={refinementContext} />
+        </Suspense>
+
+        <Suspense fallback={null}>
           <RefinementControls value={refinementContext} />
         </Suspense>
 
@@ -63,12 +71,16 @@ export default function ConversationPane({
             Review
           </div>
           <p className="text-sm">
-            Reviewed your idea and detected {count}{' '}
-            {count === 1 ? 'capability' : 'capabilities'}. A draft Architecture Brief is on the right.
+            {clarification
+              ? 'One answer will resolve the remaining architecture decision.'
+              : `Reviewed your idea and detected ${count} ${
+                  count === 1 ? 'capability' : 'capabilities'
+                }. Your architecture is on the right.`}
           </p>
           <p className="text-xs text-[hsl(var(--faint))]">
-            Refine the context to update this draft through StackScout&apos;s deterministic analysis.
-            Clarifying questions are still later.
+            {clarification
+              ? 'Choose an answer or use the sensible default to continue through StackScout’s deterministic analysis.'
+              : 'Refine the context to update this architecture through StackScout’s deterministic analysis.'}
           </p>
         </div>
       </div>

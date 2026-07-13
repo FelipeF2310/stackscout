@@ -1,4 +1,5 @@
-import { detectCapabilities } from '../capabilities/detectCapabilities'
+import { detectCapabilitiesWithEvidence } from '../capabilities/detectCapabilities'
+import { applyAiGrounding } from '../capabilities/aiGrounding'
 import { scoreTools } from './scoreTools'
 import {
   generateArchitecture,
@@ -45,7 +46,10 @@ export async function recommendArchitecture(
   const tools = getAllTools() // corpus load also populates the relationship graph
 
   // 1. Capabilities first.
-  const capabilities = detectCapabilities(projectDescription)
+  const capabilities = applyAiGrounding(
+    detectCapabilitiesWithEvidence(projectDescription),
+    context.aiGrounding
+  ).map((entry) => entry.capability)
 
   // 2. Score the corpus per capability. Accumulate the running selection so
   //    compatibility scoring reflects the tools already chosen. Ordered ids

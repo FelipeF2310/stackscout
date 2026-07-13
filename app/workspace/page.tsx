@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import ArchitectureWorkspace from '@/components/workspace/ArchitectureWorkspace'
-import { recommendArchitecture } from '@/lib/recommendations/recommendArchitecture'
-import { detectCapabilitiesWithEvidence } from '@/lib/capabilities/detectCapabilities'
+import { resolveWorkspaceRecommendation } from '@/lib/recommendations/resolveWorkspaceRecommendation'
 import {
   parseRefinementContextFromSearchParams,
   type WorkspaceSearchParams,
@@ -23,19 +22,22 @@ export default async function WorkspacePage({ searchParams }: Props) {
     redirect('/')
   }
 
-  const refinementContext = parseRefinementContextFromSearchParams(params)
-  const result = await recommendArchitecture(idea, refinementContext)
-  const evidence = detectCapabilitiesWithEvidence(idea)
+  const requestedRefinementContext = parseRefinementContextFromSearchParams(params)
+  const { refinementContext, clarification, evidence, result } =
+    await resolveWorkspaceRecommendation(idea, requestedRefinementContext)
 
   return (
     <ArchitectureWorkspace
-      idea={result.architecture.project_description}
-      capabilities={result.architecture.capabilities}
-      explanations={result.explanations}
-      alternatives={result.alternatives}
-      rationale={result.architecture.architecture_rationale}
+      idea={idea}
+      capabilities={
+        result?.architecture.capabilities ?? evidence.map((entry) => entry.capability)
+      }
+      explanations={result?.explanations ?? []}
+      alternatives={result?.alternatives ?? []}
+      rationale={result?.architecture.architecture_rationale ?? ''}
       evidence={evidence}
       refinementContext={refinementContext}
+      clarification={clarification}
     />
   )
 }

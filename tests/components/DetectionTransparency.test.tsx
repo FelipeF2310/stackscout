@@ -63,6 +63,27 @@ describe('DetectionTransparency', () => {
     expect(html).not.toContain('Detected')
   })
 
+  it('renders a user-confirmed capability distinctly from detector evidence', () => {
+    const evidence: CapabilityEvidence[] = [
+      {
+        capability: getCapabilityById('retrieval')!,
+        signals: [
+          {
+            phrase: 'use the product’s own sources',
+            type: 'clarified',
+            rationale: 'you confirmed the product needs source grounding',
+          },
+        ],
+        origin: 'clarified',
+      },
+    ]
+
+    const html = render(evidence)
+    expect(html).toContain('Confirmed by you')
+    expect(html).toContain('confirms')
+    expect(html).toContain('Retrieval')
+  })
+
   it('de-dupes duplicate display phrases (UI only)', () => {
     const evidence: CapabilityEvidence[] = [
       {
