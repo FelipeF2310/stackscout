@@ -138,6 +138,53 @@ describe('detectCapabilities (web scraping)', () => {
   })
 })
 
+describe('detectCapabilities (website product precision)', () => {
+  const ids = (prompt: string) =>
+    detectCapabilities(prompt).map((c) => c.capability_id)
+
+  it('does not treat external scrape or crawl targets as frontend products', () => {
+    const scrapeTarget = ids('scrape product prices from websites')
+    expect(scrapeTarget).toContain('web-scraping')
+    expect(scrapeTarget).not.toContain('frontend-framework')
+
+    expect(ids('crawl a website for product data')).not.toContain(
+      'frontend-framework'
+    )
+  })
+
+  it('retains the non-frontend research-assistant capabilities', () => {
+    const result = ids(
+      'Build an AI research assistant that crawls websites and answers questions from sources'
+    )
+    expect(result).toContain('llm-api')
+    expect(result).toContain('web-scraping')
+    expect(result).toContain('retrieval')
+    expect(result).not.toContain('frontend-framework')
+  })
+
+  it.each([
+    'Build a website',
+    'Build a website for a local business',
+    'Build a website that lets users browse products',
+    'Build a website with login and payments',
+  ])('treats %j as a frontend product', (prompt) => {
+    expect(ids(prompt)).toContain('frontend-framework')
+  })
+
+  it('retains auth and payments alongside the website frontend', () => {
+    const result = ids('Build a website with login and payments')
+    expect(result).toContain('auth')
+    expect(result).toContain('payments')
+    expect(result).toContain('frontend-framework')
+  })
+
+  it('retains frontend for a documentation website through project shape', () => {
+    expect(
+      ids('Build a developer documentation website with search')
+    ).toContain('frontend-framework')
+  })
+})
+
 describe('detectCapabilities (realtime collaboration)', () => {
   const ids = (prompt: string) =>
     detectCapabilities(prompt).map((c) => c.capability_id)
