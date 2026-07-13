@@ -2,8 +2,9 @@
 
 This file defines the default working rules for Codex and other coding agents in
 this repository. Before proposing work, read
-`docs/STACKSCOUT_PROJECT_ALIGNMENT.md`, `docs/NEXT_STEPS.md`, and
-`docs/ARCHITECTURE.md` for the current roadmap and implementation state. Use
+`docs/PRODUCT_ROADMAP.md` for phase direction, `docs/NEXT_STEPS.md` for the
+active execution queue, and `docs/STACKSCOUT_PROJECT_ALIGNMENT.md` plus
+`docs/ARCHITECTURE.md` for durable product and implementation context. Use
 `docs/PRD.md` as broad product vision, not as the active implementation queue.
 Consult the relevant documents under `docs/` and `.claude/rules/` before
 changing domain behavior.
@@ -61,11 +62,10 @@ Current roadmap discipline:
 - Completed slices on `main` include refinement-context activation,
   capability-peer alternatives, focused RAG peer fit metadata, the
   realtime-collaboration capability, scheduling fit metadata, detector
-  boundary-matching hardening, and the project-shape inference first slice;
-  do not redo those.
-- The next likely product PR is the `internal → auth` migration: replace the
-  bare keyword with a project-shape rule (see `docs/NEXT_STEPS.md`). Plan it
-  before implementing.
+  boundary-matching hardening, project-shape inference, the `internal → auth`
+  shape migration, and AI-grounding clarification v1; do not redo those.
+- Follow `docs/PRODUCT_ROADMAP.md` for the current phase and
+  `docs/NEXT_STEPS.md` for the next approved execution slice.
 - Scoring review should be evidence-driven and only follow concrete
   wrong-winner cases.
 - Defer paid features, browser extensions, persistence, GitHub ingestion,

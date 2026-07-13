@@ -13,24 +13,25 @@ git status                # working tree
 npm test && npm run build # current test/build status
 ```
 
-Authoritative current roadmap: `STACKSCOUT_PROJECT_ALIGNMENT.md`,
-`NEXT_STEPS.md`, and `ARCHITECTURE.md`. `PRD.md` is broad product vision, not the
-active implementation queue.
+Canonical product and phase direction lives in `PRODUCT_ROADMAP.md`. This file
+is the short active execution queue. `STACKSCOUT_PROJECT_ALIGNMENT.md` preserves
+the durable thesis and build discipline; `ARCHITECTURE.md` describes implemented
+technical reality. `PRD.md` is broad vision, not the active queue.
 
 ## Where StackScout is
 
-Deterministic, seed-based, capability-first advisor — **no LLM / DB / network at
-request time** (deliberate trust boundary, not the end state). Built through
-PRs #15–#28 plus subsequent slices pushed to `main` (through the project-shape
-inference commit `4849890`):
+Deterministic, seed-based, capability-first advisor — **no live LLM, database,
+or network lookup at request time**. AI-grounding clarification v1 is complete
+and merged.
 
 - **Flow:** Start (`/`) → two-pane Workspace (`/workspace?idea=…`) → living
   Architecture Brief. Legacy `/?q=` redirects into the workspace; the old
   stacked results shell is gone.
-- **Pipeline (deterministic):** detect capabilities (boundary-safe keyword
-  matching + project-shape inference, with evidence) → parse URL-backed
-  refinement context → score per capability → assemble (top tool per slot) →
-  explain → alternatives. Engine in `lib/`, corpus in `data/seed/`.
+- **Pipeline (deterministic):** detect capability evidence (boundary-safe
+  keyword matching + project-shape inference) → resolve eligible URL-backed
+  AI-grounding context → score per capability → assemble (top tool per slot) →
+  explain → alternatives. Unresolved eligible prompts hold the final Brief for
+  one question. Engine in `lib/`, corpus in `data/seed/`.
   Capabilities come from `lib/capabilities/capabilityTaxonomy.ts` (canonical;
   18 incl. `web-scraping` and `realtime-collaboration`).
 - **Detection quality:** keyword matching is word-boundary regexes with explicit
@@ -40,9 +41,9 @@ inference commit `4849890`):
   admin review, source-grounded answering) with authored rationale evidence;
   shape-only capabilities append after keyword detections and the assumed floor
   fires only when both are empty.
-- **Refinement context:** URL-backed refinement params flow from the live
-  workspace into `recommendArchitecture`; no params still means the default
-  deterministic recommendation path.
+- **Refinement context:** URL-backed refinement and grounding answers flow
+  through workspace orchestration before final recommendation selection; no
+  params still means the default deterministic path.
 - **Alternatives:** relationship-backed alternatives remain preferred, with
   same-capability peer fallback when explicit alternative edges are missing.
 - **Product-fit layer:** optional `best_for` / `avoid_if` on tools, surfaced in
@@ -55,7 +56,8 @@ inference commit `4849890`):
 
 ## Current queue
 
-Recently completed and pushed to `origin/main` — do not redo these slices:
+Completed on `main`, plus the roadmap reset completed by this documentation
+slice — do not redo:
 
 - Refinement-context activation, same-capability peer alternatives, and focused
   RAG peer fit metadata (earlier slices).
@@ -66,69 +68,43 @@ Recently completed and pushed to `origin/main` — do not redo these slices:
 - **Detector boundary-matching hardening** (`1459f16`): word-boundary/stem/plural
   matching replaced raw substrings; fixed false positives (authors→auth,
   "the rest of"→api-layer, team→auth, therapist→api-layer, ghost→deployment).
-  `internal → auth` was deliberately kept, deferred to the migration below.
 - **Project-shape inference first slice** (`4849890`): four entailment-based
   rules — documentation site → frontend; support inbox → frontend + database;
   admin review → database; answers-from-sources → retrieval — with authored
   rationale on each shape signal.
+- **Internal gated-access migration:** bare `internal → auth` was replaced by a
+  narrow project-shape rule for internal software and content.
+- **AI-grounding clarification v1:** unresolved AI source strategy now asks one
+  deterministic, URL-backed question; explicit source requirements bypass it.
+- **Product roadmap alignment (this documentation slice):**
+  `PRODUCT_ROADMAP.md` is the canonical phase roadmap and this file is the short
+  execution queue.
 
 Queue:
 
-1. **Current: AI-grounding clarification v1.** For an AI product whose
-   grounding remains unresolved after direct evidence and shape inference, ask
-   one deterministic question before rendering the final Architecture Brief.
-   The answer is URL-backed, adds Retrieval only for product-source choices,
-   and removes broad chatbot-derived Retrieval/Vector Storage assumptions for
-   general-knowledge/default choices. No live AI or generic question engine.
-2. **After the clarification slice: separate soft-trigger policy review.** Broad
-   inferred keywords (`support`, `requests`, `websites`, `track`, `data`)
-   produce right-ish answers for wrong reasons. The AI-grounding clarification
-   does not resolve those detector-policy questions; review each deliberately in
-   its own follow-up scope. The 14-prompt recommendation review set now lives in
-   `tests/fixtures/recommendationReviewPrompts.ts` (the golden set sources its
-   prompts from it) — include it in every before/after detector and
-   selected-tool diff audit.
-3. **Optional later: rationale-display UI slice.** Shape signals already carry
-   authored rationales; surfacing them in DetectionTransparency is a small
-   copy/UI slice.
-4. **Scoring structure review only if justified.** Examples:
-   `primary_capability` or per-capability role, only after recommendation review
-   shows concrete wrong-winner evidence.
-5. **Later: evidence/audit/report schemas.** Design after the recommendation
-   foundation is stronger.
-6. **Later still: RAG/self-learning.** Requires evidence objects and explicit
-   review boundaries first.
+1. **Next: plan the separate `websites → Frontend Framework` target-context
+   precision slice.** This is a narrowly verified detector correction, not a
+   clarification question or generic cleanup. Its implementation specification
+   belongs in its own planning pass.
+2. **Before another question vertical: define the clarification policy
+   catalog.** Each proposed question needs eligibility, priority, user-facing
+   wording, sensible default, capability/tool effect, explicit-evidence bypass,
+   and negative examples.
 
-Known-tool/current-stack evaluation remains Phase 2B — not immediate unless
-Phase 2A recommendation quality is judged strong enough.
+The remaining ambiguous triggers — `support`, `requests`, `track`, and `data` —
+are independent and deferred unless review evidence demonstrates user harm. Do
+not bundle them with the websites policy or with each other. Use the 14-prompt
+fixture in `tests/fixtures/recommendationReviewPrompts.ts` plus the broader
+detector-test corpus for every behavior-changing audit.
 
-Free product comes first. Paid plans are deferred until the free product proves
-value. Browser extensions are deferred until the core audit/report artifact is
-useful.
+## Deferred
 
-## Deferred backlog (with rationale — the why matters)
-
-- **More frontend frameworks (SvelteKit, Nuxt):** deferred — they differ from
-  Next.js mainly by language/ecosystem (Svelte/Vue) = *preference*, not product
-  fit. Add only with a clear product-fit contrast. (Astro went first because
-  content/SSG vs full-stack app is a real architecture decision.)
-- **Realtime / collaboration capability:** first focused slice covers
-  Liveblocks/Yjs with precise detector coverage. Keep future expansion small;
-  do not broaden into generic WebSocket/pubsub or whiteboard UI libraries.
-- **Reconcile `REPO_MEMORY_AND_LEARNING.md` wording:** it still says "never raw
-  model output at request time"; align with the PR #27-era framing —
-  *unreviewed* model output is never authoritative for facts/scores/selection,
-  but AI may assist at runtime (intent, clarification, grounded explanations).
-- **Optional `docs/ALIGNMENT_AUDIT.md`:** the alignment/wording audit as a
-  tracked doc (currently only in chat).
-- **Corpus quality / thin capabilities:** several capabilities have 1–2 tools
-  (few/no alternatives) — expand with fit metadata, not breadth-for-breadth.
-- **Deeper scoring refinement:** latent only — `capabilityFit` is flat 1 and
-  compatibility is slot-blind. Touch ONLY when a 2nd "wrong tool wins" output
-  proves it necessary (the supabase-auth case was fixed via corpus, not scoring).
-- **Persistence / GitHub ingestion / agents / RAG / paid / browser extension:**
-  deferred. None is part of the near product metadata work unless explicitly
-  scoped.
+- Existing-product / missing-piece mode follows Phase 1 and begins with
+  user-described current context only; see `PRODUCT_ROADMAP.md`.
+- Scoring structure changes require a concrete wrong-winner case.
+- Corpus expansion requires a clear product-fit contrast, not breadth alone.
+- Persistence, GitHub ingestion, runtime agents, RAG, paid plans, and browser
+  extensions remain outside the active phase.
 
 ## Hard-won guardrails (don't relearn these the hard way)
 
