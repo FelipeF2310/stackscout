@@ -4,6 +4,7 @@ import type { CapabilityEvidence } from '@/lib/capabilities/detectCapabilities'
 import type { ToolExplanation } from '@/lib/recommendations/explainRecommendation'
 import type { RefinementContext } from '@/lib/recommendations/generateArchitecture'
 import type { CapabilityAlternatives } from '@/lib/recommendations/recommendArchitecture'
+import type { AiGroundingQuestion } from '@/lib/capabilities/aiGrounding'
 import ConversationPane from './ConversationPane'
 import ArchitectureBrief from './ArchitectureBrief'
 
@@ -15,6 +16,7 @@ export interface ArchitectureWorkspaceProps {
   rationale: string
   evidence: CapabilityEvidence[]
   refinementContext: RefinementContext
+  clarification?: AiGroundingQuestion | null
 }
 
 // Canonical submitted state: a two-pane conversational workspace.
@@ -29,6 +31,7 @@ export default function ArchitectureWorkspace({
   rationale,
   evidence,
   refinementContext,
+  clarification = null,
 }: ArchitectureWorkspaceProps) {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -50,14 +53,29 @@ export default function ArchitectureWorkspace({
           capabilities={capabilities}
           evidence={evidence}
           refinementContext={refinementContext}
+          clarification={clarification}
         />
-        <ArchitectureBrief
-          idea={idea}
-          capabilities={capabilities}
-          explanations={explanations}
-          alternatives={alternatives}
-          rationale={rationale}
-        />
+        {clarification ? (
+          <section className="flex items-center justify-center bg-background p-6">
+            <div className="max-w-md space-y-3 text-center">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Clarifying your architecture
+              </p>
+              <h1 className="text-xl font-bold">One answer will sharpen the recommendation.</h1>
+              <p className="text-sm text-muted-foreground">
+                Answer the question in the conversation to see the recommended architecture.
+              </p>
+            </div>
+          </section>
+        ) : (
+          <ArchitectureBrief
+            idea={idea}
+            capabilities={capabilities}
+            explanations={explanations}
+            alternatives={alternatives}
+            rationale={rationale}
+          />
+        )}
       </div>
     </div>
   )

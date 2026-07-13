@@ -37,28 +37,30 @@ import { evaluateProjectShapes } from './projectShapes'
 // capability was detected without overclaiming:
 //   - 'direct'   — the phrase names or clearly describes the capability.
 //   - 'inferred' — the phrase implies the capability but does not ask for it.
+//   - 'clarified' — a user answer confirmed a capability after detection.
 // Keywords the audit flagged 'ambiguous' (broad / substring-prone) are tagged
 // 'inferred' so a shaky match is never presented as confirmed. See
 // docs/CAPABILITY_DETECTION_AUDIT.md.
 
-export type SignalType = 'direct' | 'inferred'
-export type CapabilityOrigin = 'matched' | 'assumed-floor'
+export type SignalType = 'direct' | 'inferred' | 'clarified'
+export type CapabilityOrigin = 'matched' | 'assumed-floor' | 'clarified'
 
 export interface DetectionSignal {
-  // The actual text that matched in the (lower-cased) description — for stem
-  // keywords this is the full matched word (e.g. 'summarize', never 'summar').
+  // The text that matched in the lower-cased description, or an authored label
+  // for a user-confirmed clarification. For stem keywords this is the full
+  // matched word (e.g. 'summarize', never 'summar').
   phrase: string
   type: SignalType
-  // Authored explanation, present only on project-shape inference signals
-  // (e.g. 'an inbox stores threads, status, and assignment'). Not rendered in
-  // the UI yet; carried so shape assumptions are reviewable from day one.
+  // Authored explanation for project-shape inference or a user-confirmed
+  // clarification (e.g. why a shape entails storage, or which answer added a
+  // capability). Carried so non-keyword evidence remains reviewable.
   rationale?: string
 }
 
 export interface CapabilityEvidence {
   capability: Capability
-  // All keywords that matched for this capability. Empty when the capability
-  // came from the fallback floor rather than a real match.
+  // All detector, shape, or clarification signals for this capability. Empty
+  // when the capability came from the fallback floor rather than real evidence.
   signals: DetectionSignal[]
   origin: CapabilityOrigin
 }

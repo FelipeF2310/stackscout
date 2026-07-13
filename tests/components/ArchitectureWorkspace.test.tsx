@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { recommendArchitecture } from '../../lib/recommendations/recommendArchitecture'
 import { detectCapabilitiesWithEvidence } from '../../lib/capabilities/detectCapabilities'
 import type { RefinementContext } from '../../lib/recommendations/generateArchitecture'
+import { resolveWorkspaceRecommendation } from '../../lib/recommendations/resolveWorkspaceRecommendation'
 
 // The canonical submitted state must be the two-pane workspace, never the old
 // stacked-results shell. These tests render the workspace from real deterministic
@@ -45,6 +46,33 @@ async function renderWorkspace(context: RefinementContext = {}): Promise<string>
         rationale={result.architecture.architecture_rationale}
         evidence={evidence}
         refinementContext={context}
+      />
+    )
+  } finally {
+    vi.unstubAllGlobals()
+  }
+}
+
+async function renderGroundingWorkspace(
+  idea: string,
+  requestedContext: RefinementContext = {}
+): Promise<string> {
+  const { refinementContext, clarification, evidence, result } =
+    await resolveWorkspaceRecommendation(idea, requestedContext)
+  vi.stubGlobal('React', React)
+  try {
+    return renderToStaticMarkup(
+      <ArchitectureWorkspace
+        idea={idea}
+        capabilities={
+          result?.architecture.capabilities ?? evidence.map((entry) => entry.capability)
+        }
+        explanations={result?.explanations ?? []}
+        alternatives={result?.alternatives ?? []}
+        rationale={result?.architecture.architecture_rationale ?? ''}
+        evidence={evidence}
+        refinementContext={refinementContext}
+        clarification={clarification}
       />
     )
   } finally {
@@ -151,6 +179,38 @@ describe('ArchitectureWorkspace (canonical submitted state)', () => {
     expect(html).toContain('Hosting')
     expect(html).toContain('Ecosystem')
     expect(html).not.toContain('Model preference')
+  })
+
+  it('holds the Architecture Brief until an active clarification is answered', async () => {
+    const html = await renderGroundingWorkspace('Build an AI chatbot')
+
+    expect(html).toContain('One question')
+    expect(html).toContain('Clarifying your architecture')
+    expect(html).toContain('One answer will sharpen the recommendation.')
+    expect(html).not.toContain('Architecture Brief')
+  })
+
+  it('releases the Brief and renders the selected grounding answer inline', async () => {
+    const html = await renderGroundingWorkspace('Build an AI chatbot', {
+      aiGrounding: 'product-sources',
+    })
+
+    expect(html).toContain('Architecture Brief')
+    expect(html).toContain('AI grounding')
+    expect(html).toContain('Use the product’s own sources')
+    expect(html).toContain('Change')
+    expect(html).not.toContain('One question')
+  })
+
+  it('does not render stale grounding state for an ineligible prompt', async () => {
+    const html = await renderGroundingWorkspace('Build a marketplace with payments', {
+      aiGrounding: 'product-sources',
+    })
+
+    expect(html).toContain('Architecture Brief')
+    expect(html).not.toContain('One question')
+    expect(html).not.toContain('AI grounding')
+    expect(html).not.toContain('Use the product’s own sources')
   })
 })
 

@@ -1,4 +1,5 @@
 import type { Capability } from '../capabilities/capabilityTypes'
+import type { AiGrounding } from '../capabilities/aiGrounding'
 
 export interface RefinementContext {
   skillLevel?: 'beginner' | 'intermediate' | 'advanced'
@@ -6,6 +7,7 @@ export interface RefinementContext {
   hostingPreference?: 'managed' | 'self-hosted'
   ecosystem?: 'typescript' | 'python' | 'mixed'
   modelPreference?: 'openai' | 'anthropic' | 'open-source' | 'no-preference'
+  aiGrounding?: AiGrounding
 }
 
 export interface SelectedTool {
@@ -69,7 +71,7 @@ export function generateArchitecture(
 
   const contextNote = Object.entries(context)
     .filter(([, v]) => v !== undefined)
-    .map(([k, v]) => `${k}: ${v}`)
+    .map(([k, v]) => formatContextNote(k, v as string))
     .join(', ')
 
   const architecture_rationale =
@@ -84,6 +86,18 @@ export function generateArchitecture(
     architecture_rationale,
     created_at: new Date().toISOString(),
   }
+}
+
+function formatContextNote(key: string, value: string): string {
+  if (key !== 'aiGrounding') return `${key}: ${value}`
+
+  const labels: Record<AiGrounding, string> = {
+    'product-sources': 'AI grounding: product sources',
+    'general-knowledge': 'AI grounding: general knowledge',
+    both: 'AI grounding: both',
+    default: 'AI grounding: sensible default',
+  }
+  return labels[value as AiGrounding]
 }
 
 function joinNames(names: string[]): string {

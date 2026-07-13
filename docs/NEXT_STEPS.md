@@ -74,19 +74,17 @@ Recently completed and pushed to `origin/main` — do not redo these slices:
 
 Queue:
 
-1. **Next: PR 2 — `internal → auth` migration (plan before implementing).**
-   Remove/narrow the bare `internal → auth` keyword and replace it with a
-   deliberate project-shape rule using the already-built `requires`
-   co-occurrence machinery: cue `internal` / `staff` / `operator`, requiring a
-   surface/content noun (`tool`, `dashboard`, `portal`, `console`, `app`,
-   `docs`, `documents`). Must preserve auth for the praised/golden internal
-   prompts ("internal company documents", "internal analytics dashboard") and
-   avoid auth for "internal API refactor", "internal logic", and "a tool to
-   track inventory for our team".
-2. **After PR 2: soft-trigger cleanup review.** Broad inferred keywords
-   (`support`, `requests`, `websites`, `track`, `data`) produce right-ish
-   answers for wrong reasons; review them only once shape rules can take over
-   the principled cases. The 14-prompt recommendation review set now lives in
+1. **Current: AI-grounding clarification v1.** For an AI product whose
+   grounding remains unresolved after direct evidence and shape inference, ask
+   one deterministic question before rendering the final Architecture Brief.
+   The answer is URL-backed, adds Retrieval only for product-source choices,
+   and removes broad chatbot-derived Retrieval/Vector Storage assumptions for
+   general-knowledge/default choices. No live AI or generic question engine.
+2. **After the clarification slice: separate soft-trigger policy review.** Broad
+   inferred keywords (`support`, `requests`, `websites`, `track`, `data`)
+   produce right-ish answers for wrong reasons. The AI-grounding clarification
+   does not resolve those detector-policy questions; review each deliberately in
+   its own follow-up scope. The 14-prompt recommendation review set now lives in
    `tests/fixtures/recommendationReviewPrompts.ts` (the golden set sources its
    prompts from it) — include it in every before/after detector and
    selected-tool diff audit.

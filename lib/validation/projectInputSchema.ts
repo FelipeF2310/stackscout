@@ -6,6 +6,9 @@ export const refinementContextSchema = z.object({
   hostingPreference: z.enum(['managed', 'self-hosted']).optional(),
   ecosystem: z.enum(['typescript', 'python', 'mixed']).optional(),
   modelPreference: z.enum(['openai', 'anthropic', 'open-source', 'no-preference']).optional(),
+  aiGrounding: z
+    .enum(['product-sources', 'general-knowledge', 'both', 'default'])
+    .optional(),
 })
 
 export const projectInputSchema = z.object({
