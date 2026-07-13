@@ -175,7 +175,7 @@ const KEYWORD_MAP: Record<string, TaggedKeyword[]> = {
   ],
   'frontend-framework': [
     d('frontend'), d('front-end'), d('web app'), d('webapp'), d('dashboard'),
-    d('dashboards'), d('website'), i('saas'), i('interface'), d('ui'),
+    d('dashboards'), d('build a website'), i('saas'), i('interface'), d('ui'),
     d('portal'), d('admin panel'), d('landing page'), i('marketplace app'),
     i('marketplace platform'), i('whiteboard'),
   ],

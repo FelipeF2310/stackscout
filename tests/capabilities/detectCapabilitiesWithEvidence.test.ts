@@ -215,6 +215,87 @@ describe('detectCapabilitiesWithEvidence (project-shape inference)', () => {
   })
 })
 
+describe('website product precision (evidence and recommendations)', () => {
+  const behaviorFor = async (prompt: string) => {
+    const evidence = detectCapabilitiesWithEvidence(prompt)
+    const recommendation = await recommendArchitecture(prompt)
+    return {
+      evidence,
+      capabilityIds: evidence.map((entry) => entry.capability.capability_id),
+      toolIds: recommendation.architecture.selected_tools.map((tool) => tool.tool_id),
+    }
+  }
+
+  it('removes frontend and Next.js from a plural scrape target', async () => {
+    const result = await behaviorFor('scrape product prices from websites')
+    expect(result.capabilityIds).toContain('web-scraping')
+    expect(result.capabilityIds).not.toContain('frontend-framework')
+    expect(result.toolIds).not.toContain('nextjs')
+  })
+
+  it('removes frontend and Next.js from a singular crawl target', async () => {
+    const result = await behaviorFor('crawl a website for product data')
+    expect(result.capabilityIds).not.toContain('frontend-framework')
+    expect(result.toolIds).not.toContain('nextjs')
+  })
+
+  it('keeps the research assistant source-grounded without a frontend', async () => {
+    const result = await behaviorFor(
+      'Build an AI research assistant that crawls websites and answers questions from sources'
+    )
+    expect(result.capabilityIds).toEqual(
+      expect.arrayContaining(['llm-api', 'web-scraping', 'retrieval'])
+    )
+    expect(result.capabilityIds).not.toContain('frontend-framework')
+
+    const retrieval = result.evidence.find(
+      (entry) => entry.capability.capability_id === 'retrieval'
+    )
+    expect(retrieval?.signals).toContainEqual({
+      phrase: 'answers questions from',
+      type: 'inferred',
+      rationale: 'answering from sources requires retrieving them',
+    })
+    expect(result.toolIds).toEqual(['openai-sdk', 'firecrawl', 'llamaindex'])
+  })
+
+  it.each([
+    'Build a website',
+    'Build a website for a local business',
+    'Build a website that lets users browse products',
+    'Build a website with login and payments',
+  ])('keeps direct frontend evidence and Next.js for %j', async (prompt) => {
+    const result = await behaviorFor(prompt)
+    const frontend = result.evidence.find(
+      (entry) => entry.capability.capability_id === 'frontend-framework'
+    )
+    expect(frontend?.origin).toBe('matched')
+    expect(frontend?.signals).toContainEqual({
+      phrase: 'build a website',
+      type: 'direct',
+    })
+    expect(result.toolIds).toContain('nextjs')
+  })
+
+  it('keeps a documentation website frontend through shape evidence only', async () => {
+    const result = await behaviorFor(
+      'Build a developer documentation website with search'
+    )
+    const frontend = result.evidence.find(
+      (entry) => entry.capability.capability_id === 'frontend-framework'
+    )
+    expect(frontend?.origin).toBe('matched')
+    expect(frontend?.signals).toEqual([
+      {
+        phrase: 'documentation website',
+        type: 'inferred',
+        rationale: 'a documentation site is a rendered, navigable surface',
+      },
+    ])
+    expect(result.toolIds).toContain('nextjs')
+  })
+})
+
 describe('backward compatibility (behavior-preserving)', () => {
   const PROMPTS = [
     'Build a PDF chatbot for internal company documents',
