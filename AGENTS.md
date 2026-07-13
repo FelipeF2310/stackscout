@@ -7,7 +7,8 @@ active execution queue, and `docs/STACKSCOUT_PROJECT_ALIGNMENT.md` plus
 `docs/ARCHITECTURE.md` for durable product and implementation context. Use
 `docs/PRD.md` as broad product vision, not as the active implementation queue.
 Consult the relevant documents under `docs/` and `.claude/rules/` before
-changing domain behavior.
+changing domain behavior. Before proposing or implementing a clarification
+question, read `docs/CLARIFICATION_POLICY_CATALOG.md`.
 
 ## Product purpose
 

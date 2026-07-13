@@ -9,7 +9,7 @@ This is a durable orientation document, not a spec and not a backlog. When a
 detail here goes stale, update it in a small docs PR rather than letting drift
 accumulate.
 
-_Last updated: 2026-07-12._
+_Last updated: 2026-07-13._
 
 ---
 
@@ -112,6 +112,10 @@ Already present in current branch history — **do not redo**:
 - **AI-grounding clarification v1** — unresolved AI prompts ask one
   deterministic, URL-backed grounding question before final recommendation
   selection; explicit source requirements bypass it.
+- **Website frontend target precision** — external crawl/scrape targets no
+  longer imply Frontend Framework, while explicitly built websites retain it.
+- **Clarification-policy catalog** — question proposals now have a documented
+  governance and evidence gate; this is documentation, not a runtime registry.
 
 ---
 
@@ -217,9 +221,11 @@ value and the core audit/report artifact is useful.
 
 The canonical product and phase sequence lives in
 [`PRODUCT_ROADMAP.md`](./PRODUCT_ROADMAP.md). The short active execution queue
-lives in [`NEXT_STEPS.md`](./NEXT_STEPS.md). AI-grounding clarification v1 and
-the `internal → auth` project-shape migration are complete; neither is pending
-work.
+lives in [`NEXT_STEPS.md`](./NEXT_STEPS.md). Clarification-question governance
+lives in
+[`CLARIFICATION_POLICY_CATALOG.md`](./CLARIFICATION_POLICY_CATALOG.md).
+AI-grounding clarification v1, website frontend target precision, and the
+`internal → auth` project-shape migration are complete; none is pending work.
 
 The current phase validates the Architecture Advisor decision loop. Detector
 precision work must remain evidence-led and bounded, and another clarification
@@ -233,8 +239,9 @@ Still parked (not the current focus):
   [`REPO_MEMORY_AND_LEARNING.md`](./REPO_MEMORY_AND_LEARNING.md), not implemented.
 - **Ambiguous detector policies** (`support`, `requests`, `track`, `data`) —
   independently deferred unless review evidence demonstrates user harm. The
-  verified `websites → Frontend Framework` target-context issue remains a
-  separate narrow precision slice, not a generic cleanup program.
+  completed `websites → Frontend Framework` target-context correction remains a
+  separate narrow precision slice, not a precedent for a generic cleanup
+  program.
 
 This document does **not** prescribe implementation. Each phase gets its own
 planning pass, then the smallest safe PR — per the phased discipline above.

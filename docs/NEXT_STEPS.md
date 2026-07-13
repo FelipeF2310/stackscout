@@ -22,7 +22,8 @@ technical reality. `PRD.md` is broad vision, not the active queue.
 
 Deterministic, seed-based, capability-first advisor — **no live LLM, database,
 or network lookup at request time**. AI-grounding clarification v1 is complete
-and merged.
+and merged. Website frontend target precision is complete, and the
+clarification-policy catalog now governs proposals for another question.
 
 - **Flow:** Start (`/`) → two-pane Workspace (`/workspace?idea=…`) → living
   Architecture Brief. Legacy `/?q=` redirects into the workspace; the old
@@ -56,8 +57,7 @@ and merged.
 
 ## Current queue
 
-Completed on `main`, plus the roadmap reset completed by this documentation
-slice — do not redo:
+Completed on `main` after this documentation slice merges — do not redo:
 
 - Refinement-context activation, same-capability peer alternatives, and focused
   RAG peer fit metadata (earlier slices).
@@ -76,20 +76,26 @@ slice — do not redo:
   narrow project-shape rule for internal software and content.
 - **AI-grounding clarification v1:** unresolved AI source strategy now asks one
   deterministic, URL-backed question; explicit source requirements bypass it.
-- **Product roadmap alignment (this documentation slice):**
+- **Website frontend target precision:** external crawl and scrape targets no
+  longer imply Frontend Framework or Next.js; explicit website products retain
+  the frontend path.
+- **Product roadmap alignment:**
   `PRODUCT_ROADMAP.md` is the canonical phase roadmap and this file is the short
   execution queue.
+- **Clarification-policy catalog:** question, precision-correction, conservative
+  default, and deferral policies now have a shared governance and promotion
+  gate.
 
 Queue:
 
-1. **Next: plan the separate `websites → Frontend Framework` target-context
-   precision slice.** This is a narrowly verified detector correction, not a
-   clarification question or generic cleanup. Its implementation specification
-   belongs in its own planning pass.
-2. **Before another question vertical: define the clarification policy
-   catalog.** Each proposed question needs eligibility, priority, user-facing
-   wording, sensible default, capability/tool effect, explicit-evidence bypass,
-   and negative examples.
+1. **Next: validate the Phase 1 decision-loop contract against representative
+   user journeys.** Check that unambiguous prompts reach the Brief immediately,
+   AI grounding earns its interruption, evidence and tradeoffs are clear, and
+   material decisions are easy to revise.
+
+Another clarification vertical requires a candidate to pass the evidence gate
+in [`CLARIFICATION_POLICY_CATALOG.md`](./CLARIFICATION_POLICY_CATALOG.md) before
+implementation planning begins.
 
 The remaining ambiguous triggers — `support`, `requests`, `track`, and `data` —
 are independent and deferred unless review evidence demonstrates user harm. Do
