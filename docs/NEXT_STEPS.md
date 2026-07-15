@@ -23,7 +23,10 @@ technical reality. `PRD.md` is broad vision, not the active queue.
 Deterministic, seed-based, capability-first advisor — **no live LLM, database,
 or network lookup at request time**. AI-grounding clarification v1 is complete
 and merged. Website frontend target precision is complete, and the
-clarification-policy catalog now governs proposals for another question.
+clarification-policy catalog now governs proposals for another question. Phase
+1 browser validation, capability-bound next-step guidance, and final workspace
+copy polish are complete. Phase 2 begins with governance planning, not a pilot
+or implementation.
 
 - **Flow:** Start (`/`) → two-pane Workspace (`/workspace?idea=…`) → living
   Architecture Brief. Legacy `/?q=` redirects into the workspace; the old
@@ -57,7 +60,7 @@ clarification-policy catalog now governs proposals for another question.
 
 ## Current queue
 
-Completed on `main` after this documentation slice merges — do not redo:
+Completed on `main` — do not redo:
 
 - Refinement-context activation, same-capability peer alternatives, and focused
   RAG peer fit metadata (earlier slices).
@@ -85,13 +88,25 @@ Completed on `main` after this documentation slice merges — do not redo:
 - **Clarification-policy catalog:** question, precision-correction, conservative
   default, and deferral policies now have a shared governance and promotion
   gate.
+- **Phase 1 decision-loop validation:** representative browser journeys passed;
+  the crawler receives capability-bound generic guidance, explicit document RAG
+  receives specialized guidance, stale grounding state is inert, and final
+  review copy is clear.
 
 Queue:
 
-1. **Next: validate the Phase 1 decision-loop contract against representative
-   user journeys.** Check that unambiguous prompts reach the Brief immediately,
-   AI grounding earns its interruption, evidence and tradeoffs are clear, and
-   material decisions are easy to revise.
+1. **Next: plan Phase 2A, the separate ecosystem asset classification
+   contract.** The future `ECOSYSTEM_ASSET_CLASSIFICATION_CONTRACT.md` will own
+   public Repository and AI-builder-skill boundaries, asset identity, claim
+   types, evidence/provenance/freshness fields, proposal lifecycle, pilot
+   rubrics, and promotion criteria. It is governance documentation only and is
+   not part of this roadmap-alignment slice.
+
+This queue does **not** authorize a repository or skill pilot, GitHub ingestion,
+agent workers, GitHub API access, runtime integration, database or persistence,
+seed-data changes, recommendation changes, or user-facing discovery. Phase 2B
+and 2C remain future offline public-source proposal pilots; 2C is gated by 2B
+findings. Phase 2D and 2E require their own later scopes.
 
 Another clarification vertical requires a candidate to pass the evidence gate
 in [`CLARIFICATION_POLICY_CATALOG.md`](./CLARIFICATION_POLICY_CATALOG.md) before
@@ -103,9 +118,13 @@ not bundle them with the websites policy or with each other. Use the 14-prompt
 fixture in `tests/fixtures/recommendationReviewPrompts.ts` plus the broader
 detector-test corpus for every behavior-changing audit.
 
+The support-inbox observation and any broader AI interaction-mode policy work
+also remain separate and deferred. Do not alter AI-grounding policy through the
+Phase 2 discovery roadmap.
+
 ## Deferred
 
-- Existing-product / missing-piece mode follows Phase 1 and begins with
+- Existing-product / missing-piece mode is Phase 3 and begins with
   user-described current context only; see `PRODUCT_ROADMAP.md`.
 - Scoring structure changes require a concrete wrong-winner case.
 - Corpus expansion requires a clear product-fit contrast, not breadth alone.
