@@ -25,8 +25,8 @@ or network lookup at request time**. AI-grounding clarification v1 is complete
 and merged. Website frontend target precision is complete, and the
 clarification-policy catalog now governs proposals for another question. Phase
 1 browser validation, capability-bound next-step guidance, and final workspace
-copy polish are complete. Phase 2 begins with governance planning, not a pilot
-or implementation.
+copy polish are complete. The Phase 2A ecosystem asset classification contract
+now defines governance for future proposals; no pilot or implementation exists.
 
 - **Flow:** Start (`/`) → two-pane Workspace (`/workspace?idea=…`) → living
   Architecture Brief. Legacy `/?q=` redirects into the workspace; the old
@@ -92,21 +92,23 @@ Completed on `main` — do not redo:
   the crawler receives capability-bound generic guidance, explicit document RAG
   receives specialized guidance, stale grounding state is inert, and final
   review copy is clear.
+- **Phase 2A ecosystem asset classification contract:** public GitHub Repository
+  and AI-builder Skill identity, claim, evidence, review, and promotion
+  boundaries are documented; this is governance, not a pilot or runtime model.
 
 Queue:
 
-1. **Next: plan Phase 2A, the separate ecosystem asset classification
-   contract.** The future `ECOSYSTEM_ASSET_CLASSIFICATION_CONTRACT.md` will own
-   public Repository and AI-builder-skill boundaries, asset identity, claim
-   types, evidence/provenance/freshness fields, proposal lifecycle, pilot
-   rubrics, and promotion criteria. It is governance documentation only and is
-   not part of this roadmap-alignment slice.
+1. **Next: plan a separately scoped Phase 2B offline public GitHub Repository
+   pilot.** Planning must follow
+   [`ECOSYSTEM_ASSET_CLASSIFICATION_CONTRACT.md`](./ECOSYSTEM_ASSET_CLASSIFICATION_CONTRACT.md)
+   and remain a proposal-only evaluation outside trusted application data.
 
-This queue does **not** authorize a repository or skill pilot, GitHub ingestion,
-agent workers, GitHub API access, runtime integration, database or persistence,
-seed-data changes, recommendation changes, or user-facing discovery. Phase 2B
-and 2C remain future offline public-source proposal pilots; 2C is gated by 2B
-findings. Phase 2D and 2E require their own later scopes.
+This queue does **not** authorize that pilot, classification execution, GitHub
+API access, ingestion, agent workers, runtime integration, database or
+persistence, seed/data changes, recommendation changes, or user-facing
+discovery. Phase 2C remains a later offline Skill proposal pilot and requires an
+explicit Terra go/no-go review after 2B findings. Phase 2D and 2E require their
+own later scopes.
 
 Another clarification vertical requires a candidate to pass the evidence gate
 in [`CLARIFICATION_POLICY_CATALOG.md`](./CLARIFICATION_POLICY_CATALOG.md) before

@@ -114,7 +114,10 @@ relationship graph. There is no database and no migration step.
 These are **not implemented** — they describe where the architecture is headed,
 kept explicitly separate from the current build. StackScout is meant to become an
 **AI-assisted open-source decision system**, deliberately *not* "ChatGPT over
-GitHub." The governing principle (from `REPO_MEMORY_AND_LEARNING.md`):
+GitHub." Future public Repository and AI-builder Skill classification is governed
+by
+[`ECOSYSTEM_ASSET_CLASSIFICATION_CONTRACT.md`](./ECOSYSTEM_ASSET_CLASSIFICATION_CONTRACT.md).
+The governing principle (from `REPO_MEMORY_AND_LEARNING.md`):
 
 > **Agents propose. StackScout stores reviewed knowledge. Runtime recommendations
 > use trusted, structured data.**
@@ -126,8 +129,8 @@ GitHub." The governing principle (from `REPO_MEMORY_AND_LEARNING.md`):
   (capability mappings, relationships, risk/freshness signals). Proposals are
   candidates, not truth.
 - **Review / trust boundary** — a proposal becomes part of StackScout's memory
-  only after an explicit review path (human or tightly-scoped validation).
-  Storage is the line between "a model said so" and "StackScout knows."
+  only after explicit human review and a separate promotion decision. Promotion
+  is the line between "a model said so" and "StackScout knows."
 - **Persistence / trusted repo intelligence** — later, after the free product and
   review boundaries justify it, a database could store **reviewed, structured
   repo intelligence** plus saved architectures and outcomes; the corpus could
