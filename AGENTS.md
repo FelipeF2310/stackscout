@@ -8,7 +8,9 @@ active execution queue, and `docs/STACKSCOUT_PROJECT_ALIGNMENT.md` plus
 `docs/PRD.md` as broad product vision, not as the active implementation queue.
 Consult the relevant documents under `docs/` and `.claude/rules/` before
 changing domain behavior. Before proposing or implementing a clarification
-question, read `docs/CLARIFICATION_POLICY_CATALOG.md`.
+question, read `docs/CLARIFICATION_POLICY_CATALOG.md`. Before proposing ecosystem
+asset classification, a pilot, or promotion, read
+`docs/ECOSYSTEM_ASSET_CLASSIFICATION_CONTRACT.md`.
 
 ## Product purpose
 
@@ -27,7 +29,12 @@ The product should answer:
 
 - A capability describes what a system must do, such as Authentication,
   Vector Storage, or Document Parsing.
-- A tool or repository is an implementation of one or more capabilities.
+- A current Tool is a runtime-selectable implementation of one or more
+  capabilities.
+- A public repository is an evidence-bearing source and possible future asset,
+  not automatically a Tool or recommendation.
+- An AI-builder skill is development assistance for a builder or coding agent,
+  not a runtime architecture dependency.
 - An architecture is a collection of detected capabilities fulfilled by
   compatible selected tools, with rationale.
 - Detect capabilities before recommending tools.
