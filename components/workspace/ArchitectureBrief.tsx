@@ -30,13 +30,17 @@ export default function ArchitectureBrief({
 
   const count = capabilities.length
 
-  // Architecture-specific draft next step. RAG-like when the detected capabilities
-  // include the document-chatbot pipeline. Copy only — no project state invented.
-  const ragLike = capabilities.some((c) =>
-    ['retrieval', 'vector-storage', 'document-parsing'].includes(c.capability_id)
-  )
-  const nextStep = ragLike
-    ? 'Validate the core RAG path first: parse one PDF, store embeddings, retrieve relevant chunks, and generate a cited answer.'
+  // Use specialized guidance only when the complete document-RAG pipeline is
+  // selected. Partial pipelines keep the safe generic next step.
+  const capabilityIds = new Set(capabilities.map((capability) => capability.capability_id))
+  const completeDocumentRag = [
+    'llm-api',
+    'document-parsing',
+    'vector-storage',
+    'retrieval',
+  ].every((capabilityId) => capabilityIds.has(capabilityId))
+  const nextStep = completeDocumentRag
+    ? 'Validate the document-RAG path first: parse one representative source, store embeddings, retrieve relevant chunks, and validate a grounded response.'
     : 'Start with the smallest working path through the stack, then refine tools after the first test.'
 
   // One tradeoff per unique recommended tool (avoid repeating for multi-capability tools).

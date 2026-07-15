@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 import { recommendArchitecture } from '../../lib/recommendations/recommendArchitecture'
 import { detectCapabilitiesWithEvidence } from '../../lib/capabilities/detectCapabilities'
+import { getCapabilityById } from '../../lib/capabilities/capabilityTaxonomy'
 import type { RefinementContext } from '../../lib/recommendations/generateArchitecture'
 import { resolveWorkspaceRecommendation } from '../../lib/recommendations/resolveWorkspaceRecommendation'
 
@@ -29,8 +30,15 @@ vi.mock('next/navigation', () => ({
 }))
 
 import ArchitectureWorkspace from '../../components/workspace/ArchitectureWorkspace'
+import ArchitectureBrief from '../../components/workspace/ArchitectureBrief'
 
 const PROMPT = 'Build a PDF chatbot for internal company documents'
+const CRAWLER_PROMPT =
+  'Build an AI research assistant that crawls websites and answers questions from sources'
+const GENERIC_NEXT_STEP =
+  'Start with the smallest working path through the stack, then refine tools after the first test.'
+const DOCUMENT_RAG_NEXT_STEP =
+  'Validate the document-RAG path first: parse one representative source, store embeddings, retrieve relevant chunks, and validate a grounded response.'
 
 async function renderWorkspace(context: RefinementContext = {}): Promise<string> {
   const result = await recommendArchitecture(PROMPT, context)
@@ -73,6 +81,29 @@ async function renderGroundingWorkspace(
         evidence={evidence}
         refinementContext={refinementContext}
         clarification={clarification}
+      />
+    )
+  } finally {
+    vi.unstubAllGlobals()
+  }
+}
+
+function renderBriefForCapabilities(capabilityIds: string[]): string {
+  const capabilities = capabilityIds.map((capabilityId) => {
+    const capability = getCapabilityById(capabilityId)
+    if (!capability) throw new Error(`Unknown capability: ${capabilityId}`)
+    return capability
+  })
+
+  vi.stubGlobal('React', React)
+  try {
+    return renderToStaticMarkup(
+      <ArchitectureBrief
+        idea="Capability guidance test"
+        capabilities={capabilities}
+        explanations={[]}
+        alternatives={[]}
+        rationale=""
       />
     )
   } finally {
@@ -211,6 +242,58 @@ describe('ArchitectureWorkspace (canonical submitted state)', () => {
     expect(html).not.toContain('One question')
     expect(html).not.toContain('AI grounding')
     expect(html).not.toContain('Use the product’s own sources')
+  })
+
+  it('keeps crawler next-step guidance within its selected capabilities', async () => {
+    const { result } = await resolveWorkspaceRecommendation(CRAWLER_PROMPT, {})
+    expect(result).not.toBeNull()
+    expect(
+      result!.architecture.capabilities.map((capability) => capability.capability_id)
+    ).toEqual(['llm-api', 'web-scraping', 'retrieval'])
+    expect(result!.architecture.selected_tools.map((tool) => tool.tool_id)).toEqual([
+      'openai-sdk',
+      'firecrawl',
+      'llamaindex',
+    ])
+
+    const html = await renderGroundingWorkspace(CRAWLER_PROMPT)
+    expect(html).toContain(GENERIC_NEXT_STEP)
+    expect(html).not.toContain('parse one PDF')
+    expect(html).not.toContain('store embeddings')
+    expect(html).not.toContain('document-RAG path')
+  })
+
+  it.each([
+    ['Retrieval only', ['retrieval']],
+    ['Vector Storage only', ['vector-storage']],
+    ['Document Parsing only', ['document-parsing']],
+    ['Retrieval and Vector Storage', ['retrieval', 'vector-storage']],
+    ['Document Parsing and Retrieval', ['document-parsing', 'retrieval']],
+    ['Document Parsing and Vector Storage', ['document-parsing', 'vector-storage']],
+    [
+      'Retrieval, Vector Storage, and Document Parsing without LLM API',
+      ['retrieval', 'vector-storage', 'document-parsing'],
+    ],
+    ['LLM API and Retrieval', ['llm-api', 'retrieval']],
+  ])('%s uses generic next-step guidance', (_label, capabilityIds) => {
+    const html = renderBriefForCapabilities(capabilityIds)
+
+    expect(html).toContain(GENERIC_NEXT_STEP)
+    expect(html).not.toContain('parse one PDF')
+    expect(html).not.toContain('store embeddings')
+    expect(html).not.toContain('document-RAG path')
+  })
+
+  it('uses specialized guidance for a complete document-RAG pipeline', async () => {
+    const { result } = await resolveWorkspaceRecommendation(PROMPT, {})
+    expect(result).not.toBeNull()
+    expect(result!.architecture.capabilities.map((capability) => capability.capability_id)).toEqual(
+      expect.arrayContaining(['llm-api', 'document-parsing', 'vector-storage', 'retrieval'])
+    )
+
+    const html = await renderGroundingWorkspace(PROMPT)
+    expect(html).toContain(DOCUMENT_RAG_NEXT_STEP)
+    expect(html).not.toContain('parse one PDF')
   })
 })
 
