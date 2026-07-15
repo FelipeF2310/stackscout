@@ -59,7 +59,9 @@ AI-grounding clarification v1 is complete and merged. It asks one deterministic
 question only when an AI product's source-grounding decision remains unresolved.
 Website frontend target precision is also complete: external crawl/scrape targets
 no longer imply a frontend product, while explicitly built websites retain
-Frontend Framework.
+Frontend Framework. Phase 1 decision-loop validation is complete: representative
+browser journeys passed, capability-bound next-step guidance is in place, and
+the final workspace review copy is clear.
 
 [`CLARIFICATION_POLICY_CATALOG.md`](./CLARIFICATION_POLICY_CATALOG.md) governs
 when an ambiguity warrants a question, precision correction, conservative
@@ -86,20 +88,22 @@ inspection, runtime agent, or autonomous recommendation loop.
 
 ## Roadmap phases
 
-### Phase 1 — Architecture Advisor decision loop (current)
+### Phase 1 — Architecture Advisor decision loop (completed)
 
 **User outcome:** A builder can move from a project idea to a coherent,
 understandable Architecture Brief with minimal friction and revise the decisions
 that materially affect the stack.
 
-**In scope:**
+**Completed scope:**
 
-- Validate the decision-loop UX contract against the 14-prompt review corpus
-  and representative user journeys.
+- Validated the decision-loop UX contract against the review corpus and
+  representative browser journeys.
 - AI-grounding clarification v1 — **completed**.
 - `websites → Frontend Framework` target precision — **completed** as a narrow
   detector correction for external crawl targets, not a clarification question
   or a generic keyword cleanup.
+- Capability-bound Architecture Brief next-step guidance and final workspace
+  review copy — **completed**.
 - Keep `support`, `requests`, `track`, and `data` as independent deferred
   policies unless evidence demonstrates user harm.
 - Use the clarification-policy catalog as the governance gate before planning
@@ -127,7 +131,66 @@ that materially affect the stack.
 - The phase has a clear stop; detector precision work does not become the
   product roadmap.
 
-### Phase 2 — Existing-product / missing-piece mode
+These exit criteria have been met. Later evidence may justify a separate Phase 1
+correction, but Phase 1 is no longer an open-ended active phase.
+
+### Phase 2 — Architecture-directed repository and AI-builder skill discovery
+
+**User outcome:** A builder can discover vetted public repositories and
+AI-builder skills that fit required capabilities and their emerging
+architecture, with understandable fit, tradeoffs, relationships, evidence,
+freshness, and review status.
+
+**In scope:**
+
+- Keep Capability as the primary organizing object and existing Tool records as
+  runtime-selectable implementations of capabilities.
+- Treat a public Repository as an evidence-bearing source and possible
+  implementation asset, not automatically as a Tool or recommendation.
+- Treat an AI-builder skill as help for a builder or coding agent, not as a
+  runtime dependency or a capability/tool slot in the selected architecture.
+- **2A — Classification contract and review governance:** a separate
+  governance-only document defining the boundaries required before any pilot.
+- **2B — Offline public-repository classification pilot:** future, fixed-scope,
+  public-source proposal work whose output remains untrusted and outside the
+  runtime corpus.
+- **2C — Offline AI-builder-skill classification pilot:** future, separate
+  public-source proposal work that starts only if 2B findings justify it.
+- **2D — Explicit human-reviewed corpus promotion:** a future, separately
+  scoped path for accepted structured knowledge; agents never write directly to
+  trusted data.
+- **2E — User-facing architecture-directed discovery:** future discovery over
+  reviewed knowledge only, after 2D establishes an explicit promotion path.
+
+**Explicit non-goals:**
+
+- Generic GitHub search, popularity-led recommendations, or broad crawling as a
+  success metric.
+- User repository upload, connection, import, automatic inspection, or private
+  repository access.
+- Raw repository content, raw model output, or unreviewed proposals influencing
+  runtime recommendations.
+- Templates as an approved Phase 2 asset type; they remain deferred until the
+  classification contract demonstrates a need.
+- Runtime agents, runtime RAG, database or persistence implementation, or
+  changes to the current deterministic recommender.
+- Treating this roadmap as authorization for a pilot, GitHub API access,
+  ingestion worker, corpus change, or user-facing implementation.
+
+**Exit criteria:**
+
+- The classification contract and review governance are approved before any
+  pilot begins.
+- Separate offline repository and skill pilots, if authorized, demonstrate
+  useful evidence-backed proposals without touching trusted runtime data.
+- Every promoted record crosses an explicit human-review boundary with
+  provenance, freshness, and review status intact.
+- Representative journeys show that reviewed discovery improves architecture
+  decisions without becoming generic search or silently changing final stack
+  selection.
+- Deterministic recommendation behavior and fallback remain trustworthy.
+
+### Phase 3 — Existing-product / missing-piece mode
 
 **User outcome:** A builder can describe a current stack or known tool and
 receive capability-first guidance about what is missing, redundant, compatible,
@@ -153,7 +216,7 @@ or worth replacing.
   requiring repository access.
 - The mode demonstrates distinct value beyond the project-idea flow.
 
-### Phase 3 — Decision artifact and usefulness validation
+### Phase 4 — Decision artifact and usefulness validation
 
 **User outcome:** A builder can use the Architecture Brief as a durable decision
 artifact and StackScout can validate whether the advice remains useful.
@@ -179,40 +242,17 @@ artifact and StackScout can validate whether the advice remains useful.
 - Any persistence or outcome-data proposal has a separate reviewed scope and
   trust model.
 
-### Phase 4 — Trusted ecosystem intelligence
+### Phase 5 — Assisted intelligence at scale
 
-**User outcome:** Recommendations stay useful as tools and ecosystems change,
-while every influential fact remains structured, attributable, and reviewable.
-
-**In scope:**
-
-- Define evidence, freshness, provenance, and review-state schemas.
-- Establish explicit review boundaries for proposed ecosystem facts.
-- Expand trusted capability, tool, relationship, and fit knowledge only when it
-  improves real decisions.
-
-**Explicit non-goals:**
-
-- Unreviewed automated writes to the trusted corpus.
-- Runtime recommendations from raw repository content or generated prose.
-- Breadth, popularity, or ingestion volume as success metrics.
-
-**Exit criteria:**
-
-- Trusted records have visible provenance, freshness, and review state.
-- Stale or disputed knowledge can be identified without silently changing final
-  recommendations.
-- Added intelligence demonstrably improves architecture decisions.
-
-### Phase 5 — Assisted intelligence under reviewed-data trust boundaries
-
-**User outcome:** AI assistance reduces interpretation and curation effort while
-StackScout remains accountable for every final recommendation.
+**User outcome:** Larger-scale assistance reduces interpretation and curation
+effort while StackScout remains accountable for every final recommendation.
 
 **In scope:**
 
+- Larger-scale propose-only workflows after Phase 2 proves the review boundary.
+- Retrieval over trusted evidence only when reviewed knowledge and product
+  evidence justify it.
 - AI-assisted intent interpretation within approved product policies.
-- Propose-only enrichment workers and retrieval over trusted evidence.
 - Grounded explanations that remain subordinate to structured decisions.
 
 **Explicit non-goals:**
@@ -221,6 +261,7 @@ StackScout remains accountable for every final recommendation.
 - Raw model output as authoritative tool, score, relationship, or capability
   data.
 - Bypassing review boundaries for speed or coverage.
+- Removing deterministic fallback behavior.
 
 **Exit criteria:**
 

@@ -9,7 +9,7 @@ This is a durable orientation document, not a spec and not a backlog. When a
 detail here goes stale, update it in a small docs PR rather than letting drift
 accumulate.
 
-_Last updated: 2026-07-13._
+_Last updated: 2026-07-15._
 
 ---
 
@@ -58,8 +58,13 @@ The current, decided product model:
   expressed as a named function (Authentication, Vector Storage, Document
   Parsing). Capability definitions are canonical and stable; which capabilities
   matter will vary by project.
-- **Tools / repos implement capabilities.** A tool is not a capability; it is an
-  implementation of one or more.
+- **Tools implement capabilities.** Existing Tool records are runtime-selectable
+  implementations of one or more capabilities; a tool is not a capability.
+- **Public repositories are evidence-bearing sources and possible implementation
+  assets.** A repository is not automatically a Tool or a recommendation.
+- **AI-builder skills help a builder or coding agent perform development work.**
+  They are not runtime dependencies and must not occupy capability/tool slots in
+  a selected product architecture.
 - **Architectures / stacks** are collections of capabilities fulfilled by
   compatible, selected tools — with a rationale for why they fit.
 - **Relationships** explain how tools interact: alternative-to, pairs-with /
@@ -116,6 +121,10 @@ Already present in current branch history — **do not redo**:
   longer imply Frontend Framework, while explicitly built websites retain it.
 - **Clarification-policy catalog** — question proposals now have a documented
   governance and evidence gate; this is documentation, not a runtime registry.
+- **Capability-bound next-step guidance** — specialized document-RAG guidance
+  requires the complete selected pipeline; partial stacks remain conservative.
+- **Phase 1 decision-loop validation and final copy polish** — representative
+  browser journeys passed and the workspace presents a clear review-ready state.
 
 ---
 
@@ -136,8 +145,9 @@ Already present in current branch history — **do not redo**:
 - **Current trusted data:** the canonical capability taxonomy plus the curated
   seed corpus (`tools.json`, `relationships.json`). Runtime recommendations use
   this trusted structured data.
-- **Deferred (not built):** live GitHub ingestion, database, auth, runtime LLMs,
-  RAG, agents, paid features, and browser extensions.
+- **Not built:** repository or skill classification pilots, reviewed promotion,
+  user-facing ecosystem discovery, live GitHub ingestion, database, auth,
+  runtime LLMs, RAG, agents, paid features, and browser extensions.
 
 ---
 
@@ -173,10 +183,9 @@ or accidentally started:
 - Review the **10-character input gate** / short low-signal prompt behavior
   (should very short prompts show the assumed-floor state or nothing?).
 - **Stack Map** artifact (capability-first ecosystem view).
-- **Repo memory / ecosystem learning** architecture.
+- **Templates as a classified ecosystem asset type** — deferred until the
+  classification contract demonstrates a need.
 - **Outcome memory / feedback loop.**
-- **Evidence objects** (first-class, referenceable evidence).
-- **Agent-assisted ingestion.**
 - **RAG / retrieval layer.**
 - **Paid version** — deferred until the free product proves value.
 - **Browser extension** — deferred until the core audit/report artifact is useful.
@@ -198,9 +207,13 @@ StackScout only *stores* knowledge that has been reviewed, and runtime
 recommendations only draw on **trusted, structured** data — never raw,
 unreviewed model output.
 
-When repo memory / ecosystem learning is eventually built, it should capture:
+Phase 2 planning applies this principle first to vetted public repositories and
+AI-builder skills. Public ecosystem classification is distinct from a user
+connecting, importing, or uploading their own repository; that is not part of
+the phase. Future reviewed ecosystem knowledge may capture:
 
 - repo metadata,
+- AI-builder-skill metadata,
 - capability mappings,
 - the relationship graph,
 - evidence references,
@@ -208,8 +221,9 @@ When repo memory / ecosystem learning is eventually built, it should capture:
 - user outcomes,
 - freshness / maintenance signals.
 
-**None of this is implemented yet.** This section describes the intended shape,
-not current state.
+**None of this Phase 2 ecosystem work is implemented yet.** Agents may only
+produce future structured proposals; raw agent or repository output cannot
+influence runtime recommendations.
 
 ---
 
@@ -224,24 +238,40 @@ The canonical product and phase sequence lives in
 lives in [`NEXT_STEPS.md`](./NEXT_STEPS.md). Clarification-question governance
 lives in
 [`CLARIFICATION_POLICY_CATALOG.md`](./CLARIFICATION_POLICY_CATALOG.md).
-AI-grounding clarification v1, website frontend target precision, and the
-`internal → auth` project-shape migration are complete; none is pending work.
+Phase 1 is complete: the Architecture Advisor decision loop passed
+representative browser validation, including AI-grounding, website target
+precision, capability-bound next-step guidance, stale-context handling, and
+final workspace copy.
 
-The current phase validates the Architecture Advisor decision loop. Detector
-precision work must remain evidence-led and bounded, and another clarification
-question requires an approved policy entry before implementation. Scoring
-structure should change only after recommendation review demonstrates a
-concrete wrong-winner case.
+The next strategic phase is **Phase 2 — Architecture-directed repository and
+AI-builder skill discovery**. It is organized around capabilities and an
+emerging architecture, not around a GitHub search box:
+
+1. **2A — Classification contract and review governance.** Documentation only;
+   it authorizes no pilot or implementation.
+2. **2B — Offline public-repository classification pilot.** Future public-source
+   proposal work whose output remains untrusted and external to runtime data.
+3. **2C — Offline AI-builder-skill classification pilot.** Future separate work,
+   gated by 2B findings rather than started in parallel.
+4. **2D — Explicit human-reviewed corpus promotion.** Future, separately scoped
+   promotion of accepted structured knowledge.
+5. **2E — User-facing architecture-directed discovery.** Future discovery over
+   reviewed knowledge only.
+
+This sequencing does not authorize GitHub API access, ingestion, agent workers,
+runtime integration, database or persistence, seed-data changes, or changes to
+the deterministic recommender. Templates remain deferred. Existing-product /
+missing-piece guidance moves to Phase 3 and continues to use only current tools
+and constraints described by the builder—never repository upload, connection,
+or automatic inspection.
 
 Still parked (not the current focus):
 
-- **Repo memory / ecosystem learning** architecture — design captured in
-  [`REPO_MEMORY_AND_LEARNING.md`](./REPO_MEMORY_AND_LEARNING.md), not implemented.
-- **Ambiguous detector policies** (`support`, `requests`, `track`, `data`) —
-  independently deferred unless review evidence demonstrates user harm. The
-  completed `websites → Frontend Framework` target-context correction remains a
-  separate narrow precision slice, not a precedent for a generic cleanup
-  program.
+- **Ambiguous detector policies** (`support`, `requests`, `track`, `data`) and
+  broader AI interaction-mode policy work — independently deferred unless review
+  evidence demonstrates user harm. The completed `websites → Frontend Framework`
+  target-context correction remains a separate narrow precision slice, not a
+  precedent for a generic cleanup program.
 
 This document does **not** prescribe implementation. Each phase gets its own
 planning pass, then the smallest safe PR — per the phased discipline above.

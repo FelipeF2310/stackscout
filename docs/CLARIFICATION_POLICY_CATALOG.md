@@ -211,7 +211,7 @@ behavior. Non-domain support matches are precision issues, not user questions.
 
 ### Existing-product / missing-piece context
 
-- **Lifecycle:** deferred to Phase 2
+- **Lifecycle:** deferred to a later product phase
 - **Treatment:** separate user mode, not an intake clarification policy
 - The first version uses only current context described by the builder.
 - Repository upload, GitHub connection, automatic inspection, persistence, and

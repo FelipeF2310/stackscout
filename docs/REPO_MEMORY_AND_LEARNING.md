@@ -5,9 +5,11 @@
 the time comes, implementation is deliberate, phased, and small — not a rush to
 bolt agents and RAG onto the product.
 
-Governing compass: [`docs/STACKSCOUT_PROJECT_ALIGNMENT.md`](./STACKSCOUT_PROJECT_ALIGNMENT.md).
-Where this document and the alignment compass appear to disagree, the compass
-wins and this document should be corrected.
+The canonical phase sequence lives in
+[`PRODUCT_ROADMAP.md`](./PRODUCT_ROADMAP.md), with durable product constraints in
+[`STACKSCOUT_PROJECT_ALIGNMENT.md`](./STACKSCOUT_PROJECT_ALIGNMENT.md). This
+document owns future trust and agent architecture, not active sequencing. Where
+it disagrees with either canonical document, this document should be corrected.
 
 **Core thesis.** StackScout should not become "ChatGPT over GitHub." It should
 become a **structured open-source decision system** that *remembers* tools,
@@ -23,7 +25,7 @@ output.
 3. **Evaluate** a specific repo — is it a missing puzzle piece, what does it pair
    with, what does it replace, and when is it worth using?
 
-_Last updated: 2026-06-29._
+_Last updated: 2026-07-15._
 
 ---
 
@@ -38,6 +40,8 @@ Why this document exists:
   is reviewed, structured knowledge; agents and retrieval are support systems.
 - To **guide later implementation phases** so each one is a small, reviewable PR
   with a clear job.
+- To preserve the durable trust boundary without duplicating the separate future
+  ecosystem asset classification contract.
 
 This document grants **no** permission to start building. It is a map, not a
 work order.
@@ -56,10 +60,10 @@ In practice:
   metadata and *suggest* structured facts — a capability mapping, a relationship,
   a risk signal. Proposals are candidates, not truth.
 - **StackScout stores reviewed knowledge.** A proposal becomes part of StackScout's
-  memory only after it passes an explicit review path. Early on, this should mean
-  human review or tightly scoped validation; automated approval should be
-  introduced only when the rules are clear and tested. Storage is the boundary
-  between "a model said so" and "StackScout knows."
+  memory only after it passes an explicit review path. Phase 2 requires explicit
+  human review before promotion. Any later automated approval would require its
+  own reviewed policy and evidence. Promotion is the boundary between "a model
+  said so" and "StackScout knows."
 - **Runtime recommendations use trusted structured data.** The live recommender
   reads only reviewed, structured records — never raw model output at request
   time. This keeps recommendations deterministic, explainable, and accountable.
@@ -74,8 +78,13 @@ calls an LLM to invent a stack), the design is wrong.
 
 Future memory categories (none implemented yet):
 
-- **Repo / tool metadata** — name, repository, language/ecosystem, license,
-  description, links.
+- **Public repository metadata** — identity, language/ecosystem, license,
+  description, links, freshness, and review state. A repository is not
+  automatically a Tool or recommendation.
+- **Tool metadata** — the existing runtime-selectable implementations of
+  capabilities.
+- **AI-builder-skill metadata** — development assistance for a builder or coding
+  agent, never a runtime dependency or capability/tool slot.
 - **Capability mappings** — which capabilities a tool implements. (Capabilities
   themselves stay canonical in `lib/capabilities/capabilityTaxonomy.ts`.)
 - **Relationship graph** — typed, directional links between tools (see §4).
@@ -89,6 +98,13 @@ Future memory categories (none implemented yet):
 
 Each category should be **structured and queryable**, with provenance and a
 review state — not free-text blobs.
+
+Phase 2 begins with public repositories and AI-builder skills as distinct asset
+types. Templates remain deferred. A separate future ecosystem asset
+classification contract will define repository and skill boundaries, asset
+identity, claim types, evidence/provenance/freshness fields, proposal lifecycle,
+pilot rubrics, and promotion criteria. This document does not define those
+details.
 
 ---
 
@@ -225,15 +241,18 @@ not a free-form answer shown to the user. **Do not implement RAG yet.**
 
 ## 9. Runtime recommendation tiers
 
-A possible **future** tiered model for how a request is served. This describes
-future architecture, **not current behavior** (today is Tier 1 only):
+A possible tiered model for how a request is served. The advanced retrieval and
+curated tiers describe future architecture; current runtime remains
+deterministic, with one narrowly governed AI-grounding clarification before
+recommendation when eligible:
 
 - **Tier 1 — Deterministic recommendation.** The default. Capability detection →
   scoring → architecture → explanation, from trusted structured data. Fast,
   explainable, accountable.
-- **Tier 2 — Clarifying question.** When context is ambiguous, ask a targeted
-  question before recommending. This builds on the transparency layer, but is not
-  implemented yet.
+- **Tier 2 — Clarifying question.** One deterministic AI-grounding clarification
+  is implemented for a narrowly governed ambiguity. Further questions require
+  promotion through the clarification-policy catalog; this is not a generic
+  clarification engine.
 - **Tier 3 — Agentic retrieval.** For ambiguous / high-complexity prompts, use
   retrieval (§8) over trusted memory to assemble candidates and evidence — still
   feeding the deterministic recommender, not bypassing it.
@@ -257,10 +276,11 @@ Review states (illustrative):
 - `disputed` — flagged as questionable / conflicting.
 - `deprecated` — once true, no longer trusted.
 
-Runtime recommendations should prefer `human_reviewed` and `machine_extracted`
-data, treat `machine_inferred` with appropriate caution, and exclude `disputed` /
-`deprecated`. Surfacing trust ("human-reviewed" vs "inferred") in the UI is part
-of the product's honesty, consistent with confidence ≠ correctness.
+During Phase 2, `machine_extracted` and `machine_inferred` are proposal states,
+not runtime truth. Only explicitly human-reviewed, promoted structured records
+may influence runtime recommendations; `disputed` and `deprecated` records remain
+excluded. Surfacing trust ("human-reviewed" vs "inferred") in future discovery is
+part of the product's honesty, consistent with confidence ≠ correctness.
 
 ---
 
@@ -283,36 +303,34 @@ the canonical capability taxonomy and a seed relationship graph. That's it.
 
 ---
 
-## 12. Recommended future phases
+## 12. Approved Phase 2 sequence
 
-A phased path, smallest-justifiable-step first (each its own planning + PR cycle):
+Phase 1's Architecture Advisor decision loop is complete. The canonical roadmap
+now places architecture-directed public repository and AI-builder-skill discovery
+in Phase 2, with this sequence:
 
-The free recommendation foundation has been strengthened on `main` by
-activating refinement context, improving alternatives from capability peers,
-backfilling focused `best_for` / `avoid_if` metadata, hardening the detector
-with boundary-safe matching, and adding the project-shape inference first
-slice. Continue with the `internal → auth` shape-rule migration next (see
-`NEXT_STEPS.md`); improve scoring structure only if recommendation review shows
-concrete wrong-winner evidence.
+1. **2A — Classification contract and review governance.** A separate planning
+   document defines the asset and trust contract; it authorizes no pilot.
+2. **2B — Offline public-repository classification pilot.** Public-source
+   proposals remain external, untrusted, and unable to affect runtime data.
+3. **2C — Offline AI-builder-skill classification pilot.** This is gated by 2B
+   findings and requires a separate scope; it does not start in parallel.
+4. **2D — Explicit human-reviewed corpus promotion.** Only accepted structured
+   records cross the trusted runtime boundary.
+5. **2E — User-facing architecture-directed discovery.** Discovery uses reviewed
+   knowledge and remains organized by required capabilities and the emerging
+   architecture.
 
-After that foundation:
+The future classification contract, not this document, will own repository and
+skill definitions, asset identity, claim types, evidence/provenance/freshness
+fields, proposal lifecycle, pilot rubrics, and promotion criteria. Each substage
+requires its own approval and scope. This sequence does not authorize a pilot,
+GitHub API access, ingestion, agent workers, corpus changes, runtime integration,
+or user-facing discovery.
 
-1. **Define evidence/audit/report schemas** — design first, as docs; then small
-   structural PRs.
-2. **Define review boundaries** — make clear how proposed facts become trusted
-   knowledge.
-3. **Define the outcome model** — states + reason codes as a schema, before any
-   collection.
-4. **Add agent-assisted ingestion** — propose-only workers writing to a review
-   path, once schemas and review boundaries exist.
-5. **Add RAG** — retrieval over trusted memory to support (not replace) the
-   recommender.
-6. **Add selective agentic behavior** — Tier 3/4, only where ambiguity or trust
-   needs justify it.
-
-Earlier phases unlock later ones. Skipping ahead (e.g. agents before schemas, RAG
-before evidence/review boundaries) is the failure mode this document exists to
-prevent.
+Database storage, runtime RAG, autonomous behavior, broad automated discovery,
+and user repository connection remain deferred. Skipping the review and promotion
+boundary is the failure mode this document exists to prevent.
 
 ---
 
@@ -327,5 +345,5 @@ Reinforcing the project working rule (from the alignment compass):
 - **Defer anything not needed for the current phase.** Park it as a documented
   item rather than expanding the active PR.
 
-When the next phase is chosen, it gets its own planning pass first — then the
-smallest safe PR.
+Each approved substage gets its own planning pass first — then the smallest safe
+PR.
