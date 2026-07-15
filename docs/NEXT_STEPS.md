@@ -95,20 +95,30 @@ Completed on `main` — do not redo:
 - **Phase 2A ecosystem asset classification contract:** public GitHub Repository
   and AI-builder Skill identity, claim, evidence, review, and promotion
   boundaries are documented; this is governance, not a pilot or runtime model.
+- **Phase 2B repository pre-execution plan:** the hypothesis, corpus-construction
+  boundary, minimal evidence bundle, proposal-only workflow, human review,
+  reproducibility, and Phase 2C gate are documented; it is not the executable
+  pilot plan and authorizes no source access or pilot run.
 
 Queue:
 
-1. **Next: plan a separately scoped Phase 2B offline public GitHub Repository
-   pilot.** Planning must follow
-   [`ECOSYSTEM_ASSET_CLASSIFICATION_CONTRACT.md`](./ECOSYSTEM_ASSET_CLASSIFICATION_CONTRACT.md)
-   and remain a proposal-only evaluation outside trusted application data.
+1. **Next: Terra must decide whether to authorize preparation of one separately
+   scoped Phase 2B execution authorization.** Preparation must follow
+   [`PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md`](./PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md),
+   but this decision does not authorize source access or a pilot run.
 
-This queue does **not** authorize that pilot, classification execution, GitHub
-API access, ingestion, agent workers, runtime integration, database or
-persistence, seed/data changes, recommendation changes, or user-facing
-discovery. Phase 2C remains a later offline Skill proposal pilot and requires an
-explicit Terra go/no-go review after 2B findings. Phase 2D and 2E require their
-own later scopes.
+Before source access or execution, the separately reviewed execution
+authorization must name the frozen corpus and revisions, exact contract version,
+minimal evidence bundle, acquisition procedure, agent configuration, external
+workspace, retention policy, human roles, and exact run and stop scope. A
+separate Terra decision is still required to authorize the actual run.
+
+The pre-execution plan and this queue do **not** authorize external source
+access, a pilot run, classification execution, GitHub API access, ingestion,
+agent execution or workers, a classifier, runtime integration, database or
+persistence, corpus or seed/data changes, recommendation changes, or user-facing
+discovery. Phase 2C remains blocked pending an explicit Terra go/no-go review of
+Phase 2B findings. Phase 2D and 2E require their own later scopes.
 
 Another clarification vertical requires a candidate to pass the evidence gate
 in [`CLARIFICATION_POLICY_CATALOG.md`](./CLARIFICATION_POLICY_CATALOG.md) before
