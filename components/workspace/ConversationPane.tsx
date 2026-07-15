@@ -75,7 +75,7 @@ export default function ConversationPane({
               ? 'One answer will resolve the remaining architecture decision.'
               : `Reviewed your idea and detected ${count} ${
                   count === 1 ? 'capability' : 'capabilities'
-                }. Your architecture is on the right.`}
+                }. Your Architecture Brief is ready to review.`}
           </p>
           <p className="text-xs text-[hsl(var(--faint))]">
             {clarification

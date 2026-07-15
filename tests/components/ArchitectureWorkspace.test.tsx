@@ -124,6 +124,16 @@ describe('ArchitectureWorkspace (canonical submitted state)', () => {
     expect(html).toContain('Capabilities → recommended tool')
   })
 
+  it('renders review-ready copy after a normal Architecture Brief is available', async () => {
+    const result = await recommendArchitecture(PROMPT)
+    const html = await renderWorkspace()
+
+    expect(html).toContain(
+      `Reviewed your idea and detected ${result.architecture.capabilities.length} capabilities. Your Architecture Brief is ready to review.`
+    )
+    expect(html).not.toContain('Your architecture is on the right.')
+  })
+
   it('renders capability and tool content from deterministic output', async () => {
     const result = await recommendArchitecture(PROMPT)
     const html = await renderWorkspace()
