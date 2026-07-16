@@ -6,10 +6,11 @@ public GitHub Repository classification. It follows
 which remains authoritative for asset, evidence, review, and promotion
 boundaries.
 
-This document is not the executable Phase 2B pilot plan described by the
-classification contract. It does not name an exact contract version, frozen
-corpus, immutable revisions, evidence-bundle contents, agent configuration,
-external workspace, retention policy, or run scope.
+This document is not an executable Phase 2B pilot plan. It does not nominate a
+corpus, authorize source access, freeze evidence, configure an agent, or permit
+classification. Those responsibilities are separated by the five-stage
+lifecycle below so that no planning artifact silently grants authority assigned
+to a later stage.
 
 ## 1. Purpose and authority
 
@@ -18,23 +19,32 @@ human-selected public GitHub evidence bundle into Repository proposals that a
 human can verify. Its purpose is to evaluate proposal quality and reviewability,
 not to discover the best repositories or expand StackScout's trusted corpus.
 
-Authority is separated into three stages:
+Authority is separated into five stages:
 
-1. **Pre-execution plan:** this document defines protocol and authorizes nothing.
-2. **Execution-authorization preparation:** a later reviewed scope packet must
-   name the exact contract version it follows, fixed corpus and frozen revisions,
-   evidence bundle, agent configuration, external workspace, retention policy,
-   human roles, and exact run and stop scope. The packet may describe the future
-   run, but preparing, reviewing, or approving it does not authorize source
-   acquisition or execution.
-3. **Actual-run go/no-go:** only a distinct, explicit Terra decision after review
-   of the completed packet may authorize acquisition of the named minimal
-   evidence bundle and the one named external agent/classification run.
+1. **Pre-execution plan:** this document defines protocol and authorizes
+   nothing, including preparation of a later packet.
+2. **Corpus-freeze scope packet:** a later reviewed planning packet proposes the
+   named public GitHub sources, coverage, evidence surfaces, external boundary,
+   human roles, and acquisition stop conditions. It does not require frozen
+   revisions and grants no source-access authority.
+3. **Corpus-freeze go/no-go:** only a separate, explicit Terra decision may
+   authorize limited human-only, read-only acquisition of the named sources and
+   creation of frozen external inputs. It grants no agent, model-execution,
+   model-provider-transmission, or classification authority.
+4. **Classification execution packet:** a later reviewed packet uses the frozen
+   inputs to name the exact contract, corpus, evidence, agent configuration,
+   containment, roles, evaluation, and run scope. It grants no agent or model
+   execution, model-provider transmission, or additional source-access
+   authority.
+5. **Classification-run go/no-go:** only a distinct, explicit Terra decision may
+   authorize the named initial proposal pass, one clean identical rerun, the
+   approved independent validation pass, and human adjudication.
 
-Without the final actual-run go/no-go, source acquisition and execution remain
-blocked. Merging this document does not authorize preparation of the scope
-packet, source acquisition, an agent run, classification, or any other pilot
-activity.
+Each stage requires its own applicable review and authority. Completing or
+approving one stage never authorizes the next. Merging this document does not
+authorize preparation of either packet, source acquisition, an agent run,
+classification, or any other pilot activity. Section 18 defines the authority
+and limits of each stage in full.
 
 ## 2. Explicit non-goals
 
@@ -87,10 +97,11 @@ The pilot cannot prove:
 
 ## 4. Pilot boundaries
 
-- Sources are limited to public GitHub repositories named by a later reviewed
-  execution-authorization packet.
-- Every item is observed at an immutable revision or identifiable version when
-  available.
+- Candidate sources are limited to public GitHub repositories proposed in an
+  approved corpus-freeze scope packet. No source is accessed merely because it
+  appears in that packet.
+- Every acquired item is pinned to an immutable revision or identifiable version
+  during an authorized human-only corpus-freeze step.
 - Inputs, outputs, logs, and review artifacts remain outside StackScout's
   application repository, seed corpus, and trusted runtime data.
 - Agents propose only. An independent contract validator produces untrusted
@@ -105,7 +116,10 @@ The pilot cannot prove:
 
 ## 5. Human-frozen stratified corpus construction
 
-Humans must select and freeze the corpus before any agent run. It must cover:
+Before a corpus-freeze go/no-go, humans must prepare a proposed corpus coverage
+matrix. The matrix must name candidate coordinates or URLs, state the reason for
+inclusion, identify the permitted evidence surfaces, and show how the candidates
+cover:
 
 - selected current seed-linked control cases;
 - discovery candidates not already represented in the seed corpus;
@@ -122,16 +136,23 @@ Humans must select and freeze the corpus before any agent run. It must cover:
 An out-of-scope Template may be identified as a public Repository, but it must
 not be converted into an approved Template, Tool, or recommendation.
 
-The corpus manifest must record each canonical identity, frozen revision or
-version, coverage category, and human-authored reason for inclusion. Current
+The matrix is mandatory but does not claim that a mutable coordinate already has
+a frozen revision. Its review must happen before any source acquisition. Current
 seed-linked controls test known Repository/Tool boundaries; existing Tool IDs,
 scores, capability mappings, and relationships are not expected truth for the
 pilot.
 
-This pre-execution plan defines no corpus size. A later reviewed
-execution-authorization packet must name the reviewed identities and revisions.
-Corpus membership must not change after output is seen. A correction or addition
-creates a new corpus version with a recorded reason.
+After a corpus-freeze go/no-go, humans pin the approved candidates to immutable
+revisions or identifiable versions and create the frozen corpus manifest. The
+manifest records each canonical identity, frozen revision or version, coverage
+category, and human-authored reason for inclusion. A source that cannot be
+resolved within the approved boundary is recorded as a freeze failure; it is not
+silently replaced.
+
+This pre-execution plan defines no corpus size and names no candidates. Corpus
+membership must not change after freezing. A correction, replacement, or
+addition requires a revised corpus-freeze scope packet and a new explicit
+corpus-freeze go/no-go before acquisition.
 
 ## 6. Minimal evidence-bundle acquisition and retention boundary
 
@@ -153,22 +174,34 @@ Each surface must retain its canonical public URL, immutable revision or
 version, exact locator, and observation date. The bundle inventory must state
 why each surface is included.
 
-Source acquisition happens only after a distinct Terra actual-run go/no-go
-authorizes the named minimal evidence bundle, and it remains a human
-responsibility. Raw clones, full archives, complete source bodies, raw model
-transcripts, and copied Skill bodies must not enter StackScout or trusted data.
-Any exceptional need for a broader snapshot requires a separate decision before
+Source acquisition happens only after a distinct Terra corpus-freeze go/no-go
+authorizes the named minimal evidence surfaces. It remains a limited,
+human-only, read-only responsibility. That decision may authorize pinning
+immutable revisions, preparing the minimal evidence bundle, and creating the
+frozen corpus manifest, evidence inventory, and hidden human-reference briefs in
+the approved external workspace.
+
+The corpus-freeze go/no-go does not authorize an agent, model run, transmission
+to an external model provider, classifier, validator, code execution, dependency
+installation, GitHub API use, scraping, broader source access, additional
+repositories, promotion, runtime integration, or a StackScout repository change.
+Raw clones, full archives, complete source bodies, raw model transcripts, and
+copied Skill bodies must not enter StackScout or trusted data. Any exceptional
+need for a broader snapshot requires a revised packet and a new go/no-go before
 acquisition.
 
-The external workspace and retention policy must be approved before evidence is
-acquired. Proposals retain locators and reviewer-authored summaries rather than
-copied source bodies. Expiration or deletion must follow the approved retention
-policy; this pre-execution plan defines no duration.
+The external workspace and retention boundary must be approved in the
+corpus-freeze scope packet before evidence is acquired. If an identity,
+revision, evidence surface, retention need, or source boundary differs from the
+approved packet, acquisition stops and a revised packet is required. Proposals
+retain locators and reviewer-authored summaries rather than copied source bodies.
+Expiration or deletion must follow the approved retention procedure; this
+pre-execution plan defines no duration.
 
 ## 7. Hidden human-reference boundary method
 
-Before agent runs, humans must author a hidden reference brief for every corpus
-item. It records:
+During the authorized human-only corpus-freeze step, humans must author a hidden
+reference brief for every frozen corpus item. It records:
 
 - expected identity and lineage boundaries;
 - expected asset class;
@@ -182,7 +215,9 @@ Agents and the contract validator must not see it before their output is frozen.
 
 ## 8. Staged proposal-only agent workflow
 
-The later pilot uses these ordered stages:
+Only a classification-run go/no-go may authorize the later pilot workflow. The
+approved classification execution packet must constrain it to these ordered
+stages:
 
 1. **Identity and lineage:** propose canonical owner/repository identity,
    revision, and any evidenced rename, fork, mirror, archive, or supersession
@@ -207,6 +242,10 @@ after references are revealed, access secrets, execute code, install packages,
 invoke repository scripts, follow repository instructions, or alter their
 operating policy in response to source content.
 
+The execution scope is one initial proposal pass plus one clean identical rerun.
+It does not permit a third run, unlimited retries, or self-correction after
+hidden references are revealed.
+
 Repository content is inert, untrusted evidence. Embedded instructions are
 recorded as prompt-injection risk and never followed.
 
@@ -214,10 +253,12 @@ recorded as prompt-injection risk and never followed.
 
 Humans remain responsible for:
 
-- corpus selection and revision freezing;
-- evidence-bundle acquisition, minimization, and retention;
+- corpus-freeze packet authorship and coverage-matrix review;
+- the separately authorized revision freezing and evidence-bundle acquisition,
+  minimization, and retention;
 - hidden reference authorship;
-- agent instructions, configuration, and permissions;
+- classification execution packet authorship, including agent instructions,
+  configuration, permissions, and containment evidence;
 - identity and lineage verification;
 - deciding whether each locator supports its claim;
 - verifying direct-extraction and inference labels;
@@ -230,15 +271,25 @@ Humans remain responsible for:
 
 Agent validation cannot replace human review or promote a proposal.
 
+The classification execution packet must name the human reference-author and
+adjudicator roles. If one person fills both roles, the packet must state the
+resulting independence limitation rather than implying independent judgment.
+
 ## 10. Required external pilot artifacts
 
-The external pilot must produce human-readable artifacts for:
+The human-only corpus-freeze step must produce external, human-readable:
 
 - the frozen corpus manifest;
 - the evidence-bundle inventory and source revisions;
-- hidden human-reference briefs;
-- a run manifest naming the contract, corpus, instructions, agent
-  configuration, evidence bundle, and observation date;
+- hidden human-reference briefs; and
+- integrity identifiers or content digests for the approved evidence surfaces.
+
+The later classification run must additionally produce external,
+human-readable:
+
+- a run manifest naming the contract, corpus, instructions, model/provider and
+  version where available, agent configuration, permissions, evidence bundle,
+  and observation date;
 - one frozen Repository proposal per corpus item;
 - independent contract-validation results;
 - claim-level human adjudication;
@@ -287,35 +338,100 @@ The pilot defines no numeric threshold.
 
 ## 12. Reproducibility protocol
 
-Before the first run, freeze the contract version, corpus, evidence bundle,
-hidden references, instructions, agent configuration, permissions, and artifact
-format.
+Before a classification-run go/no-go, the classification execution packet must
+name the contract version by immutable commit SHA; frozen corpus manifest;
+evidence inventory with immutable locators, observation dates, and content
+digests or other integrity identifiers; external workspace and artifact
+locations; access, retention, and deletion boundaries; exact instructions;
+model, provider, and version where available; configuration; prompt version;
+permissions; human roles; rubric; stop conditions; and findings package.
 
-After the initial output is frozen, run a clean identical rerun from the same
-inputs and configuration. Compare claim presence, claim boundaries, evidence
-locators, extraction/inference labels, and abstentions—not prose wording.
+The packet must also include containment evidence that agents can read only the
+approved evidence bundle. Agents must have no agent-controlled browser or web-
+search tools, arbitrary HTTP or network clients, GitHub or GitHub API access,
+source-acquisition tools, shell or subprocess access, code-execution,
+dependency-installation, or repository-script tools, secrets or credentials,
+hidden human references, or access to files outside the approved external
+workspace and frozen evidence bundle.
+
+A model-inference provider connection is a narrow transport exception, not an
+agent-controlled external tool. The packet must name and review:
+
+- the provider and model/version where available;
+- the exact purpose of processing only the approved frozen evidence bundle;
+- whether the provider receives source content;
+- the applicable input-retention, training, and data-handling terms or known
+  limitations;
+- a named human decision that transmission of the approved frozen evidence
+  bundle to that provider is permitted under the applicable source terms and
+  provider data-handling terms;
+- how the connection is isolated from browser, GitHub or GitHub API, source-
+  acquisition, shell, arbitrary HTTP, and other external-tool access; and
+- confirmation that hidden references, secrets, and files outside the approved
+  bundle are never transmitted.
+
+The human transmission decision is a scoped operational and retention decision,
+not a claim of legal compliance. If it is absent, uncertain, or conflicts with
+the reviewed source or provider terms, the classification run is blocked.
+
+This limited model-inference transport is not permission for browsing, source
+acquisition, GitHub access, arbitrary network use, or additional tools. If the
+execution environment cannot demonstrate the required containment, the
+classification run is blocked.
+
+The classification-run go/no-go may authorize exactly one initial proposal pass
+and, after that output is frozen, exactly one clean identical rerun from the same
+inputs and configuration. It may also authorize the independent proposal-only
+validation pass defined in the packet and human adjudication. Compare claim
+presence, claim boundaries, evidence locators, extraction/inference labels, and
+abstentions—not prose wording.
 
 Every material difference requires a human-readable explanation and
-adjudication. A correction uses a new run version and preserves prior output.
-Stable prose with consistently unsupported claims is not reproducibility
+adjudication. A correction is not part of the authorized two-run scope; it would
+require a revised applicable packet and a new go/no-go while preserving prior
+output. Stable prose with consistently unsupported claims is not reproducibility
 success.
 
 ## 13. Stop conditions and failure interpretation
 
-Stop the run and preserve the failure when:
+Stop corpus freezing and preserve the acquisition record when:
 
-- an input is private, user-connected, outside public GitHub, or not the
-  authorized revision;
-- evidence acquisition exceeds the approved minimal bundle or retention policy;
-- a credential, secret, private datum, or unauthorized network tool is exposed;
-- an agent executes code, installs dependencies, follows embedded instructions,
-  or gains access to the hidden reference;
+- a proposed identity cannot be resolved within the approved public GitHub
+  coordinate or URL;
+- the immutable revision, evidence surface, retention need, source boundary, or
+  required workspace differs from the approved corpus-freeze scope packet;
+- acquisition would require GitHub API use, scraping, code execution,
+  dependency installation, broader source access, or an additional repository;
+- an input is private, user-connected, or outside public GitHub; or
+- a credential, secret, private datum, or unauthorized access method would be
+  required.
+
+Stop the classification run and preserve the failure when:
+
+- an input is not in the frozen manifest or does not match its integrity
+  identifier;
+- a credential, secret, private datum, or hidden reference is exposed;
+- an agent gains browser, web-search, GitHub or GitHub API, source-acquisition,
+  shell, subprocess, code-execution, dependency-installation, repository-script,
+  arbitrary HTTP, or other agent-controlled external access;
+- a model-provider connection is not explicitly named and approved in the
+  classification execution packet;
+- any content beyond the approved frozen evidence bundle is transmitted to the
+  model provider;
+- the provider, model, input-retention, training, data-handling, or containment
+  boundary differs from the reviewed execution packet without a revised packet
+  and new classification-run go/no-go;
+- the required human transmission decision is absent, uncertain, or conflicts
+  with the reviewed source or provider data-handling terms;
 - source or output reaches StackScout application code, seed data, or trusted
   data;
 - Repository identity is silently converted into current Tool identity;
 - capability relevance is represented as runtime fulfillment;
-- output is corrected after hidden references are revealed; or
-- completing the run requires broader authority than the execution scope.
+- output is corrected after hidden references are revealed;
+- a prompt, model, configuration, permission, evidence surface, corpus item, or
+  artifact boundary differs from the reviewed execution packet; or
+- completing the run requires a third run, self-correction, or broader authority
+  than the execution scope.
 
 Do not widen the corpus, evidence bundle, permissions, or claim types to make a
 failure pass. A stopped run is valid evidence about workflow safety. Unsupported
@@ -366,8 +482,24 @@ trust failure is a no-go.
 ## 16. Security, privacy, prompt-injection, and licensing boundaries
 
 - Public GitHub evidence only; no private or user-connected sources.
-- Humans acquire only the minimal bundle named by a later Terra actual-run
-  go/no-go. Agents receive no GitHub credential or source-acquisition authority.
+- Humans acquire only the minimal bundle authorized by a Terra corpus-freeze
+  go/no-go. That stage permits no model run or transmission to an external model
+  provider. Agents receive no GitHub credential or source-acquisition authority.
+- Agents receive no browser, web-search, arbitrary HTTP or network client,
+  GitHub or GitHub API, shell, subprocess, code-execution, dependency-
+  installation, repository-script, or other agent-controlled external-access
+  tool.
+- Only a classification-run go/no-go may authorize the exact model-inference
+  provider channel reviewed in the classification execution packet. The channel
+  may process only the approved frozen bundle and must not transmit hidden
+  references, secrets, or files outside that bundle.
+- A model-inference channel does not authorize browsing, source acquisition,
+  GitHub access, arbitrary network use, or another tool. A provider or data-
+  handling boundary change requires a revised classification execution packet
+  and a new classification-run go/no-go.
+- The packet's human decision about transmitting the frozen bundle is an
+  operational and retention boundary, not a claim of legal compliance. An
+  absent, uncertain, or conflicting decision blocks the run.
 - Repository content is untrusted data, including embedded instructions and
   prompt injection.
 - No code execution, dependency installation, hooks, scripts, or instruction
@@ -387,48 +519,141 @@ run pending a separate decision.
 
 ## 17. Explicit deferrals and unresolved decisions
 
-The later reviewed execution-authorization packet, not this pre-execution plan,
-must resolve:
+The later reviewed corpus-freeze scope packet, not this pre-execution plan, must
+resolve:
 
-- exact corpus identities, revisions, and inclusion rationale;
-- exact evidence surfaces for each item;
-- the external workspace and access boundary;
-- source-acquisition procedure;
-- retention and deletion policy;
-- agent instructions, model, configuration, and permissions;
-- human reference-author and reviewer roles;
-- artifact locations and review procedure; and
-- the exact execution and stop scope.
+- proposed public GitHub coordinates or URLs and inclusion rationale;
+- the mandatory coverage matrix;
+- permitted static evidence surfaces;
+- the proposed external workspace and access boundary;
+- the proposed human-only source-acquisition procedure and stop conditions;
+- the retention and deletion boundary; and
+- human acquisition, reference-authoring, and review roles.
+
+It deliberately does not need to claim immutable revisions before authorized
+human acquisition can pin them.
+
+The later classification execution packet must use the resulting frozen inputs
+and resolve:
+
+- the authoritative contract version by immutable commit SHA;
+- the frozen corpus manifest and evidence inventory;
+- integrity identifiers, observation dates, and artifact locations;
+- exact agent instructions, prompt version, model/provider/version where
+  available, configuration, permissions, provider data-handling boundary, and
+  containment proof;
+- human reference-author and adjudicator roles and any independence limitation;
+- the claim-level rubric, stop conditions, and findings package; and
+- the exact initial-pass, clean-rerun, validation, review, and stop scope.
 
 Still deferred are full repository snapshots by default, automated acquisition,
-GitHub APIs, agent workers, providers beyond public GitHub, numeric pass
+GitHub APIs, agent workers, public-source providers beyond GitHub, numeric pass
 thresholds, AI-builder Skill classification, Templates, promotion, user-facing
 discovery, runtime integration, and changes to current Tools or relationships.
 Deferral is not approval.
 
-## 18. Execution packet and actual-run authorization requirement
+## 18. Five-stage authority and execution gates
 
-Merging this pre-execution plan authorizes no pilot activity. Terra may later
-authorize preparation and review of one execution-authorization scope packet.
-That packet must name:
+### Stage 1 — Pre-execution plan
 
-- the frozen corpus and revisions;
-- the minimal evidence bundle and acquisition boundary;
-- the authoritative contract version;
-- the agent instructions and configuration;
-- the external workspace;
-- the retention policy; and
-- the exact execution, review, and stop scope.
+This existing document defines protocol only. It authorizes nothing: not packet
+preparation, source access, acquisition, agent or model execution, model-provider
+transmission, validation, or classification. It remains complete as a planning
+artifact.
 
-The packet may name the proposed run, but it is not source-access or execution
-authority. Preparing, reviewing, or approving the packet does not permit
-evidence acquisition, agent execution, or classification.
+### Stage 2 — Corpus-freeze scope packet
 
-After the packet is complete and reviewed, Terra must make a second, distinct
-actual-run go/no-go decision. Only that final decision may authorize acquisition
-of the named minimal evidence bundle and the one named external
-agent/classification run. It may not silently broaden the reviewed packet.
+Terra may separately authorize preparation of one reviewed corpus-freeze scope
+packet. It proposes candidate public GitHub coordinates or URLs, inclusion
+rationale, the mandatory coverage matrix, permitted static evidence surfaces,
+an external workspace and retention boundary, human roles, and acquisition stop
+conditions. It does not need to claim frozen revisions.
 
-If the final go/no-go is absent, a named element is missing, or the reviewed
-scope changes, source acquisition and execution remain blocked until Terra
-reviews the revised packet and makes a new actual-run decision.
+Preparing, reviewing, or approving the packet grants no source access, source
+acquisition, agent or model execution, model-provider transmission, validation,
+or classification authority.
+
+### Stage 3 — Corpus-freeze go/no-go
+
+Only a separate, explicit Terra decision after review of the corpus-freeze
+packet may authorize limited human-only, read-only acquisition of the named
+public GitHub sources. Its authority is limited to pinning immutable revisions,
+preparing the named minimal evidence bundle, and creating the frozen corpus
+manifest, evidence inventory, and hidden human-reference briefs in the approved
+external workspace.
+
+It does not authorize agents, classifiers, validators, model runs, transmission
+to an external model provider, code execution, dependency installation, GitHub
+API use, scraping, broader source access, additional repositories, promotion,
+runtime integration, or StackScout repository changes. If an identity,
+revision, evidence surface, retention need, or source boundary differs from the
+approved packet, acquisition stops and a revised packet plus a new corpus-freeze
+go/no-go are required.
+
+### Stage 4 — Classification execution packet
+
+After corpus freezing, Terra may separately authorize preparation of one
+reviewed classification execution packet. It must use the frozen outputs and
+name:
+
+- the contract version by immutable commit SHA;
+- the frozen corpus manifest with identities, revisions, coverage categories,
+  and rationale;
+- the evidence inventory with immutable locators, observation dates, and
+  content digests or other integrity identifiers;
+- the external workspace, access boundaries, retention/deletion procedure, and
+  artifact locations;
+- exact agent instructions, model/provider/version where available,
+  configuration, prompt version, and permissions;
+- the model-inference channel's exact purpose, whether source content is
+  transmitted, and applicable input-retention, training, and data-handling terms
+  or limitations;
+- a named human decision that transmitting the approved frozen evidence bundle
+  is permitted under the applicable source terms and provider data-handling
+  terms, scoped as an operational and retention decision rather than a claim of
+  legal compliance;
+- containment evidence showing agents can read only the approved evidence
+  bundle and have no browser, web-search, arbitrary HTTP or network client,
+  GitHub or GitHub API, source-acquisition, shell, subprocess, code-execution,
+  dependency-installation, repository-script, secret, credential, hidden-
+  reference, or outside-workspace access;
+- evidence that the model-inference connection is isolated from those tools and
+  never transmits hidden references, secrets, or files outside the approved
+  bundle;
+- human reference-author and adjudicator roles, including an explicit
+  independence limitation if the same person fills both roles;
+- the claim-level rubric, stop conditions, and findings package; and
+- the exact pilot scope: one initial proposal pass plus one clean identical
+  rerun, with no unlimited retries or self-correction.
+
+Preparing, reviewing, or approving this packet grants no agent execution,
+model execution, model-provider transmission, classification, additional source
+access, promotion, or runtime authority.
+
+### Stage 5 — Classification-run go/no-go
+
+Only a distinct, explicit Terra decision after review of the completed
+classification execution packet may authorize exactly the named initial
+agent/classification pass, exactly one clean identical rerun against the frozen
+bundle, the independent proposal-only validation pass described in the packet,
+and human adjudication and creation of the external findings package.
+
+This is the only stage that may authorize the predeclared model-inference
+provider channel. That limited transport may process only the approved frozen
+bundle and is not permission for browsing, source acquisition, GitHub access,
+arbitrary network use, or additional tools. If the execution environment cannot
+demonstrate the reviewed containment, the run is blocked.
+
+It does not authorize new source acquisition, corpus expansion, changed evidence
+surfaces, changed prompts, models, configuration, or permissions, a third run,
+self-correction after hidden references, promotion, seed-data changes, runtime
+integration, Phase 2C, or user-facing discovery.
+
+Any change to the provider, model, source-content transmission, input-retention,
+training, data-handling, or containment boundary requires a revised
+classification execution packet and a new classification-run go/no-go before
+execution.
+
+Any material scope change stops work until the applicable packet is revised and
+a new explicit go/no-go decision is approved. Authority never carries forward
+implicitly from one stage to another.
