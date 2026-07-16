@@ -97,46 +97,59 @@ Completed on `main` — do not redo:
   boundaries are documented; this is governance, not a pilot or runtime model.
 - **Phase 2B repository pre-execution plan:** the hypothesis, corpus-construction
   boundary, minimal evidence bundle, proposal-only workflow, human review,
-  reproducibility, and Phase 2C gate are documented. Its five-stage lifecycle
-  separates planning, human-only corpus freezing, and agent execution; the plan
-  authorizes none of them.
+  reproducibility, and Phase 2C gate are documented. Its six-stage lifecycle
+  separates candidate nomination, corpus planning, human-only corpus freezing,
+  agent-execution planning, and execution; the plan authorizes none of them.
 
 Queue:
 
-1. **Next: Terra must decide whether to authorize preparation of one
-   corpus-freeze scope packet.** Preparation must follow
+1. **Next: Terra must decide whether to authorize one bounded
+   candidate-nomination research activity.** Any authorization must follow
    [`PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md`](./PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md),
-   but this is planning-only and grants no source access, source acquisition,
-   agent execution, validation, or classification authority.
+   name its human-directed role, public GitHub listing/search and landing-page
+   surfaces, candidate categories, maximum scope, external workspace, retention
+   boundary, output format, and observation date.
 
-The packet must propose candidate public GitHub coordinates or URLs, inclusion
-rationale and the mandatory coverage matrix, permitted static evidence surfaces,
-the external workspace and retention boundary, human roles, and acquisition stop
-conditions. It does not need to claim frozen revisions.
+The activity may produce only an external, untrusted nomination register with a
+public URL or coordinate, intended test category, observation date, and short
+human-authored rationale. It does not authorize corpus selection, source
+acquisition, evidence freezing, agent execution, model-provider transmission,
+classification, or a pilot run. It also does not authorize GitHub API access,
+authentication, source-content review or retention, cloning, downloading, or
+asset conclusions.
 
-After that packet is complete and reviewed, a separate Terra corpus-freeze
-go/no-go is required before limited human-only, read-only acquisition may pin the
-named sources to immutable revisions and create the approved minimal evidence
-bundle, frozen manifest, evidence inventory, and hidden references. That
-decision grants no agent, classifier, validator, or model-run authority.
+After nomination, a separately prepared and reviewed corpus-freeze scope packet
+may use the register only as an untrusted input. The packet must independently
+propose the intended corpus, inclusion rationale and mandatory coverage matrix,
+permitted evidence surfaces, external workspace and retention boundary, human
+roles, and acquisition stop conditions. Preparing or reviewing it grants no
+source or execution authority.
 
-After freezing, a separately prepared and reviewed classification execution
-packet must name the exact contract commit, frozen inputs and integrity
+After that packet is complete and reviewed, a separate Terra Stage 4 corpus-
+freeze go/no-go is required before limited human-only, read-only acquisition may
+pin the named sources to immutable revisions and create the approved minimal
+evidence bundle, frozen manifest, evidence inventory, and hidden references.
+That decision grants no agent, classifier, validator, or model-run authority.
+
+After freezing, a separately prepared and reviewed Stage 5 classification
+execution packet must name the exact contract commit, frozen inputs and integrity
 identifiers, agent configuration and containment, workspace and retention
 procedure, human roles, rubric, stop conditions, and exact scope of one initial
 pass plus one clean identical rerun. Preparing, reviewing, or approving it grants
 no execution authority.
 
-Only a final, distinct Terra classification-run go/no-go may authorize the named
-initial pass, one clean rerun, approved independent validation, and human
-adjudication. No stage silently authorizes the next one.
+Only a final, distinct Terra Stage 6 classification-run go/no-go may authorize
+the named initial pass, one clean rerun, approved independent validation, human
+adjudication, and the declared model-inference transport. No stage silently
+authorizes the next one.
 
-The pre-execution plan and this queue do **not** authorize external source
-access, a pilot run, classification execution, GitHub API access, ingestion,
-agent execution or workers, a classifier, runtime integration, database or
-persistence, corpus or seed/data changes, recommendation changes, or user-facing
-discovery. Phase 2C remains blocked pending an explicit Terra go/no-go review of
-Phase 2B findings. Phase 2D and 2E require their own later scopes.
+The pre-execution plan and this queue do **not** themselves authorize nomination
+research, external source access, a pilot run, classification execution, GitHub
+API access, ingestion, agent execution or workers, a classifier, runtime
+integration, database or persistence, corpus or seed/data changes,
+recommendation changes, or user-facing discovery. Phase 2C remains blocked
+pending an explicit Terra go/no-go review of Phase 2B findings. Phase 2D and 2E
+require their own later scopes.
 
 Another clarification vertical requires a candidate to pass the evidence gate
 in [`CLARIFICATION_POLICY_CATALOG.md`](./CLARIFICATION_POLICY_CATALOG.md) before

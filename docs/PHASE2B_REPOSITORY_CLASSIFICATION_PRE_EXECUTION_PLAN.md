@@ -8,7 +8,7 @@ boundaries.
 
 This document is not an executable Phase 2B pilot plan. It does not nominate a
 corpus, authorize source access, freeze evidence, configure an agent, or permit
-classification. Those responsibilities are separated by the five-stage
+classification. Those responsibilities are separated by the six-stage
 lifecycle below so that no planning artifact silently grants authority assigned
 to a later stage.
 
@@ -19,32 +19,36 @@ human-selected public GitHub evidence bundle into Repository proposals that a
 human can verify. Its purpose is to evaluate proposal quality and reviewability,
 not to discover the best repositories or expand StackScout's trusted corpus.
 
-Authority is separated into five stages:
+Authority is separated into six stages:
 
 1. **Pre-execution plan:** this document defines protocol and authorizes
    nothing, including preparation of a later packet.
-2. **Corpus-freeze scope packet:** a later reviewed planning packet proposes the
-   named public GitHub sources, coverage, evidence surfaces, external boundary,
-   human roles, and acquisition stop conditions. It does not require frozen
-   revisions and grants no source-access authority.
-3. **Corpus-freeze go/no-go:** only a separate, explicit Terra decision may
+2. **Candidate-nomination research authorization:** only a distinct, explicit
+   Terra decision may authorize one bounded, human-directed activity that
+   records possible public GitHub coordinates for later planning. Its external,
+   untrusted register is neither evidence nor corpus selection.
+3. **Corpus-freeze scope packet:** a later reviewed planning packet uses
+   nominated coordinates only as untrusted inputs and independently proposes the
+   intended corpus, coverage, evidence surfaces, external boundary, human roles,
+   and acquisition stop conditions. It grants no authority.
+4. **Corpus-freeze go/no-go:** only a separate, explicit Terra decision may
    authorize limited human-only, read-only acquisition of the named sources and
    creation of frozen external inputs. It grants no agent, model-execution,
    model-provider-transmission, or classification authority.
-4. **Classification execution packet:** a later reviewed packet uses the frozen
+5. **Classification execution packet:** a later reviewed packet uses the frozen
    inputs to name the exact contract, corpus, evidence, agent configuration,
    containment, roles, evaluation, and run scope. It grants no agent or model
    execution, model-provider transmission, or additional source-access
    authority.
-5. **Classification-run go/no-go:** only a distinct, explicit Terra decision may
+6. **Classification-run go/no-go:** only a distinct, explicit Terra decision may
    authorize the named initial proposal pass, one clean identical rerun, the
    approved independent validation pass, and human adjudication.
 
 Each stage requires its own applicable review and authority. Completing or
 approving one stage never authorizes the next. Merging this document does not
-authorize preparation of either packet, source acquisition, an agent run,
-classification, or any other pilot activity. Section 18 defines the authority
-and limits of each stage in full.
+authorize candidate nomination, preparation of either packet, source
+acquisition, an agent run, classification, or any other pilot activity. Section
+18 defines the authority and limits of each stage in full.
 
 ## 2. Explicit non-goals
 
@@ -52,7 +56,8 @@ The pilot does not include or authorize:
 
 - AI-builder Skill classification or a Phase 2C pilot;
 - Templates as an active asset type;
-- generic GitHub search, popularity ranking, or broad ecosystem coverage;
+- a generic GitHub search product, unbounded discovery, popularity ranking, or
+  broad ecosystem coverage;
 - private, user-connected, uploaded, or imported repositories;
 - runtime Tool promotion or current Tool capability mappings;
 - current relationship-graph changes;
@@ -97,9 +102,10 @@ The pilot cannot prove:
 
 ## 4. Pilot boundaries
 
-- Candidate sources are limited to public GitHub repositories proposed in an
-  approved corpus-freeze scope packet. No source is accessed merely because it
-  appears in that packet.
+- Candidate sources are limited to public GitHub repositories independently
+  proposed in an approved corpus-freeze scope packet. A prior nomination does
+  not require inclusion, and no source is acquired merely because it appears in
+  a nomination register or packet.
 - Every acquired item is pinned to an immutable revision or identifiable version
   during an authorized human-only corpus-freeze step.
 - Inputs, outputs, logs, and review artifacts remain outside StackScout's
@@ -114,12 +120,59 @@ The pilot cannot prove:
 - No pilot output affects capability detection, Tool scoring, Tool selection,
   recommendation order, explanations, or the current relationship graph.
 
+### Candidate-nomination research boundary
+
+Stage 2 exists only to produce an external, untrusted candidate-nomination
+register for later corpus-freeze packet preparation. A future authorization for
+one nomination activity must explicitly name:
+
+- the human-directed researcher or research role;
+- the permitted public GitHub surfaces;
+- the allowed candidate categories;
+- the maximum intended candidate scope or other stopping boundary;
+- the external workspace and retention boundary; and
+- the output format and observation date.
+
+For the first pilot, the authorization may permit only public GitHub repository
+listing or search and landing-page metadata needed to identify a repository
+coordinate. The register may record only:
+
+- the public GitHub URL or owner/repository coordinate;
+- the intended coverage category;
+- the observation date; and
+- a short human-authored nomination rationale.
+
+Stage 2 must not permit:
+
+- GitHub API access;
+- authentication or private, user-connected, uploaded, or imported sources;
+- cloning, downloading, raw-file retrieval, README, documentation, or code
+  review, release-body capture, or source-content retention;
+- model or agent classification;
+- Tool, capability, fit, relationship, security, or license conclusions;
+- popularity ranking;
+- scoring, recommendation, review, or promotion decisions;
+- corpus selection or immutable revision pinning;
+- evidence-bundle creation; or
+- StackScout code, data, seed, runtime, or recommendation changes.
+
+The nomination register is not evidence, a frozen corpus, classification output,
+a review decision, or a promotion artifact. It cannot establish identity,
+lineage, relevance, suitability, or inclusion. If nomination requires source
+content, API access, authentication, private data, broader browsing, or any
+conclusion beyond a coordinate and intended test category, the activity stops
+and requires a revised scope and new explicit Terra decision.
+
+Stage 2 authority does not carry into packet preparation or corpus freezing and
+does not weaken the later human-only source-acquisition boundary.
+
 ## 5. Human-frozen stratified corpus construction
 
-Before a corpus-freeze go/no-go, humans must prepare a proposed corpus coverage
-matrix. The matrix must name candidate coordinates or URLs, state the reason for
-inclusion, identify the permitted evidence surfaces, and show how the candidates
-cover:
+The corpus-freeze scope packet must independently select its intended corpus and
+prepare a proposed coverage matrix before any corpus-freeze go/no-go. Nominated
+coordinates are untrusted planning inputs, not automatic selections. The matrix
+must name candidate coordinates or URLs, state the reason for inclusion,
+identify the permitted evidence surfaces, and show how the candidates cover:
 
 - selected current seed-linked control cases;
 - discovery candidates not already represented in the seed corpus;
@@ -142,12 +195,12 @@ seed-linked controls test known Repository/Tool boundaries; existing Tool IDs,
 scores, capability mappings, and relationships are not expected truth for the
 pilot.
 
-After a corpus-freeze go/no-go, humans pin the approved candidates to immutable
-revisions or identifiable versions and create the frozen corpus manifest. The
-manifest records each canonical identity, frozen revision or version, coverage
-category, and human-authored reason for inclusion. A source that cannot be
-resolved within the approved boundary is recorded as a freeze failure; it is not
-silently replaced.
+After a corpus-freeze go/no-go, humans pin the packet's approved candidates to
+immutable revisions or identifiable versions and create the frozen corpus
+manifest. The manifest records each canonical identity, frozen revision or
+version, coverage category, and human-authored reason for inclusion. A source
+that cannot be resolved within the approved boundary is recorded as a freeze
+failure; it is not silently replaced or replaced from the nomination register.
 
 This pre-execution plan defines no corpus size and names no candidates. Corpus
 membership must not change after freezing. A correction, replacement, or
@@ -174,8 +227,8 @@ Each surface must retain its canonical public URL, immutable revision or
 version, exact locator, and observation date. The bundle inventory must state
 why each surface is included.
 
-Source acquisition happens only after a distinct Terra corpus-freeze go/no-go
-authorizes the named minimal evidence surfaces. It remains a limited,
+Source acquisition happens only after a distinct Terra Stage 4 corpus-freeze
+go/no-go authorizes the named minimal evidence surfaces. It remains a limited,
 human-only, read-only responsibility. That decision may authorize pinning
 immutable revisions, preparing the minimal evidence bundle, and creating the
 frozen corpus manifest, evidence inventory, and hidden human-reference briefs in
@@ -215,9 +268,9 @@ Agents and the contract validator must not see it before their output is frozen.
 
 ## 8. Staged proposal-only agent workflow
 
-Only a classification-run go/no-go may authorize the later pilot workflow. The
-approved classification execution packet must constrain it to these ordered
-stages:
+Only a Stage 6 classification-run go/no-go may authorize the later pilot
+workflow. The approved classification execution packet must constrain it to
+these ordered stages:
 
 1. **Identity and lineage:** propose canonical owner/repository identity,
    revision, and any evidenced rename, fork, mirror, archive, or supersession
@@ -276,6 +329,10 @@ adjudicator roles. If one person fills both roles, the packet must state the
 resulting independence limitation rather than implying independent judgment.
 
 ## 10. Required external pilot artifacts
+
+Any Stage 2 activity produces only the external, untrusted nomination register
+defined in Section 4. That register remains separate from pilot evidence and the
+frozen corpus artifacts below.
 
 The human-only corpus-freeze step must produce external, human-readable:
 
@@ -338,10 +395,10 @@ The pilot defines no numeric threshold.
 
 ## 12. Reproducibility protocol
 
-Before a classification-run go/no-go, the classification execution packet must
-name the contract version by immutable commit SHA; frozen corpus manifest;
-evidence inventory with immutable locators, observation dates, and content
-digests or other integrity identifiers; external workspace and artifact
+Before a Stage 6 classification-run go/no-go, the classification execution
+packet must name the contract version by immutable commit SHA; frozen corpus
+manifest; evidence inventory with immutable locators, observation dates, and
+content digests or other integrity identifiers; external workspace and artifact
 locations; access, retention, and deletion boundaries; exact instructions;
 model, provider, and version where available; configuration; prompt version;
 permissions; human roles; rubric; stop conditions; and findings package.
@@ -393,6 +450,21 @@ output. Stable prose with consistently unsupported claims is not reproducibility
 success.
 
 ## 13. Stop conditions and failure interpretation
+
+Stop candidate nomination and preserve the external activity record when:
+
+- the authorized candidate limit or stopping boundary is reached;
+- nomination would require source content, raw-file retrieval, README,
+  documentation, code, or release-body review or retention;
+- nomination would require GitHub API access, authentication, private or user-
+  connected data, cloning, downloading, or broader browsing;
+- the activity attempts a Tool, capability, fit, relationship, security,
+  license, popularity, or corpus-selection conclusion; or
+- the activity needs any output beyond a public coordinate, intended coverage
+  category, observation date, and short human-authored rationale.
+
+A stopped nomination cannot be widened in place. Broader activity requires a
+revised nomination scope and a new explicit Terra decision.
 
 Stop corpus freezing and preserve the acquisition record when:
 
@@ -482,6 +554,9 @@ trust failure is a no-go.
 ## 16. Security, privacy, prompt-injection, and licensing boundaries
 
 - Public GitHub evidence only; no private or user-connected sources.
+- Candidate nomination may inspect only the public GitHub listing, search, and
+  landing-page metadata named by a Stage 2 authorization. It may retain only the
+  bounded nomination-register fields and creates no evidence or trusted record.
 - Humans acquire only the minimal bundle authorized by a Terra corpus-freeze
   go/no-go. That stage permits no model run or transmission to an external model
   provider. Agents receive no GitHub credential or source-acquisition authority.
@@ -489,10 +564,10 @@ trust failure is a no-go.
   GitHub or GitHub API, shell, subprocess, code-execution, dependency-
   installation, repository-script, or other agent-controlled external-access
   tool.
-- Only a classification-run go/no-go may authorize the exact model-inference
-  provider channel reviewed in the classification execution packet. The channel
-  may process only the approved frozen bundle and must not transmit hidden
-  references, secrets, or files outside that bundle.
+- Only the Stage 6 classification-run go/no-go may authorize the exact model-
+  inference provider channel reviewed in the classification execution packet.
+  The channel may process only the approved frozen bundle and must not transmit
+  hidden references, secrets, or files outside that bundle.
 - A model-inference channel does not authorize browsing, source acquisition,
   GitHub access, arbitrary network use, or another tool. A provider or data-
   handling boundary change requires a revised classification execution packet
@@ -519,10 +594,15 @@ run pending a separate decision.
 
 ## 17. Explicit deferrals and unresolved decisions
 
-The later reviewed corpus-freeze scope packet, not this pre-execution plan, must
-resolve:
+The Stage 2 candidate-nomination authorization, not this pre-execution plan,
+must resolve the human-directed role, permitted public GitHub surfaces, allowed
+categories, maximum scope or stopping boundary, external workspace, retention
+boundary, output format, and observation date.
 
-- proposed public GitHub coordinates or URLs and inclusion rationale;
+The later reviewed corpus-freeze scope packet must independently resolve:
+
+- intended public GitHub coordinates or URLs and inclusion rationale, using any
+  nomination register only as an untrusted input;
 - the mandatory coverage matrix;
 - permitted static evidence surfaces;
 - the proposed external workspace and access boundary;
@@ -552,7 +632,7 @@ thresholds, AI-builder Skill classification, Templates, promotion, user-facing
 discovery, runtime integration, and changes to current Tools or relationships.
 Deferral is not approval.
 
-## 18. Five-stage authority and execution gates
+## 18. Six-stage authority and execution gates
 
 ### Stage 1 — Pre-execution plan
 
@@ -561,19 +641,45 @@ preparation, source access, acquisition, agent or model execution, model-provide
 transmission, validation, or classification. It remains complete as a planning
 artifact.
 
-### Stage 2 — Corpus-freeze scope packet
+### Stage 2 — Candidate-nomination research authorization
+
+Only a distinct, explicit Terra decision may authorize one bounded,
+human-directed candidate-nomination activity. Its sole purpose is to produce an
+external, untrusted register of possible public GitHub coordinates and intended
+test categories for later packet preparation.
+
+The authorization must name the human-directed researcher or role, permitted
+public GitHub listing/search and landing-page surfaces, allowed candidate
+categories, maximum intended scope or stopping boundary, external workspace and
+retention boundary, output format, and observation date.
+
+It may permit recording only the public URL or coordinate, intended coverage
+category, observation date, and a short human-authored nomination rationale. It
+does not authorize GitHub API access, authentication, private or user-connected
+sources, source-content access or retention, cloning, downloading, raw-file,
+README, documentation, code, or release-body review, model or agent
+classification, conclusions about the asset, corpus selection, revision
+pinning, evidence creation, scoring, recommendation, review, promotion, or
+StackScout changes.
+
+The register is not evidence, a frozen corpus, classification output, review
+decision, or promotion artifact. Any need to cross the approved boundary stops
+nomination until a revised scope receives a new explicit Terra decision.
+
+### Stage 3 — Corpus-freeze scope packet
 
 Terra may separately authorize preparation of one reviewed corpus-freeze scope
-packet. It proposes candidate public GitHub coordinates or URLs, inclusion
-rationale, the mandatory coverage matrix, permitted static evidence surfaces,
-an external workspace and retention boundary, human roles, and acquisition stop
-conditions. It does not need to claim frozen revisions.
+packet. It may use nominated coordinates as untrusted inputs, but must
+independently propose the intended corpus, inclusion rationale, mandatory
+coverage matrix, permitted static evidence surfaces, external workspace and
+retention boundary, human roles, and acquisition stop conditions. It does not
+need to claim frozen revisions.
 
 Preparing, reviewing, or approving the packet grants no source access, source
 acquisition, agent or model execution, model-provider transmission, validation,
 or classification authority.
 
-### Stage 3 — Corpus-freeze go/no-go
+### Stage 4 — Corpus-freeze go/no-go
 
 Only a separate, explicit Terra decision after review of the corpus-freeze
 packet may authorize limited human-only, read-only acquisition of the named
@@ -590,7 +696,7 @@ revision, evidence surface, retention need, or source boundary differs from the
 approved packet, acquisition stops and a revised packet plus a new corpus-freeze
 go/no-go are required.
 
-### Stage 4 — Classification execution packet
+### Stage 5 — Classification execution packet
 
 After corpus freezing, Terra may separately authorize preparation of one
 reviewed classification execution packet. It must use the frozen outputs and
@@ -630,7 +736,7 @@ Preparing, reviewing, or approving this packet grants no agent execution,
 model execution, model-provider transmission, classification, additional source
 access, promotion, or runtime authority.
 
-### Stage 5 — Classification-run go/no-go
+### Stage 6 — Classification-run go/no-go
 
 Only a distinct, explicit Terra decision after review of the completed
 classification execution packet may authorize exactly the named initial
