@@ -110,25 +110,26 @@ Completed on `main` — do not redo:
 
 Queue:
 
-1. **Current prerequisite: Terra review of the proposed
+1. **Current prerequisite: Terra TPM review and recommendation on the external-
+   action authority and static-control governance correction in
+   [`PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md`](./PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md)
+   and
    [`PHASE2B_GITHUB_API_ACCESS_SCOPE_PACKET.md`](./PHASE2B_GITHUB_API_ACCESS_SCOPE_PACKET.md).**
-   The packet follows
-   [`ADR 005`](./DECISIONS/005-phase2b-public-source-acquisition.md) and proposes
-   a Stage 2-only authentication decision, endpoint and field allowlist, request
-   budget, no-retry failure policy, external-workspace boundary, retention
-   requirements, and human-operated procedure.
+   The correction makes Felipe the sole authority for actual external actions
+   after Terra's required review, and permits exact predeclared queries and a
+   local seed-linked control coordinate to appear as static governance values
+   without exposing operational material to an agent or model.
 
-This documentation decision and approval or merge of the proposed packet
-authorize no API call, credential creation or use, token, authentication,
-source access, candidate research, nomination, classification, corpus work,
-model activity, promotion, or implementation. After approval, the next possible
-action is preparation of a separate Stage 2 candidate-nomination actual-run
-authorization—not execution. That later authorization must explicitly adopt the
-packet and name any bounded API preflight and nomination inside the same Stage 2
-activity before a request may occur. Later source freezing remains subject to a
-separately scoped extension and the existing Stage 4 corpus-freeze go/no-go. The
-packet is a cross-cutting acquisition prerequisite; it creates no seventh or
-unnumbered stage, gate, or authority in the six-stage lifecycle.
+Terra review, recommendation, documentation approval, merge, or publication of
+this correction authorizes no API call, credential creation or use, token,
+authentication, source access, candidate research, nomination, freezing,
+classification, model activity, promotion, implementation, or execution. After
+the correction merges, the next work returns to revising the already-drafted
+Stage 2 candidate-nomination actual-run authorization from corrected `main`,
+including adoption of the API scope packet by immutable commit SHA. That
+revision still grants no external authority. Only Felipe's later, explicit
+Stage 2 go/no-go after Terra's required review and recommendation may authorize
+the exact named activity. No later Phase 2B stage becomes active automatically.
 
 Any later nomination activity remains constrained by the discovery product
 contract and
@@ -147,11 +148,13 @@ permitted evidence surfaces, external workspace and retention boundary, human
 roles, and acquisition stop conditions. Preparing or reviewing it grants no
 source or execution authority.
 
-After that packet is complete and reviewed, a separate Terra Stage 4 corpus-
-freeze go/no-go is required before limited human-only, read-only acquisition may
-pin the named sources to immutable revisions and create the approved minimal
+After that packet is complete, Terra must review it and recommend go or no-go.
+Terra's review grants no access. Only Felipe's subsequent, explicit Stage 4
+corpus-freeze go/no-go may authorize limited human-only, read-only acquisition
+to pin the named sources to immutable revisions and create the approved minimal
 evidence bundle, frozen manifest, evidence inventory, and hidden references.
-That decision grants no agent, classifier, validator, or model-run authority.
+Felipe's decision grants no agent, classifier, validator, or model-run
+authority.
 
 After freezing, a separately prepared and reviewed Stage 5 classification
 execution packet must name the exact contract commit, frozen inputs and integrity
@@ -160,18 +163,21 @@ procedure, human roles, rubric, stop conditions, and exact scope of one initial
 pass plus one clean identical rerun. Preparing, reviewing, or approving it grants
 no execution authority.
 
-Only a final, distinct Terra Stage 6 classification-run go/no-go may authorize
-the named initial pass, one clean rerun, approved independent validation, human
-adjudication, and the declared model-inference transport. No stage silently
-authorizes the next one.
+Terra must review the completed Stage 5 packet and recommend go or no-go. That
+review grants no execution authority. Only Felipe's subsequent, explicit Stage
+6 classification-run go/no-go may authorize the named initial pass, one clean
+rerun, approved independent validation, human adjudication, and the declared
+model-inference transport. No stage silently authorizes the next one.
 
 ADR 005, the pre-execution plan, and this queue do **not** themselves authorize
 an API call, token, authentication, nomination research, external source access,
 a pilot run, classification execution, ingestion, agent execution or workers, a
 classifier, runtime integration, database or persistence, corpus or seed/data
 changes, recommendation changes, or user-facing discovery. Phase 2C remains
-blocked pending an explicit Terra go/no-go review of Phase 2B findings. Phase 2D
-and 2E require their own later scopes.
+blocked pending Terra's explicit review and go/no-go recommendation on the Phase
+2B findings. Phase 2D and 2E require their own later scopes. Terra's Phase 2C
+review is a TPM phase recommendation, not external-action authority; any later
+external activity still requires Felipe's explicit go/no-go.
 
 Another clarification vertical requires a candidate to pass the evidence gate
 in [`CLARIFICATION_POLICY_CATALOG.md`](./CLARIFICATION_POLICY_CATALOG.md) before

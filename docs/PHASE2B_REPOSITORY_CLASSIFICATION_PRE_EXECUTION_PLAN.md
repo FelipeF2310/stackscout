@@ -23,19 +23,28 @@ human-selected public GitHub evidence bundle into Repository proposals that a
 human can verify. Its purpose is to evaluate proposal quality and reviewability,
 not to discover the best repositories or expand StackScout's trusted corpus.
 
+Terra is StackScout's required TPM review and recommendation gate. Felipe is
+the sole authority who may explicitly approve an actual external action. Terra
+review, recommendation, approval of a documentation packet, merge, or
+publication never itself authorizes external access or execution. For Stages 2,
+4, and 6, only Felipe's explicit go/no-go after Terra's required review may
+authorize the exact named external activity.
+
 Authority is separated into six stages:
 
 1. **Pre-execution plan:** this document defines protocol and authorizes
    nothing, including preparation of a later packet.
-2. **Candidate-nomination research authorization:** only a distinct, explicit
-   Terra decision may authorize one bounded, human-directed activity that
-   records possible public GitHub coordinates for later planning. Its external,
-   untrusted register is neither evidence nor corpus selection.
+2. **Candidate-nomination research authorization:** Terra must review the exact
+   scope and recommend go or no-go. Only Felipe's subsequent, explicit go/no-go
+   may authorize one bounded, human-directed activity that records possible
+   public GitHub coordinates for later planning. Its external, untrusted
+   register is neither evidence nor corpus selection.
 3. **Corpus-freeze scope packet:** a later reviewed planning packet uses
    nominated coordinates only as untrusted inputs and independently proposes the
    intended corpus, coverage, evidence surfaces, external boundary, human roles,
    and acquisition stop conditions. It grants no authority.
-4. **Corpus-freeze go/no-go:** only a separate, explicit Terra decision may
+4. **Corpus-freeze go/no-go:** Terra must review the exact acquisition scope and
+   recommend go or no-go. Only Felipe's subsequent, explicit go/no-go may
    authorize limited human-only, read-only acquisition of the named sources and
    creation of frozen external inputs. It grants no agent, model-execution,
    model-provider-transmission, or classification authority.
@@ -44,9 +53,10 @@ Authority is separated into six stages:
    containment, roles, evaluation, and run scope. It grants no agent or model
    execution, model-provider transmission, or additional source-access
    authority.
-6. **Classification-run go/no-go:** only a distinct, explicit Terra decision may
-   authorize the named initial proposal pass, one clean identical rerun, the
-   approved independent validation pass, and human adjudication.
+6. **Classification-run go/no-go:** Terra must review the completed execution
+   packet and recommend go or no-go. Only Felipe's subsequent, explicit go/no-go
+   may authorize the named initial proposal pass, one clean identical rerun,
+   the approved independent validation pass, and human adjudication.
 
 Each stage requires its own applicable review and authority. Completing or
 approving one stage never authorizes the next. Merging this document does not
@@ -161,6 +171,16 @@ use. The register may record only:
 - the observation date; and
 - a short human-authored nomination rationale.
 
+A reviewed, committed Stage 2 authorization may name exact predeclared query
+strings, one local seed-linked control coordinate, endpoint names, API version,
+request ceiling, and static stop rules. Agents and models may read those static
+governance values for review. They are not acquired GitHub data and establish no
+Repository identity, lineage, classification, Capability relevance, Tool
+status, fit, evidence, inclusion, or recommendation. Agents and models still
+must not execute requests, control the client, change queries, select candidates,
+or receive responses, returned coordinates, register rows, workspace contents,
+retention material, or operational output.
+
 Stage 2 must not permit:
 
 - any GitHub API method, endpoint, field, credential, or request outside the
@@ -183,7 +203,8 @@ lineage, relevance, suitability, or inclusion. API requests must be serial,
 budgeted, and rate-aware. If nomination requires source content, an endpoint or
 field outside the allowlist, private data, broader access, or any conclusion
 beyond a coordinate and intended test category, the activity stops and requires
-a revised scope and new explicit Terra decision.
+a revised scope, renewed Terra review and recommendation, and a new explicit
+Felipe go/no-go.
 
 The API access scope packet is a cross-cutting acquisition prerequisite, not a
 seventh lifecycle stage. It must name the authentication method, least-privilege
@@ -195,6 +216,10 @@ authorization is the distinct actual-run decision and may define a bounded API
 preflight within that same Stage 2 activity. For later source freezing, the
 existing Stage 4 corpus-freeze go/no-go is the distinct actual-run decision. The
 packet creates no seventh or unnumbered execution stage, gate, or authority.
+
+For both actual-run decisions, Terra's required review produces a TPM
+recommendation only. It grants no API or acquisition authority. Felipe's
+explicit go/no-go is the sole authority for the exact external action.
 
 Stage 2 authority does not carry into packet preparation or corpus freezing and
 does not weaken the later human-only source-acquisition boundary.
@@ -261,11 +286,12 @@ Each surface must retain its canonical public URL, immutable revision or
 version, exact locator, and observation date. The bundle inventory must state
 why each surface is included.
 
-Source acquisition happens only after a distinct Terra Stage 4 corpus-freeze
-go/no-go authorizes the named minimal evidence surfaces and immutable-revision
+Source acquisition happens only after Terra reviews the exact Stage 4 scope and
+recommends go or no-go, followed by Felipe's distinct, explicit corpus-freeze
+go/no-go for the named minimal evidence surfaces and immutable-revision
 procedure. It remains a limited, human-only, read-only responsibility. Stage 4
 may use the same separately approved external GitHub API channel only for those
-named public surfaces and revisions. That decision may authorize pinning
+named public surfaces and revisions. Felipe's decision may authorize pinning
 immutable revisions, preparing the minimal evidence bundle, and creating the
 frozen corpus manifest, evidence inventory, and hidden human-reference briefs in
 the approved external workspace.
@@ -311,9 +337,10 @@ Agents and the contract validator must not see it before their output is frozen.
 
 ## 8. Staged proposal-only agent workflow
 
-Only a Stage 6 classification-run go/no-go may authorize the later pilot
-workflow. The approved classification execution packet must constrain it to
-these ordered stages:
+Only Felipe's explicit Stage 6 classification-run go/no-go after Terra's
+required review and recommendation may authorize the later pilot workflow. The
+approved classification execution packet must constrain it to these ordered
+stages:
 
 1. **Identity and lineage:** propose canonical owner/repository identity,
    revision, and any evidenced rename, fork, mirror, archive, or supersession
@@ -494,10 +521,11 @@ acquisition, GitHub access, arbitrary network use, or additional tools. If the
 execution environment cannot demonstrate the required containment, the
 classification run is blocked.
 
-The classification-run go/no-go may authorize exactly one initial proposal pass
-and, after that output is frozen, exactly one clean identical rerun from the same
-inputs and configuration. It may also authorize the independent proposal-only
-validation pass defined in the packet and human adjudication. Compare claim
+Felipe's classification-run go/no-go, after Terra's required review and
+recommendation, may authorize exactly one initial proposal pass and, after that
+output is frozen, exactly one clean identical rerun from the same inputs and
+configuration. It may also authorize the independent proposal-only validation
+pass defined in the packet and human adjudication. Compare claim
 presence, claim boundaries, evidence locators, extraction/inference labels, and
 abstentions—including product-contract fit, limitation, tradeoff, and duplicate
 or suppression boundaries—not prose wording.
@@ -525,7 +553,8 @@ Stop candidate nomination and preserve the external activity record when:
   category, observation date, and short human-authored rationale.
 
 A stopped nomination cannot be widened in place. Broader activity requires a
-revised nomination scope and a new explicit Terra decision.
+revised nomination scope, renewed Terra review and recommendation, and a new
+explicit Felipe go/no-go.
 
 Stop corpus freezing and preserve the acquisition record when:
 
@@ -597,7 +626,7 @@ run.
 ## 15. Explicit Phase 2C go/no-go gate
 
 Phase 2C remains blocked until Terra explicitly reviews the Phase 2B findings.
-A go decision requires evidence that:
+A go recommendation requires evidence that:
 
 - primary identity, lineage, evidence, extraction/inference, Repository/Tool,
   and capability-relevance boundaries are reproducible and reviewable;
@@ -612,7 +641,8 @@ A go decision requires evidence that:
 
 Repository-pilot success does not establish Skill identity, subpath, permission,
 prompt-injection, development-assistance, or artifact boundaries. Phase 2C needs
-its own plan, corpus, scope, and Terra authorization. Any unresolved material
+its own plan, corpus, scope, Terra review and recommendation, and Felipe's
+explicit authorization for any actual external action. Any unresolved material
 trust failure is a no-go.
 
 ## 16. Security, privacy, prompt-injection, and licensing boundaries
@@ -622,11 +652,18 @@ trust failure is a no-go.
   read-only public GitHub API channel and the reviewed endpoint and field
   allowlist named by a Stage 2 authorization. It may retain only the bounded
   nomination-register fields and creates no evidence or trusted record.
-- Humans acquire only the minimal bundle authorized by a Terra corpus-freeze
-  go/no-go through the same approved external channel and only for the named
-  static surfaces and immutable-revision procedure. That stage permits no model
-  run or transmission to an external model provider. Agents receive no GitHub
-  credential or source-acquisition authority.
+- Agents and models may review static control values committed in a governance
+  document: predeclared query strings, one local seed-linked control coordinate,
+  endpoint names, API version, request ceiling, and static stop rules. They may
+  not execute or control requests or receive API responses, returned leads,
+  selected coordinates, register rows, workspace contents, retention material,
+  or operational output.
+- Humans acquire only the minimal bundle reviewed by Terra and explicitly
+  authorized by Felipe's corpus-freeze go/no-go through the same approved
+  external channel and only for the named static surfaces and immutable-
+  revision procedure. Terra's recommendation grants no access. That stage
+  permits no model run or transmission to an external model provider. Agents
+  receive no GitHub credential or source-acquisition authority.
 - Acquisition requests are serial, budgeted, and rate-aware. An access,
   rate-limit, scope, retention, or containment failure stops the applicable
   activity without a silent retry, scrape, broad crawl, or provider fallback.
@@ -637,8 +674,10 @@ trust failure is a no-go.
   GitHub or GitHub API, shell, subprocess, code-execution, dependency-
   installation, repository-script, or other agent-controlled external-access
   tool.
-- Only the Stage 6 classification-run go/no-go may authorize the exact model-
-  inference provider channel reviewed in the classification execution packet.
+- Terra's required Stage 6 review recommends go or no-go; only Felipe's
+  subsequent, explicit classification-run go/no-go may authorize the exact
+  model-inference provider channel and named run reviewed in the classification
+  execution packet.
   The channel may process only the approved frozen bundle and must not transmit
   hidden references, secrets, or files outside that bundle.
 - A model-inference channel does not authorize browsing, source acquisition,
@@ -727,10 +766,12 @@ artifact.
 
 ### Stage 2 — Candidate-nomination research authorization
 
-Only a distinct, explicit Terra decision may authorize one bounded,
-human-directed candidate-nomination activity. Its sole purpose is to produce an
-external, untrusted register of possible public GitHub coordinates and intended
-test categories for later packet preparation.
+Terra must review the completed Stage 2 authorization and recommend go or
+no-go. That TPM review and recommendation grants no API, source-access, or
+execution authority. Only Felipe's subsequent, explicit go/no-go may authorize
+one bounded, human-directed candidate-nomination activity. Its sole purpose is
+to produce an external, untrusted register of possible public GitHub coordinates
+and intended test categories for later packet preparation.
 
 The authorization must name the human-directed researcher or role, the reviewed
 public GitHub API access scope packet and endpoint/field allowlist, allowed
@@ -754,31 +795,36 @@ scrape, broad crawl, or provider fallback.
 
 The register is not evidence, a frozen corpus, classification output, review
 decision, or promotion artifact. Any need to cross the approved boundary stops
-nomination until a revised scope receives a new explicit Terra decision.
+nomination until a revised scope receives renewed Terra review and
+recommendation and a new explicit Felipe go/no-go.
 
 ### Stage 3 — Corpus-freeze scope packet
 
-Terra may separately authorize preparation of one reviewed corpus-freeze scope
-packet. It may use nominated coordinates as untrusted inputs, but must
-independently propose the intended corpus, inclusion rationale, mandatory
-coverage matrix, permitted static evidence surfaces, external workspace and
-retention boundary, human roles, and acquisition stop conditions. It does not
-need to claim frozen revisions.
+One corpus-freeze scope packet may be prepared as planning-only work.
+Preparation grants no authority. The packet may use nominated coordinates as
+untrusted inputs, but must independently propose the intended corpus, inclusion
+rationale, mandatory coverage matrix, permitted static evidence surfaces,
+external workspace and retention boundary, human roles, and acquisition stop
+conditions. It does not need to claim frozen revisions.
 
-Preparing, reviewing, or approving the packet grants no source access, source
-acquisition, agent or model execution, model-provider transmission, validation,
-or classification authority.
+After the completed packet exists, Terra reviews it and recommends go or no-go.
+That TPM review and recommendation grants no source access, source acquisition,
+agent or model execution, model-provider transmission, validation, or
+classification authority. Only Felipe's subsequent, explicit Stage 4 go/no-go
+may authorize the named external corpus-freeze action.
 
 ### Stage 4 — Corpus-freeze go/no-go
 
-Only a separate, explicit Terra decision after review of the corpus-freeze
-packet may authorize limited human-only, read-only acquisition of the named
-public GitHub sources through the separately reviewed external API channel. The
-go/no-go must name the exact approved static evidence surfaces and immutable-
-revision procedure. Its authority is limited to pinning immutable revisions,
-preparing the named minimal evidence bundle, and creating the frozen corpus
-manifest, evidence inventory, and hidden human-reference briefs in the approved
-external workspace.
+Terra must review the completed corpus-freeze packet and recommend go or no-go.
+That TPM review and recommendation grants no source-access or acquisition
+authority. Only Felipe's subsequent, explicit Stage 4 go/no-go may authorize
+limited human-only, read-only acquisition of the named public GitHub sources
+through the separately reviewed external API channel. Felipe's go/no-go must
+name the exact approved static evidence surfaces and immutable-revision
+procedure. Its authority is limited to pinning immutable revisions, preparing
+the named minimal evidence bundle, and creating the frozen corpus manifest,
+evidence inventory, and hidden human-reference briefs in the approved external
+workspace.
 
 It does not authorize agents, classifiers, validators, model runs, transmission
 to an external model provider, code execution, dependency installation, GitHub
@@ -788,13 +834,14 @@ StackScout repository changes. Requests must be serial, budgeted, rate-aware,
 and stop on an access, rate-limit, scope, retention, or containment failure. If
 an identity, revision, evidence surface, retention need, or source boundary
 differs from the approved packet, acquisition stops and a revised packet plus a
-new corpus-freeze go/no-go are required.
+renewed Terra review and recommendation and a new explicit Felipe corpus-freeze
+go/no-go are required.
 
 ### Stage 5 — Classification execution packet
 
-After corpus freezing, Terra may separately authorize preparation of one
-reviewed classification execution packet. It must use the frozen outputs and
-name:
+After corpus freezing, one classification execution packet may be prepared as
+planning-only work. Preparation grants no authority. It must use the frozen
+outputs and name:
 
 - the classification and discovery product contract versions by immutable
   commit SHA;
@@ -827,23 +874,28 @@ name:
 - the exact pilot scope: one initial proposal pass plus one clean identical
   rerun, with no unlimited retries or self-correction.
 
-Preparing, reviewing, or approving this packet grants no agent execution,
-model execution, model-provider transmission, classification, additional source
-access, promotion, or runtime authority.
+After the completed packet exists, Terra reviews it and recommends go or no-go.
+That TPM review and recommendation grants no agent execution, model execution,
+model-provider transmission, classification, additional source access,
+promotion, or runtime authority. Only Felipe's subsequent, explicit Stage 6
+go/no-go may authorize the named external classification action.
 
 ### Stage 6 — Classification-run go/no-go
 
-Only a distinct, explicit Terra decision after review of the completed
-classification execution packet may authorize exactly the named initial
+Terra must review the completed classification execution packet and recommend
+go or no-go. That TPM review and recommendation grants no model-inference,
+agent, validation, adjudication, or execution authority. Only Felipe's
+subsequent, explicit Stage 6 go/no-go may authorize exactly the named initial
 agent/classification pass, exactly one clean identical rerun against the frozen
 bundle, the independent proposal-only validation pass described in the packet,
 and human adjudication and creation of the external findings package.
 
-This is the only stage that may authorize the predeclared model-inference
-provider channel. That limited transport may process only the approved frozen
-bundle and is not permission for browsing, source acquisition, GitHub access,
-arbitrary network use, or additional tools. If the execution environment cannot
-demonstrate the reviewed containment, the run is blocked.
+Felipe's explicit go/no-go at this stage is the only decision that may authorize
+the predeclared model-inference provider channel. That limited transport may
+process only the approved frozen bundle and is not permission for browsing,
+source acquisition, GitHub access, arbitrary network use, or additional tools.
+If the execution environment cannot demonstrate the reviewed containment, the
+run is blocked.
 
 It does not authorize new source acquisition, corpus expansion, changed evidence
 surfaces, changed prompts, models, configuration, or permissions, a third run,
@@ -852,9 +904,10 @@ integration, Phase 2C, or user-facing discovery.
 
 Any change to the provider, model, source-content transmission, input-retention,
 training, data-handling, or containment boundary requires a revised
-classification execution packet and a new classification-run go/no-go before
-execution.
+classification execution packet, renewed Terra review and recommendation, and a
+new explicit Felipe classification-run go/no-go before execution.
 
 Any material scope change stops work until the applicable packet is revised and
-a new explicit go/no-go decision is approved. Authority never carries forward
-implicitly from one stage to another.
+Terra has reviewed and recommended the revised scope and Felipe has issued a new
+explicit go/no-go. Authority never carries forward implicitly from one stage to
+another.

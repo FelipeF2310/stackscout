@@ -20,11 +20,13 @@ Reviewing, approving, or merging this packet grants no authority to:
 
 The packet is a cross-cutting prerequisite inside the existing six-stage Phase
 2B lifecycle. It creates no seventh or unnumbered stage, gate, or authority.
-Only a later, explicit **Stage 2 candidate-nomination actual-run
-authorization** could permit the bounded API preflight and nomination activity
-proposed here. That later authorization must adopt this packet by immutable
-revision and name the human operator, exact query set, date, workspace,
-retention decision, and stop scope before any request occurs.
+Terra must review a later **Stage 2 candidate-nomination actual-run
+authorization** and recommend go or no-go. That TPM review grants no request or
+execution authority. Only Felipe's subsequent, explicit go/no-go could permit
+the bounded API preflight and nomination activity proposed here. The later
+authorization must adopt this packet by immutable revision and name the human
+operator, exact query set, date, workspace, retention decision, and stop scope
+before any request occurs.
 
 Stage 4 remains separately governed by a later corpus-freeze scope packet and
 Stage 4 corpus-freeze go/no-go. This packet intentionally proposes no Stage 4
@@ -317,8 +319,8 @@ If unauthenticated access is denied, throttled, unavailable, or operationally
 insufficient, the activity stops. It must not create or fall back to a personal
 access token, GitHub App, GitHub CLI session, shared credential, alternate
 account, proxy, browser, scraper, or provider. A credentialed alternative would
-require a revised packet, product/security review, and a new explicit Stage 2
-actual-run decision.
+require a revised packet, renewed Terra product/security review and
+recommendation, and a new explicit Felipe Stage 2 go/no-go.
 
 Because the recommendation is unauthenticated, the proposed run has no
 credential to contain. Nevertheless, any future revision that introduces a
@@ -433,8 +435,9 @@ The activity stops immediately on any of these conditions:
 
 Stopping produces no implied permission to repair, retry, authenticate, widen
 scope, replace a candidate, or begin another activity. A later attempt requires
-a new Terra decision. No stop record may be retained beyond any four-field rows
-already present in the nomination register.
+renewed Terra review and recommendation and a new explicit Felipe Stage 2
+go/no-go. No stop record may be retained beyond any four-field rows already
+present in the nomination register.
 
 ## 7. External workspace and retention proposal
 
@@ -482,20 +485,36 @@ The proposed future activity is human-operated and read-only. The human operator
 alone performs the predeclared requests and mechanical field reduction in the
 approved external workspace.
 
-No agent controls or receives:
+Agents and models may read these static, predeclared control values in a
+reviewed, committed governance document:
 
-- network requests, API clients, request timing, endpoint selection, query
-  strings, parameters, pagination, redirects, retries, or fallback behavior;
-- credentials, authentication state, environment secrets, or response bodies;
-- nomination selection, retention, deletion, or operational stop decisions; or
-- access to GitHub, the external workspace, the nomination register, or raw
-  operational material.
+- exact query strings;
+- one predeclared local seed-linked control coordinate;
+- endpoint names and the reviewed API version;
+- the request ceiling; and
+- static stop rules.
 
-No model receives any request, response, coordinate, query, Repository metadata,
-source content, register row, or retained artifact under Stage 2. A future
-model-inference transport belongs only to Stage 6 after a separately reviewed
-classification execution packet, containment proof, and explicit Stage 6
-classification-run go/no-go.
+These values exist so reviewers can evaluate a deterministic scope before any
+external action. They are not acquired from GitHub and do not establish
+Repository identity, lineage, classification, Capability relevance, Tool
+status, fit, evidence, inclusion, or recommendation.
+
+No agent or model may execute a request, control the client, change a query,
+select a candidate, retry, or make an operational decision. During an activity,
+no agent or model controls or receives:
+
+- network requests as executed, API clients, request timing, parameters as
+  executed, pagination, redirects, retries, or fallback behavior;
+- credentials, authentication state, environment secrets, API responses,
+  response headers, statuses, or raw bodies;
+- returned leads, selected coordinates, nomination-register rows, workspace
+  contents, retention material, or operational output; or
+- access to GitHub, the external workspace, the nomination register, or any
+  operational decision or material.
+
+A future model-inference transport belongs only to Stage 6 after a separately
+reviewed classification execution packet, containment proof, Terra review and
+recommendation, and Felipe's explicit Stage 6 classification-run go/no-go.
 
 Public API data remains untrusted. It cannot alter an Architecture Brief,
 Capability, current Tool, score, selection, ordering, explanation, relationship,
@@ -522,7 +541,7 @@ seed record, runtime recommendation, or user-facing discovery result.
   evidence-backed usefulness for a named Architecture Brief context. They may
   not determine eligibility, ordering, fit, or recommendation.
 
-## 10. Risks, alternatives, and unresolved Terra decisions
+## 10. Risks, alternatives, and unresolved Terra review questions
 
 ### 10.1 Risks and controls
 
@@ -548,7 +567,8 @@ seed record, runtime recommendation, or user-facing discovery result.
   scope, review, and Stage 4 go/no-go.
 - **Misleading authority language:** a reviewed packet could be mistaken for
   permission to make requests. Control: packet status and NEXT_STEPS state that
-  only a later explicit Stage 2 authorization may permit the named activity.
+  Terra review recommends only and only Felipe's later explicit Stage 2 go/no-go
+  may permit the named activity.
 - **False confidence from an untrusted register:** a category label may be read
   as a fact or manufactured from forbidden metadata. Control: fixed hypothesis
   wording, query-supported nomination only, mandatory unfilled slots when the
@@ -573,10 +593,10 @@ seed record, runtime recommendation, or user-facing discovery result.
 - **Runtime GitHub integration:** rejected because it would breach the
   deterministic recommendation and reviewed-data boundaries.
 
-### 10.3 Genuine remaining Terra decisions
+### 10.3 Genuine remaining Terra review decisions
 
-Before drafting a separate Stage 2 actual-run authorization, Terra must decide
-whether to approve:
+Before drafting a separate Stage 2 actual-run authorization, Terra must review
+the following and recommend whether the scope should proceed:
 
 1. unauthenticated public REST as the first-run authentication decision, with no
    credentialed fallback;
@@ -596,19 +616,25 @@ whether to approve:
    terms remain sufficient on the planned activity date.
 
 The packet makes a clear recommendation on authentication, endpoints, fields,
-budget, and failure policy. It does not manufacture a token choice, Stage 4
-design, or execution permission.
+budget, and failure policy. Terra's review or approval of those documentation
+choices grants no external authority. It does not manufacture a token choice,
+Stage 4 design, or execution permission.
 
 ## 11. Approval checklist
 
-Terra must affirm every item below before a separate Stage 2 actual-run
-authorization can be drafted:
+Terra must affirm every item below as the TPM review gate before a separate
+Stage 2 actual-run authorization can be drafted:
 
 - [ ] The packet remains Stage 2-only and creates no seventh stage.
 - [ ] Packet approval grants no API, credential, authentication, source,
       nomination, model, or execution authority.
-- [ ] Only a later explicit Stage 2 authorization may permit the bounded
-      preflight and nomination activity.
+- [ ] Terra review and recommendation grants no request authority; only Felipe's
+      later explicit Stage 2 go/no-go may permit the bounded preflight and
+      nomination activity.
+- [ ] A committed authorization may expose exact static queries, its
+      predeclared seed-linked control coordinate, endpoint names, API version,
+      request ceiling, and static stop rules for review without treating them as
+      acquired data or Repository claims.
 - [ ] The only endpoints are `GET /search/repositories` and
       `GET /repos/{owner}/{repo}`; no Stage 4 or content endpoint is present.
 - [ ] Search uses exact predeclared category queries, `is:public`, `in:name`,
@@ -634,6 +660,9 @@ authorization can be drafted:
 - [ ] The nomination register contains only coordinate/URL, intended category,
       observation date, and short human-authored rationale. Missing rows are the
       only retained indication of unfilled slots.
+- [ ] No agent or model executes requests or receives API responses, headers,
+      statuses, raw bodies, returned leads, selected coordinates, register rows,
+      workspace contents, retention material, or operational output.
 - [ ] No raw response, source content, credential, unreviewed observation, agent
       or model data, or external artifact can enter StackScout or trusted data.
 - [ ] Repository remains distinct from Tool; nomination remains distinct from
@@ -644,8 +673,9 @@ authorization can be drafted:
 - [ ] A partial register and honest no-result remain acceptable outcomes.
 - [ ] Stage 4 source freezing requires a later separately scoped extension and
       Stage 4 go/no-go.
-- [ ] A new Terra decision is required after any stop, scope change, provider
-      policy change, or proposed credentialed access.
+- [ ] Renewed Terra review and recommendation and a new explicit Felipe go/no-go
+      are required after any stop, scope change, provider-policy change, or
+      proposed credentialed access.
 
 ## Official GitHub documentation basis
 
