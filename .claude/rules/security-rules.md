@@ -36,9 +36,15 @@ current free MVP; add them only when explicitly scoped.
 
 ## GitHub Integration (Future / Conditional)
 
-- GitHub API calls are read-only (metadata only).
-- Use a personal access token scoped to `public_repo:read` only.
-- Cache GitHub responses — do not fetch on every architecture generation.
+- Any future Phase 2B GitHub API access is external to StackScout, public-only,
+  read-only, endpoint/field allowlisted, serial, budgeted, rate-aware, and
+  separately authorized.
+- The reviewed API access scope packet decides the authentication mechanism and
+  least-privilege permissions; this rule prescribes no token type or scope.
+- Credentials are never committed, logged, included in prompts or model input,
+  exposed to agents or models, or available to runtime user requests.
+- Phase 2B acquisition planning is not authorization for runtime GitHub
+  integration or for any GitHub work in the current free MVP.
 
 ---
 
