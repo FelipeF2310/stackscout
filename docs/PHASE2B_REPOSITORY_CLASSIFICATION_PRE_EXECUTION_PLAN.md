@@ -18,13 +18,22 @@ human-selected public GitHub evidence bundle into Repository proposals that a
 human can verify. Its purpose is to evaluate proposal quality and reviewability,
 not to discover the best repositories or expand StackScout's trusted corpus.
 
-This pre-execution plan defines the conditions a later, separately reviewed
-Phase 2B execution authorization must satisfy. That later authorization is the
-artifact that must name the exact contract version it follows, define the fixed
-corpus and frozen revisions required by the contract, and name the evidence
-bundle, agent configuration, external workspace, retention policy, and exact run
-and stop scope. Merging this document does not authorize preparation or
-acquisition of source evidence, an agent run, classification, or any other pilot
+Authority is separated into three stages:
+
+1. **Pre-execution plan:** this document defines protocol and authorizes nothing.
+2. **Execution-authorization preparation:** a later reviewed scope packet must
+   name the exact contract version it follows, fixed corpus and frozen revisions,
+   evidence bundle, agent configuration, external workspace, retention policy,
+   human roles, and exact run and stop scope. The packet may describe the future
+   run, but preparing, reviewing, or approving it does not authorize source
+   acquisition or execution.
+3. **Actual-run go/no-go:** only a distinct, explicit Terra decision after review
+   of the completed packet may authorize acquisition of the named minimal
+   evidence bundle and the one named external agent/classification run.
+
+Without the final actual-run go/no-go, source acquisition and execution remain
+blocked. Merging this document does not authorize preparation of the scope
+packet, source acquisition, an agent run, classification, or any other pilot
 activity.
 
 ## 2. Explicit non-goals
@@ -78,8 +87,8 @@ The pilot cannot prove:
 
 ## 4. Pilot boundaries
 
-- Sources are limited to public GitHub repositories named by a later execution
-  authorization.
+- Sources are limited to public GitHub repositories named by a later reviewed
+  execution-authorization packet.
 - Every item is observed at an immutable revision or identifiable version when
   available.
 - Inputs, outputs, logs, and review artifacts remain outside StackScout's
@@ -119,10 +128,10 @@ seed-linked controls test known Repository/Tool boundaries; existing Tool IDs,
 scores, capability mappings, and relationships are not expected truth for the
 pilot.
 
-This pre-execution plan defines no corpus size. A later execution authorization
-must name the reviewed identities and revisions. Corpus membership must not
-change after output is seen. A correction or addition creates a new corpus
-version with a recorded reason.
+This pre-execution plan defines no corpus size. A later reviewed
+execution-authorization packet must name the reviewed identities and revisions.
+Corpus membership must not change after output is seen. A correction or addition
+creates a new corpus version with a recorded reason.
 
 ## 6. Minimal evidence-bundle acquisition and retention boundary
 
@@ -144,7 +153,8 @@ Each surface must retain its canonical public URL, immutable revision or
 version, exact locator, and observation date. The bundle inventory must state
 why each surface is included.
 
-Source acquisition happens only under a later authorization and remains a human
+Source acquisition happens only after a distinct Terra actual-run go/no-go
+authorizes the named minimal evidence bundle, and it remains a human
 responsibility. Raw clones, full archives, complete source bodies, raw model
 transcripts, and copied Skill bodies must not enter StackScout or trusted data.
 Any exceptional need for a broader snapshot requires a separate decision before
@@ -356,8 +366,8 @@ trust failure is a no-go.
 ## 16. Security, privacy, prompt-injection, and licensing boundaries
 
 - Public GitHub evidence only; no private or user-connected sources.
-- Humans acquire only the later-authorized minimal bundle. Agents receive no
-  GitHub credential or source-acquisition authority.
+- Humans acquire only the minimal bundle named by a later Terra actual-run
+  go/no-go. Agents receive no GitHub credential or source-acquisition authority.
 - Repository content is untrusted data, including embedded instructions and
   prompt injection.
 - No code execution, dependency installation, hooks, scripts, or instruction
@@ -377,7 +387,8 @@ run pending a separate decision.
 
 ## 17. Explicit deferrals and unresolved decisions
 
-The later execution authorization, not this pre-execution plan, must resolve:
+The later reviewed execution-authorization packet, not this pre-execution plan,
+must resolve:
 
 - exact corpus identities, revisions, and inclusion rationale;
 - exact evidence surfaces for each item;
@@ -395,11 +406,11 @@ thresholds, AI-builder Skill classification, Templates, promotion, user-facing
 discovery, runtime integration, and changes to current Tools or relationships.
 Deferral is not approval.
 
-## 18. Execution-authorization requirement
+## 18. Execution packet and actual-run authorization requirement
 
-Merging this pre-execution plan authorizes no pilot activity. Before any evidence
-is acquired or agent is run, Terra must issue a separate explicit authorization
-naming:
+Merging this pre-execution plan authorizes no pilot activity. Terra may later
+authorize preparation and review of one execution-authorization scope packet.
+That packet must name:
 
 - the frozen corpus and revisions;
 - the minimal evidence bundle and acquisition boundary;
@@ -409,5 +420,15 @@ naming:
 - the retention policy; and
 - the exact execution, review, and stop scope.
 
-If any named element is absent or changes, execution remains blocked until Terra
-reviews the revised scope.
+The packet may name the proposed run, but it is not source-access or execution
+authority. Preparing, reviewing, or approving the packet does not permit
+evidence acquisition, agent execution, or classification.
+
+After the packet is complete and reviewed, Terra must make a second, distinct
+actual-run go/no-go decision. Only that final decision may authorize acquisition
+of the named minimal evidence bundle and the one named external
+agent/classification run. It may not silently broaden the reviewed packet.
+
+If the final go/no-go is absent, a named element is missing, or the reviewed
+scope changes, source acquisition and execution remain blocked until Terra
+reviews the revised packet and makes a new actual-run decision.

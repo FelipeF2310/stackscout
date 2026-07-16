@@ -103,15 +103,20 @@ Completed on `main` — do not redo:
 Queue:
 
 1. **Next: Terra must decide whether to authorize preparation of one separately
-   scoped Phase 2B execution authorization.** Preparation must follow
+   scoped Phase 2B execution-authorization packet.** Preparation must follow
    [`PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md`](./PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md),
    but this decision does not authorize source access or a pilot run.
 
-Before source access or execution, the separately reviewed execution
-authorization must name the frozen corpus and revisions, exact contract version,
-minimal evidence bundle, acquisition procedure, agent configuration, external
-workspace, retention policy, human roles, and exact run and stop scope. A
-separate Terra decision is still required to authorize the actual run.
+The completed packet must name the frozen corpus and revisions, exact contract
+version, minimal evidence bundle, acquisition procedure, agent configuration,
+external workspace, retention policy, human roles, and exact run and stop scope.
+Preparing, reviewing, or approving that packet does not permit source access or
+agent execution.
+
+After the packet is complete and reviewed, a separate Terra actual-run go/no-go
+is required. Only that final decision may authorize acquisition of the named
+minimal evidence bundle and the one named external agent/classification run.
+Without it, source acquisition and execution remain blocked.
 
 The pre-execution plan and this queue do **not** authorize external source
 access, a pilot run, classification execution, GitHub API access, ingestion,
