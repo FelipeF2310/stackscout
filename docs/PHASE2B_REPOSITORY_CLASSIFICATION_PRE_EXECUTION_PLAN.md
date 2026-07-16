@@ -158,7 +158,8 @@ one nomination activity must explicitly name:
   endpoints and fields;
 - the allowed candidate categories;
 - the maximum intended candidate scope or other stopping boundary;
-- the external workspace and retention boundary; and
+- the external workspace, retention boundary, named human deletion owner, and
+  non-retained human deletion-confirmation method; and
 - the output format and observation date.
 
 For the first pilot, a future separately authorized, external, read-only GitHub
@@ -173,13 +174,30 @@ use. The register may record only:
 
 A reviewed, committed Stage 2 authorization may name exact predeclared query
 strings, one local seed-linked control coordinate, endpoint names, API version,
-request ceiling, and static stop rules. Agents and models may read those static
-governance values for review. They are not acquired GitHub data and establish no
-Repository identity, lineage, classification, Capability relevance, Tool
-status, fit, evidence, inclusion, or recommendation. Agents and models still
-must not execute requests, control the client, change queries, select candidates,
-or receive responses, returned coordinates, register rows, workspace contents,
-retention material, or operational output.
+the exact non-secret `User-Agent` value
+`StackScout-Phase2B-Stage2-Nomination/1.0`, request ceiling, and static stop
+rules. GitHub requires a valid `User-Agent` on every REST API request; see
+[Getting started with the REST API](https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api)
+(observed 2026-07-16). Agents and models may read those static governance values
+for review. They are not acquired GitHub data and establish no Repository
+identity, lineage, classification, Capability relevance, Tool status, fit,
+evidence, inclusion, or recommendation. Agents and models still must not
+execute requests, control the client, change queries or the reviewed
+`User-Agent`, select candidates, or receive responses, returned coordinates,
+register rows, workspace contents, retention material, or operational output.
+The later authorization must pin that exact `User-Agent`; a missing or different
+value blocks the activity pending a revised packet, renewed Terra review and
+recommendation, and a new explicit Felipe go/no-go.
+
+The later Stage 2 authorization must name a human deletion owner and a
+deletion-confirmation method. The confirmation is a non-retained human
+accountability action performed by that owner after deletion, not a Stage 2
+activity artifact. It may contain no raw response, header, status, query text,
+coordinate, register row, source content, or other operational material. No
+deletion-confirmation file, log, manifest, screenshot, register field, or other
+record may be created or retained. The named human operational/retention
+decision must consider the GitHub API Terms and applicable data-handling terms;
+that judgment is not a claim of legal compliance.
 
 Stage 2 must not permit:
 
@@ -407,7 +425,9 @@ resulting independence limitation rather than implying independent judgment.
 
 Any Stage 2 activity produces only the external, untrusted nomination register
 defined in Section 4. That register remains separate from pilot evidence and the
-frozen corpus artifacts below.
+frozen corpus artifacts below. Its required deletion confirmation is a
+non-retained human accountability action, not an artifact; it cannot create a
+file, log, manifest, screenshot, or additional register field.
 
 The human-only corpus-freeze step must produce external, human-readable:
 
@@ -538,11 +558,14 @@ success.
 
 ## 13. Stop conditions and failure interpretation
 
-Stop candidate nomination and preserve the external activity record when:
+Stop candidate nomination when any condition below occurs. Only permitted
+four-field register rows already written may remain:
 
 - the authorized candidate limit or stopping boundary is reached;
 - an API request reaches a rate limit or violates the reviewed access, endpoint,
   field, request-budget, retention, or containment boundary;
+- the required `User-Agent` is missing or differs from
+  `StackScout-Phase2B-Stage2-Nomination/1.0`;
 - nomination would require source content, raw-file retrieval, README,
   documentation, code, or release-body review or retention;
 - nomination would require an unapproved credential or API request, private or
@@ -654,10 +677,11 @@ trust failure is a no-go.
   nomination-register fields and creates no evidence or trusted record.
 - Agents and models may review static control values committed in a governance
   document: predeclared query strings, one local seed-linked control coordinate,
-  endpoint names, API version, request ceiling, and static stop rules. They may
-  not execute or control requests or receive API responses, returned leads,
-  selected coordinates, register rows, workspace contents, retention material,
-  or operational output.
+  endpoint names, API version, the exact non-secret `User-Agent` value
+  `StackScout-Phase2B-Stage2-Nomination/1.0`, request ceiling, and static stop
+  rules. They may not execute or control requests, change that header, or
+  receive API responses, returned leads, selected coordinates, register rows,
+  workspace contents, retention material, or operational output.
 - Humans acquire only the minimal bundle reviewed by Terra and explicitly
   authorized by Felipe's corpus-freeze go/no-go through the same approved
   external channel and only for the named static surfaces and immutable-
@@ -709,7 +733,8 @@ run pending a separate decision.
 The Stage 2 candidate-nomination authorization, not this pre-execution plan,
 must resolve the human-directed role, reviewed API access scope packet, allowed
 categories, maximum scope or stopping boundary, external workspace, retention
-boundary, output format, and observation date.
+boundary, named human deletion owner, non-retained human deletion-confirmation
+method, output format, exact `User-Agent`, and observation date.
 
 A separately reviewed API access scope packet must first resolve the exact
 authentication method, least-privilege permissions, endpoint and field
@@ -776,7 +801,12 @@ and intended test categories for later packet preparation.
 The authorization must name the human-directed researcher or role, the reviewed
 public GitHub API access scope packet and endpoint/field allowlist, allowed
 candidate categories, maximum intended scope or stopping boundary, external
-workspace and retention boundary, output format, and observation date.
+workspace and retention boundary, human deletion owner, non-retained human
+deletion-confirmation method, output format, exact `User-Agent`, and observation
+date. It must pin
+`User-Agent: StackScout-Phase2B-Stage2-Nomination/1.0`; any missing or different
+value blocks the activity pending a revised packet, renewed Terra review and
+recommendation, and a new explicit Felipe go/no-go.
 
 It may permit recording only the public URL or coordinate, intended coverage
 category, observation date, and a short human-authored nomination rationale. It
@@ -790,8 +820,15 @@ revision pinning; evidence creation; scoring; recommendation; review;
 promotion; or StackScout changes.
 
 Requests must be serial, budgeted, and rate-aware. A rate-limit, access, scope,
-retention, or containment failure stops the activity without a silent retry,
-scrape, broad crawl, or provider fallback.
+retention, containment, or static-header mismatch stops the activity without a
+silent retry, scrape, broad crawl, or provider fallback.
+
+The deletion confirmation is a non-retained human accountability action by the
+named deletion owner after deletion, not an activity artifact. It may contain no
+operational material, and no confirmation file, log, manifest, screenshot, or
+register field may be created or retained. The related human operational and
+retention decision must consider the GitHub API Terms and applicable data-
+handling terms without claiming legal compliance.
 
 The register is not evidence, a frozen corpus, classification output, review
 decision, or promotion artifact. Any need to cross the approved boundary stops
