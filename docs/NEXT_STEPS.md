@@ -110,23 +110,23 @@ Completed on `main` — do not redo:
 
 Queue:
 
-1. **Current prerequisite: Terra TPM review and recommendation on the external-
-   action authority and static-control governance correction in
+1. **Current prerequisite: Terra TPM review and recommendation on the Stage 2
+   transport-completeness correction in
    [`PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md`](./PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md)
    and
    [`PHASE2B_GITHUB_API_ACCESS_SCOPE_PACKET.md`](./PHASE2B_GITHUB_API_ACCESS_SCOPE_PACKET.md).**
-   The correction makes Felipe the sole authority for actual external actions
-   after Terra's required review, and permits exact predeclared queries and a
-   local seed-linked control coordinate to appear as static governance values
-   without exposing operational material to an agent or model.
+   The correction adds the exact non-secret `User-Agent` required for the
+   proposed Stage 2 transport and defines deletion confirmation as a non-
+   retained human accountability action without weakening the four-field
+   nomination-register limit.
 
 Terra review, recommendation, documentation approval, merge, or publication of
 this correction authorizes no API call, credential creation or use, token,
 authentication, source access, candidate research, nomination, freezing,
 classification, model activity, promotion, implementation, or execution. After
-the correction merges, the next work returns to revising the already-drafted
-Stage 2 candidate-nomination actual-run authorization from corrected `main`,
-including adoption of the API scope packet by immutable commit SHA. That
+the correction merges, work returns only to revising the parked v2 Stage 2
+candidate-nomination actual-run authorization from corrected `main`, including
+adoption of the corrected API scope packet by immutable commit SHA. That
 revision still grants no external authority. Only Felipe's later, explicit
 Stage 2 go/no-go after Terra's required review and recommendation may authorize
 the exact named activity. No later Phase 2B stage becomes active automatically.

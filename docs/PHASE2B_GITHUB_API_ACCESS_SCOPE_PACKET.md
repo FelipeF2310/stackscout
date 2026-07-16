@@ -147,10 +147,18 @@ and [REST API endpoints for repositories](https://docs.github.com/en/rest/repos/
 (both observed 2026-07-16).
 
 All requests must use `Accept: application/vnd.github+json`; text-match and
-other custom media types are prohibited. The later Stage 2 authorization must
-pin the GitHub REST API version then under review; this packet does not silently
-float to a future API version. GitHub recommends that JSON media type in the two
-endpoint references above (observed 2026-07-16).
+other custom media types are prohibited. They must also use the exact,
+non-secret static control
+`User-Agent: StackScout-Phase2B-Stage2-Nomination/1.0`. GitHub requires a valid
+`User-Agent` on every REST API request; see
+[Getting started with the REST API](https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api)
+(observed 2026-07-16). The later Stage 2 authorization must pin this exact
+value and the GitHub REST API version then under review; this packet does not
+silently float either control to a future value. A missing or different
+`User-Agent` blocks the activity pending a revised packet, renewed Terra review
+and recommendation, and a new explicit Felipe Stage 2 go/no-go. GitHub
+recommends the JSON media type in the two endpoint references above (observed
+2026-07-16).
 
 ### 4.1 Search repositories
 
@@ -418,7 +426,8 @@ The activity stops immediately on any of these conditions:
 - an absent or materially changed official endpoint contract;
 - an unexpected field in the reduced operator view or retained output, response
   shape, content type, visibility state, endpoint, HTTP method, query,
-  parameter, page, or field request;
+  parameter, page, field request, or a missing or different `User-Agent` static
+  control;
 - request-budget exhaustion or an attempted retry, pagination follow, query
   expansion, provider fallback, authentication, or source-content access;
 - scope drift toward evidence, revisions, corpus selection, classification,
@@ -468,10 +477,15 @@ trusted knowledge, runtime data, or a model context.
 
 Before any future request, the Stage 2 authorization must record a named human
 operational/retention decision covering the exact workspace, access list,
-retention deadline, deletion owner, and deletion confirmation. The decision
-must consider the GitHub API Terms and applicable data-handling terms. GitHub's
-Terms of Service include API-specific conditions and prohibit attempts to evade
-rate limits. See
+retention deadline, human deletion owner, and deletion-confirmation method. The
+method must be a non-retained human accountability action performed by the
+named deletion owner after deletion, not a Stage 2 activity artifact. No
+deletion-confirmation file, log, manifest, screenshot, register field, or other
+record may be created or retained. The confirmation may not contain raw
+responses, headers, statuses, query text, coordinates, register rows, source
+content, or other operational material. The decision must consider the GitHub
+API Terms and applicable data-handling terms. GitHub's Terms of Service include
+API-specific conditions and prohibit attempts to evade rate limits. See
 [GitHub Terms of Service, API Terms](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service)
 (observed 2026-07-16).
 
@@ -491,6 +505,8 @@ reviewed, committed governance document:
 - exact query strings;
 - one predeclared local seed-linked control coordinate;
 - endpoint names and the reviewed API version;
+- the exact non-secret `User-Agent` value
+  `StackScout-Phase2B-Stage2-Nomination/1.0`;
 - the request ceiling; and
 - static stop rules.
 
@@ -499,9 +515,9 @@ external action. They are not acquired from GitHub and do not establish
 Repository identity, lineage, classification, Capability relevance, Tool
 status, fit, evidence, inclusion, or recommendation.
 
-No agent or model may execute a request, control the client, change a query,
-select a candidate, retry, or make an operational decision. During an activity,
-no agent or model controls or receives:
+No agent or model may execute a request, control the client, change a query or
+the reviewed `User-Agent`, select a candidate, retry, or make an operational
+decision. During an activity, no agent or model controls or receives:
 
 - network requests as executed, API clients, request timing, parameters as
   executed, pagination, redirects, retries, or fallback behavior;
@@ -607,8 +623,8 @@ the following and recommend whether the scope should proceed:
    reachable intended categories, including which slots must remain unfilled
    under the approved surface;
 5. the named human operator and reviewer, exact external workspace, access
-   boundary, observation date, retention deadline, deletion owner, and
-   human-authored rationale template;
+   boundary, observation date, retention deadline, deletion owner, non-retained
+   human deletion-confirmation method, and human-authored rationale template;
 6. the exact human-operated client and field-reduction procedure, including how
    raw responses and operational metadata are kept out of retained artifacts;
    and
@@ -633,8 +649,13 @@ Stage 2 actual-run authorization can be drafted:
       nomination activity.
 - [ ] A committed authorization may expose exact static queries, its
       predeclared seed-linked control coordinate, endpoint names, API version,
-      request ceiling, and static stop rules for review without treating them as
-      acquired data or Repository claims.
+      the exact non-secret `User-Agent`
+      `StackScout-Phase2B-Stage2-Nomination/1.0`, request ceiling, and static
+      stop rules for review without treating them as acquired data or
+      Repository claims.
+- [ ] The later authorization pins that exact `User-Agent`; a missing or
+      different value blocks the activity pending revised scope and renewed
+      review and authority.
 - [ ] The only endpoints are `GET /search/repositories` and
       `GET /repos/{owner}/{repo}`; no Stage 4 or content endpoint is present.
 - [ ] Search uses exact predeclared category queries, `is:public`, `in:name`,
@@ -655,8 +676,9 @@ Stage 2 actual-run authorization can be drafted:
       condition fails closed without retaining headers, statuses, a manifest,
       log, incomplete-category list, or stop report.
 - [ ] The exact external workspace, operator/reviewer access, retention
-      deadline, deletion owner, and deletion confirmation will be named in the
-      later authorization.
+      deadline, deletion owner, and non-retained human deletion-confirmation
+      method will be named in the later authorization. No deletion-confirmation
+      artifact or register field may be created or retained.
 - [ ] The nomination register contains only coordinate/URL, intended category,
       observation date, and short human-authored rationale. Missing rows are the
       only retained indication of unfilled slots.
@@ -691,4 +713,5 @@ file, or user profile was accessed.
 - [Rate limits for the REST API](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api)
 - [Best practices for using the REST API](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api)
 - [Using pagination in the REST API](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api)
+- [Getting started with the REST API](https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api)
 - [GitHub Terms of Service](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service)
