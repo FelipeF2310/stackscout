@@ -110,21 +110,25 @@ Completed on `main` — do not redo:
 
 Queue:
 
-1. **Current prerequisite: prepare and review a separate Phase 2B public GitHub
-   API access scope packet.** The packet must follow
-   [`ADR 005`](./DECISIONS/005-phase2b-public-source-acquisition.md) and name the
-   authentication method, least-privilege permissions, endpoint and field
-   allowlist, request budget, retry and backoff policy, external workspace,
-   retention policy, and exact execution procedure.
+1. **Current prerequisite: Terra review of the proposed
+   [`PHASE2B_GITHUB_API_ACCESS_SCOPE_PACKET.md`](./PHASE2B_GITHUB_API_ACCESS_SCOPE_PACKET.md).**
+   The packet follows
+   [`ADR 005`](./DECISIONS/005-phase2b-public-source-acquisition.md) and proposes
+   a Stage 2-only authentication decision, endpoint and field allowlist, request
+   budget, no-retry failure policy, external-workspace boundary, retention
+   requirements, and human-operated procedure.
 
-This documentation decision and the later packet authorize no API call, token,
-authentication, source access, candidate research, classification, corpus
-freezing, promotion, or implementation. After the packet is approved, the
-existing Stage 2 candidate-nomination authorization must explicitly authorize
-any bounded API preflight and nomination within that same Stage 2 activity.
-Later source freezing remains subject to the existing Stage 4 corpus-freeze
-go/no-go. The packet is a cross-cutting acquisition prerequisite; it creates no
-seventh or unnumbered stage, gate, or authority in the six-stage lifecycle.
+This documentation decision and approval or merge of the proposed packet
+authorize no API call, credential creation or use, token, authentication,
+source access, candidate research, nomination, classification, corpus work,
+model activity, promotion, or implementation. After approval, the next possible
+action is preparation of a separate Stage 2 candidate-nomination actual-run
+authorization—not execution. That later authorization must explicitly adopt the
+packet and name any bounded API preflight and nomination inside the same Stage 2
+activity before a request may occur. Later source freezing remains subject to a
+separately scoped extension and the existing Stage 4 corpus-freeze go/no-go. The
+packet is a cross-cutting acquisition prerequisite; it creates no seventh or
+unnumbered stage, gate, or authority in the six-stage lifecycle.
 
 Any later nomination activity remains constrained by the discovery product
 contract and
