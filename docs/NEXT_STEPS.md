@@ -103,12 +103,21 @@ Completed on `main` — do not redo:
 
 Queue:
 
-1. **Next: Terra must decide whether to authorize one bounded
-   candidate-nomination research activity.** Any authorization must follow
-   [`PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md`](./PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md),
-   name its human-directed role, public GitHub listing/search and landing-page
-   surfaces, candidate categories, maximum scope, external workspace, retention
-   boundary, output format, and observation date.
+1. **Current prerequisite: Terra must review and approve the
+   architecture-directed discovery product contract.**
+   [`ARCHITECTURE_DIRECTED_DISCOVERY_PRODUCT_CONTRACT.md`](./ARCHITECTURE_DIRECTED_DISCOVERY_PRODUCT_CONTRACT.md)
+   defines the deliberate post-Brief user moment, minimum reviewed Repository
+   result, duplicate and no-result behavior, and the product requirements that
+   Phase 2B must evaluate. Reviewing or merging it authorizes no research,
+   source access, corpus work, classification, promotion, or implementation.
+
+After the product contract is approved and merged, the next decision may return
+to whether to authorize one bounded candidate-nomination research activity,
+constrained by that contract and
+[`PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md`](./PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md).
+Any authorization must name its human-directed role, public GitHub
+listing/search and landing-page surfaces, candidate categories, maximum scope,
+external workspace, retention boundary, output format, and observation date.
 
 The activity may produce only an external, untrusted nomination register with a
 public URL or coordinate, intended test category, observation date, and short
