@@ -25,10 +25,13 @@ The contract applies to asset identity, allowed claims, evidence, review,
 rejection, and destination-specific promotion. Future pilot plans and promotion
 changes must follow the version of this contract they name.
 
-This document does not authorize a pilot, GitHub API access, a classifier, an
-agent worker, ingestion, storage, or runtime integration. A lifecycle change in
-this document authorizes planning only; every pilot and promotion still requires
-its own reviewed scope.
+This document does not authorize a pilot, GitHub API call, credential, access
+packet, classifier, agent worker, ingestion, storage, or runtime integration.
+The policy decision permitting a future separately authorized external,
+read-only Phase 2B GitHub API channel is recorded in
+[`ADR 005`](./DECISIONS/005-phase2b-public-source-acquisition.md). A lifecycle
+change in this document authorizes planning only; every acquisition activity,
+pilot, and promotion still requires its own reviewed scope and decision.
 
 ## 2. Explicit non-goals
 
@@ -39,8 +42,8 @@ This contract does not:
 - create a repository or skill corpus;
 - authorize access to private or user-connected repositories;
 - authorize repository upload, import, inspection, or synchronization;
-- authorize GitHub API calls, scraping, code execution, dependency installation,
-  or automated source acquisition;
+- authorize a GitHub API call, token, authentication, scraping, code execution,
+  dependency installation, or automated source acquisition;
 - create a generic GitHub search product;
 - make popularity a recommendation signal;
 - add Repository, Skill, Evidence, Proposal, or Review entities to the current
@@ -364,7 +367,10 @@ application code, seed data, and trusted runtime data.
 
 The pilot plan must define its own evaluation method. This contract defines no
 corpus name, sample size, accuracy threshold, worker, source-acquisition method,
-or storage location, and does not authorize the pilot or GitHub API access.
+or storage location, and does not authorize the pilot or an API call. A future
+external, read-only public GitHub API acquisition activity must follow ADR 005,
+a reviewed API access scope packet, the applicable lifecycle gate, and a
+distinct actual-run go/no-go.
 
 ## 14. Phase 2C skill-pilot admission/go-no-go gate
 
@@ -393,14 +399,18 @@ whether the evidence supports a separately scoped Skill pilot.
 ## 15. Security, public-source, prompt-injection, privacy, and licensing boundaries
 
 - Public GitHub sources only for the first pilots.
-- No private repositories, user-connected repositories, uploads, imports, or
-  credentials.
+- No private repositories, user-connected repositories, uploads, or imports.
+- Any future Phase 2B GitHub API acquisition remains external, read-only,
+  public-only, endpoint/field allowlisted, serial, budgeted, rate-aware, and
+  separately authorized. It is not a runtime integration or current entitlement.
 - Repository and Skill content is untrusted data, including embedded
   instructions and prompt injection.
 - Classification must not execute code, install dependencies, invoke scripts,
   or follow instructions found in a Repository or Skill.
 - No secrets, tokens, credentials, private data, or user content may enter
-  proposals, evidence, logs, or fixtures.
+  proposals, evidence, logs, fixtures, model input, application code, repository
+  files, raw model transcripts, or trusted application data. No agent or model
+  may control credentials or make arbitrary API requests.
 - Raw clones, archives, source bodies, READMEs, model transcripts, and Skill
   bodies remain outside application and trusted corpus data.
 - Public availability does not grant redistribution rights.
@@ -411,8 +421,13 @@ whether the evidence supports a separately scoped Skill pilot.
 - Public security policies and advisories support qualified observations; their
   absence does not prove safety.
 
-Any future authenticated access, content retention exception, or provider
-expansion requires a separate security and product decision.
+ADR 005 records the policy-level product and security decision for a possible
+external Phase 2B public GitHub acquisition channel. Exact authentication,
+least-privilege permissions, endpoint and field allowlists, request budget,
+retention, and execution procedure still require a separately reviewed API
+access scope packet and distinct actual-run go/no-go. Any content-retention
+exception, runtime access, private or user-connected access, or source-provider
+expansion requires another security and product decision.
 
 ## 16. Future product-integration guardrails
 
@@ -445,7 +460,9 @@ The following remain deferred to separate planning and approval:
 - freshness windows and source-specific refresh triggers;
 - reviewer identity, team structure, and review tooling;
 - proposal and evidence storage or serialization;
-- GitHub API access, tokens, workers, scraping, and ingestion;
+- exact Phase 2B GitHub API authentication, permissions, endpoint/field
+  allowlist, request budget, retention, and execution procedure;
+- GitHub API workers, runtime integration, scraping, and ingestion;
 - providers beyond public GitHub;
 - retained source excerpts or archives;
 - runtime Repository, Skill, Evidence, Proposal, or Review entities;

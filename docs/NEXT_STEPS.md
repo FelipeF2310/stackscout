@@ -100,32 +100,41 @@ Completed on `main` — do not redo:
   reproducibility, and Phase 2C gate are documented. Its six-stage lifecycle
   separates candidate nomination, corpus planning, human-only corpus freezing,
   agent-execution planning, and execution; the plan authorizes none of them.
+- **Architecture-directed discovery product contract:** the deliberate post-
+  Brief user moment, minimum reviewed Repository result, duplicate suppression,
+  and honest no-result boundary are documented.
+- **Phase 2B public-source acquisition decision:** browser-only nomination is no
+  longer the default after two bounded activities encountered secondary rate
+  limits; ADR 005 permits planning a separately authorized, external, read-only
+  public GitHub API channel without authorizing its use.
 
 Queue:
 
-1. **Current prerequisite: Terra must review and approve the
-   architecture-directed discovery product contract.**
-   [`ARCHITECTURE_DIRECTED_DISCOVERY_PRODUCT_CONTRACT.md`](./ARCHITECTURE_DIRECTED_DISCOVERY_PRODUCT_CONTRACT.md)
-   defines the deliberate post-Brief user moment, minimum reviewed Repository
-   result, duplicate and no-result behavior, and the product requirements that
-   Phase 2B must evaluate. Reviewing or merging it authorizes no research,
-   source access, corpus work, classification, promotion, or implementation.
+1. **Current prerequisite: prepare and review a separate Phase 2B public GitHub
+   API access scope packet.** The packet must follow
+   [`ADR 005`](./DECISIONS/005-phase2b-public-source-acquisition.md) and name the
+   authentication method, least-privilege permissions, endpoint and field
+   allowlist, request budget, retry and backoff policy, external workspace,
+   retention policy, and exact execution procedure.
 
-After the product contract is approved and merged, the next decision may return
-to whether to authorize one bounded candidate-nomination research activity,
-constrained by that contract and
+This documentation decision and the later packet authorize no API call, token,
+authentication, source access, candidate research, classification, corpus
+freezing, promotion, or implementation. After the packet is approved, the
+existing Stage 2 candidate-nomination authorization must explicitly authorize
+any bounded API preflight and nomination within that same Stage 2 activity.
+Later source freezing remains subject to the existing Stage 4 corpus-freeze
+go/no-go. The packet is a cross-cutting acquisition prerequisite; it creates no
+seventh or unnumbered stage, gate, or authority in the six-stage lifecycle.
+
+Any later nomination activity remains constrained by the discovery product
+contract and
 [`PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md`](./PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md).
-Any authorization must name its human-directed role, public GitHub
-listing/search and landing-page surfaces, candidate categories, maximum scope,
-external workspace, retention boundary, output format, and observation date.
-
-The activity may produce only an external, untrusted nomination register with a
-public URL or coordinate, intended test category, observation date, and short
-human-authored rationale. It does not authorize corpus selection, source
-acquisition, evidence freezing, agent execution, model-provider transmission,
-classification, or a pilot run. It also does not authorize GitHub API access,
-authentication, source-content review or retention, cloning, downloading, or
-asset conclusions.
+It may use only the reviewed external, read-only public GitHub API channel to
+produce an external, untrusted register containing a public URL or coordinate,
+intended test category, observation date, and short human-authored rationale.
+It does not authorize source-content retrieval or retention, asset conclusions,
+corpus selection, evidence freezing, agent execution, model-provider
+transmission, classification, or a pilot run.
 
 After nomination, a separately prepared and reviewed corpus-freeze scope packet
 may use the register only as an untrusted input. The packet must independently
@@ -152,13 +161,13 @@ the named initial pass, one clean rerun, approved independent validation, human
 adjudication, and the declared model-inference transport. No stage silently
 authorizes the next one.
 
-The pre-execution plan and this queue do **not** themselves authorize nomination
-research, external source access, a pilot run, classification execution, GitHub
-API access, ingestion, agent execution or workers, a classifier, runtime
-integration, database or persistence, corpus or seed/data changes,
-recommendation changes, or user-facing discovery. Phase 2C remains blocked
-pending an explicit Terra go/no-go review of Phase 2B findings. Phase 2D and 2E
-require their own later scopes.
+ADR 005, the pre-execution plan, and this queue do **not** themselves authorize
+an API call, token, authentication, nomination research, external source access,
+a pilot run, classification execution, ingestion, agent execution or workers, a
+classifier, runtime integration, database or persistence, corpus or seed/data
+changes, recommendation changes, or user-facing discovery. Phase 2C remains
+blocked pending an explicit Terra go/no-go review of Phase 2B findings. Phase 2D
+and 2E require their own later scopes.
 
 Another clarification vertical requires a candidate to pass the evidence gate
 in [`CLARIFICATION_POLICY_CATALOG.md`](./CLARIFICATION_POLICY_CATALOG.md) before

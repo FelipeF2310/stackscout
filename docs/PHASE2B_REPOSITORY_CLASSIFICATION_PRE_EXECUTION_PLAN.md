@@ -7,6 +7,8 @@ which remains authoritative for asset, evidence, review, and promotion
 boundaries. The minimum builder-facing result that the pilot must evaluate is
 defined by
 [`ARCHITECTURE_DIRECTED_DISCOVERY_PRODUCT_CONTRACT.md`](./ARCHITECTURE_DIRECTED_DISCOVERY_PRODUCT_CONTRACT.md).
+The durable Phase 2B public-source acquisition policy is recorded in
+[`ADR 005`](./DECISIONS/005-phase2b-public-source-acquisition.md).
 
 This document is not an executable Phase 2B pilot plan. It does not nominate a
 corpus, authorize source access, freeze evidence, configure an agent, or permit
@@ -142,15 +144,17 @@ register for later corpus-freeze packet preparation. A future authorization for
 one nomination activity must explicitly name:
 
 - the human-directed researcher or research role;
-- the permitted public GitHub surfaces;
+- the reviewed API access scope packet and its permitted public GitHub API
+  endpoints and fields;
 - the allowed candidate categories;
 - the maximum intended candidate scope or other stopping boundary;
 - the external workspace and retention boundary; and
 - the output format and observation date.
 
-For the first pilot, the authorization may permit only public GitHub repository
-listing or search and landing-page metadata needed to identify a repository
-coordinate. The register may record only:
+For the first pilot, a future separately authorized, external, read-only GitHub
+API channel may retrieve only the minimum public metadata needed to identify a
+repository coordinate. The endpoint and field allowlist must be reviewed before
+use. The register may record only:
 
 - the public GitHub URL or owner/repository coordinate;
 - the intended coverage category;
@@ -159,8 +163,10 @@ coordinate. The register may record only:
 
 Stage 2 must not permit:
 
-- GitHub API access;
-- authentication or private, user-connected, uploaded, or imported sources;
+- any GitHub API method, endpoint, field, credential, or request outside the
+  separately reviewed API access scope packet and Stage 2 candidate-nomination
+  authorization;
+- private, user-connected, uploaded, or imported sources;
 - cloning, downloading, raw-file retrieval, README, documentation, or code
   review, release-body capture, or source-content retention;
 - model or agent classification;
@@ -173,10 +179,22 @@ Stage 2 must not permit:
 
 The nomination register is not evidence, a frozen corpus, classification output,
 a review decision, or a promotion artifact. It cannot establish identity,
-lineage, relevance, suitability, or inclusion. If nomination requires source
-content, API access, authentication, private data, broader browsing, or any
-conclusion beyond a coordinate and intended test category, the activity stops
-and requires a revised scope and new explicit Terra decision.
+lineage, relevance, suitability, or inclusion. API requests must be serial,
+budgeted, and rate-aware. If nomination requires source content, an endpoint or
+field outside the allowlist, private data, broader access, or any conclusion
+beyond a coordinate and intended test category, the activity stops and requires
+a revised scope and new explicit Terra decision.
+
+The API access scope packet is a cross-cutting acquisition prerequisite, not a
+seventh lifecycle stage. It must name the authentication method, least-privilege
+permissions, endpoint and field allowlist, request budget, retry and backoff
+policy, external workspace, retention policy, and execution procedure. Preparing
+or approving that packet authorizes no API call, token creation, authentication,
+or source access. For nomination, the existing Stage 2 candidate-nomination
+authorization is the distinct actual-run decision and may define a bounded API
+preflight within that same Stage 2 activity. For later source freezing, the
+existing Stage 4 corpus-freeze go/no-go is the distinct actual-run decision. The
+packet creates no seventh or unnumbered execution stage, gate, or authority.
 
 Stage 2 authority does not carry into packet preparation or corpus freezing and
 does not weaken the later human-only source-acquisition boundary.
@@ -244,16 +262,21 @@ version, exact locator, and observation date. The bundle inventory must state
 why each surface is included.
 
 Source acquisition happens only after a distinct Terra Stage 4 corpus-freeze
-go/no-go authorizes the named minimal evidence surfaces. It remains a limited,
-human-only, read-only responsibility. That decision may authorize pinning
+go/no-go authorizes the named minimal evidence surfaces and immutable-revision
+procedure. It remains a limited, human-only, read-only responsibility. Stage 4
+may use the same separately approved external GitHub API channel only for those
+named public surfaces and revisions. That decision may authorize pinning
 immutable revisions, preparing the minimal evidence bundle, and creating the
 frozen corpus manifest, evidence inventory, and hidden human-reference briefs in
 the approved external workspace.
 
 The corpus-freeze go/no-go does not authorize an agent, model run, transmission
 to an external model provider, classifier, validator, code execution, dependency
-installation, GitHub API use, scraping, broader source access, additional
-repositories, promotion, runtime integration, or a StackScout repository change.
+installation, API access outside the reviewed endpoint and field allowlist,
+scraping, broader source access, additional repositories, promotion, runtime
+integration, or a StackScout repository change. Requests must be serial,
+budgeted, rate-aware, and stop on an access, rate-limit, scope, retention, or
+containment failure.
 Raw clones, full archives, complete source bodies, raw model transcripts, and
 copied Skill bodies must not enter StackScout or trusted data. Any exceptional
 need for a broader snapshot requires a revised packet and a new go/no-go before
@@ -262,8 +285,10 @@ acquisition.
 The external workspace and retention boundary must be approved in the
 corpus-freeze scope packet before evidence is acquired. If an identity,
 revision, evidence surface, retention need, or source boundary differs from the
-approved packet, acquisition stops and a revised packet is required. Proposals
-retain locators and reviewer-authored summaries rather than copied source bodies.
+approved packet, acquisition stops and a revised packet is required. API output
+must not enter the StackScout repository, seed data, runtime, model context, or
+trusted corpus directly. Proposals retain locators and reviewer-authored
+summaries rather than copied source bodies.
 Expiration or deletion must follow the approved retention procedure; this
 pre-execution plan defines no duration.
 
@@ -488,10 +513,12 @@ success.
 Stop candidate nomination and preserve the external activity record when:
 
 - the authorized candidate limit or stopping boundary is reached;
+- an API request reaches a rate limit or violates the reviewed access, endpoint,
+  field, request-budget, retention, or containment boundary;
 - nomination would require source content, raw-file retrieval, README,
   documentation, code, or release-body review or retention;
-- nomination would require GitHub API access, authentication, private or user-
-  connected data, cloning, downloading, or broader browsing;
+- nomination would require an unapproved credential or API request, private or
+  user-connected data, cloning, downloading, or broader source access;
 - the activity attempts a Tool, capability, fit, relationship, security,
   license, popularity, or corpus-selection conclusion; or
 - the activity needs any output beyond a public coordinate, intended coverage
@@ -504,10 +531,13 @@ Stop corpus freezing and preserve the acquisition record when:
 
 - a proposed identity cannot be resolved within the approved public GitHub
   coordinate or URL;
+- an API request reaches a rate limit or violates the reviewed access, endpoint,
+  field, request-budget, retention, or containment boundary;
 - the immutable revision, evidence surface, retention need, source boundary, or
   required workspace differs from the approved corpus-freeze scope packet;
-- acquisition would require GitHub API use, scraping, code execution,
-  dependency installation, broader source access, or an additional repository;
+- acquisition would require an unapproved credential or API request, scraping,
+  code execution, dependency installation, broader source access, or an
+  additional repository;
 - an input is private, user-connected, or outside public GitHub; or
 - a credential, secret, private datum, or unauthorized access method would be
   required.
@@ -588,12 +618,21 @@ trust failure is a no-go.
 ## 16. Security, privacy, prompt-injection, and licensing boundaries
 
 - Public GitHub evidence only; no private or user-connected sources.
-- Candidate nomination may inspect only the public GitHub listing, search, and
-  landing-page metadata named by a Stage 2 authorization. It may retain only the
-  bounded nomination-register fields and creates no evidence or trusted record.
+- Candidate nomination may use only a separately authorized, external,
+  read-only public GitHub API channel and the reviewed endpoint and field
+  allowlist named by a Stage 2 authorization. It may retain only the bounded
+  nomination-register fields and creates no evidence or trusted record.
 - Humans acquire only the minimal bundle authorized by a Terra corpus-freeze
-  go/no-go. That stage permits no model run or transmission to an external model
-  provider. Agents receive no GitHub credential or source-acquisition authority.
+  go/no-go through the same approved external channel and only for the named
+  static surfaces and immutable-revision procedure. That stage permits no model
+  run or transmission to an external model provider. Agents receive no GitHub
+  credential or source-acquisition authority.
+- Acquisition requests are serial, budgeted, and rate-aware. An access,
+  rate-limit, scope, retention, or containment failure stops the applicable
+  activity without a silent retry, scrape, broad crawl, or provider fallback.
+- Credentials must not enter StackScout files, application code, prompts, model
+  input, logs, evidence, fixtures, proposals, or trusted data. No agent or model
+  controls credentials or makes an arbitrary API request.
 - Agents receive no browser, web-search, arbitrary HTTP or network client,
   GitHub or GitHub API, shell, subprocess, code-execution, dependency-
   installation, repository-script, or other agent-controlled external-access
@@ -629,9 +668,18 @@ run pending a separate decision.
 ## 17. Explicit deferrals and unresolved decisions
 
 The Stage 2 candidate-nomination authorization, not this pre-execution plan,
-must resolve the human-directed role, permitted public GitHub surfaces, allowed
+must resolve the human-directed role, reviewed API access scope packet, allowed
 categories, maximum scope or stopping boundary, external workspace, retention
 boundary, output format, and observation date.
+
+A separately reviewed API access scope packet must first resolve the exact
+authentication method, least-privilege permissions, endpoint and field
+allowlist, request budget, retry and backoff policy, external workspace,
+retention policy, and execution procedure. This plan and that packet grant no
+API authority. The existing Stage 2 candidate-nomination authorization governs
+any bounded API preflight and nomination within one Stage 2 activity; the
+existing Stage 4 corpus-freeze go/no-go governs later source freezing. No other
+execution stage, gate, or authority exists beyond the six-stage lifecycle.
 
 The later reviewed corpus-freeze scope packet must independently resolve:
 
@@ -662,10 +710,11 @@ and resolve:
 - the exact initial-pass, clean-rerun, validation, review, and stop scope.
 
 Still deferred are full repository snapshots by default, automated acquisition,
-GitHub APIs, agent workers, public-source providers beyond GitHub, numeric pass
-thresholds, AI-builder Skill classification, Templates, promotion, user-facing
-discovery, runtime integration, and changes to current Tools or relationships.
-Deferral is not approval.
+GitHub API workers or runtime integration, public-source providers beyond
+GitHub, numeric pass thresholds, AI-builder Skill classification, Templates,
+promotion, user-facing discovery, and changes to current Tools or relationships.
+The exact Phase 2B API access method also remains unresolved until the reviewed
+scope packet and actual-run decision. Deferral is not approval.
 
 ## 18. Six-stage authority and execution gates
 
@@ -683,19 +732,25 @@ human-directed candidate-nomination activity. Its sole purpose is to produce an
 external, untrusted register of possible public GitHub coordinates and intended
 test categories for later packet preparation.
 
-The authorization must name the human-directed researcher or role, permitted
-public GitHub listing/search and landing-page surfaces, allowed candidate
-categories, maximum intended scope or stopping boundary, external workspace and
-retention boundary, output format, and observation date.
+The authorization must name the human-directed researcher or role, the reviewed
+public GitHub API access scope packet and endpoint/field allowlist, allowed
+candidate categories, maximum intended scope or stopping boundary, external
+workspace and retention boundary, output format, and observation date.
 
 It may permit recording only the public URL or coordinate, intended coverage
 category, observation date, and a short human-authored nomination rationale. It
-does not authorize GitHub API access, authentication, private or user-connected
-sources, source-content access or retention, cloning, downloading, raw-file,
-README, documentation, code, or release-body review, model or agent
-classification, conclusions about the asset, corpus selection, revision
-pinning, evidence creation, scoring, recommendation, review, promotion, or
-StackScout changes.
+may use the separately approved external, read-only channel only for the minimum
+public metadata needed to populate those fields. It does not authorize an API
+method, endpoint, field, credential, or request outside the reviewed scope;
+private or user-connected sources; source-content access or retention; cloning;
+downloading; raw-file, README, documentation, code, or release-body review;
+model or agent classification; conclusions about the asset; corpus selection;
+revision pinning; evidence creation; scoring; recommendation; review;
+promotion; or StackScout changes.
+
+Requests must be serial, budgeted, and rate-aware. A rate-limit, access, scope,
+retention, or containment failure stops the activity without a silent retry,
+scrape, broad crawl, or provider fallback.
 
 The register is not evidence, a frozen corpus, classification output, review
 decision, or promotion artifact. Any need to cross the approved boundary stops
@@ -718,18 +773,22 @@ or classification authority.
 
 Only a separate, explicit Terra decision after review of the corpus-freeze
 packet may authorize limited human-only, read-only acquisition of the named
-public GitHub sources. Its authority is limited to pinning immutable revisions,
+public GitHub sources through the separately reviewed external API channel. The
+go/no-go must name the exact approved static evidence surfaces and immutable-
+revision procedure. Its authority is limited to pinning immutable revisions,
 preparing the named minimal evidence bundle, and creating the frozen corpus
 manifest, evidence inventory, and hidden human-reference briefs in the approved
 external workspace.
 
 It does not authorize agents, classifiers, validators, model runs, transmission
 to an external model provider, code execution, dependency installation, GitHub
-API use, scraping, broader source access, additional repositories, promotion,
-runtime integration, or StackScout repository changes. If an identity,
-revision, evidence surface, retention need, or source boundary differs from the
-approved packet, acquisition stops and a revised packet plus a new corpus-freeze
-go/no-go are required.
+API access outside the reviewed endpoint and field allowlist, scraping, broader
+source access, additional repositories, promotion, runtime integration, or
+StackScout repository changes. Requests must be serial, budgeted, rate-aware,
+and stop on an access, rate-limit, scope, retention, or containment failure. If
+an identity, revision, evidence surface, retention need, or source boundary
+differs from the approved packet, acquisition stops and a revised packet plus a
+new corpus-freeze go/no-go are required.
 
 ### Stage 5 — Classification execution packet
 
