@@ -107,29 +107,27 @@ Completed on `main` — do not redo:
   longer the default after two bounded activities encountered secondary rate
   limits; ADR 005 permits planning a separately authorized, external, read-only
   public GitHub API channel without authorizing its use.
+- **Phase 2B Stage 2 transport completeness:** the exact non-secret
+  `User-Agent` and non-retained human deletion-confirmation boundary are now
+  documented without weakening the four-field register limit.
 
 Queue:
 
-1. **Current prerequisite: Terra TPM review and recommendation on the Stage 2
-   transport-completeness correction in
-   [`PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md`](./PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md)
-   and
-   [`PHASE2B_GITHUB_API_ACCESS_SCOPE_PACKET.md`](./PHASE2B_GITHUB_API_ACCESS_SCOPE_PACKET.md).**
-   The correction adds the exact non-secret `User-Agent` required for the
-   proposed Stage 2 transport and defines deletion confirmation as a non-
-   retained human accountability action without weakening the four-field
-   nomination-register limit.
+1. **Current prerequisite: Terra TPM review and recommendation on the completed
+   Stage 2 actual-run authorization proposal in
+   [`PHASE2B_STAGE2_CANDIDATE_NOMINATION_ACTUAL_RUN_AUTHORIZATION.md`](./PHASE2B_STAGE2_CANDIDATE_NOMINATION_ACTUAL_RUN_AUTHORIZATION.md).**
+   The authorization adopts the API scope packet at immutable revision, pins
+   the exact six-slot and eleven-request boundary, and names the proposed human,
+   workspace, retention, deletion, and fail-closed controls.
 
 Terra review, recommendation, documentation approval, merge, or publication of
-this correction authorizes no API call, credential creation or use, token,
+this authorization authorizes no API call, credential creation or use, token,
 authentication, source access, candidate research, nomination, freezing,
 classification, model activity, promotion, implementation, or execution. After
-the correction merges, work returns only to revising the parked v2 Stage 2
-candidate-nomination actual-run authorization from corrected `main`, including
-adoption of the corrected API scope packet by immutable commit SHA. That
-revision still grants no external authority. Only Felipe's later, explicit
-Stage 2 go/no-go after Terra's required review and recommendation may authorize
-the exact named activity. No later Phase 2B stage becomes active automatically.
+a favorable Terra recommendation, the next possible decision is only Felipe's
+separate, explicit Stage 2 actual-run go/no-go on the exact named activity.
+Felipe's decision is the sole external-action authority; execution does not
+begin by default. No later Phase 2B stage becomes active automatically.
 
 Any later nomination activity remains constrained by the discovery product
 contract and
