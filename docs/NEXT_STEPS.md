@@ -97,26 +97,39 @@ Completed on `main` — do not redo:
   boundaries are documented; this is governance, not a pilot or runtime model.
 - **Phase 2B repository pre-execution plan:** the hypothesis, corpus-construction
   boundary, minimal evidence bundle, proposal-only workflow, human review,
-  reproducibility, and Phase 2C gate are documented; it is not the executable
-  pilot plan and authorizes no source access or pilot run.
+  reproducibility, and Phase 2C gate are documented. Its five-stage lifecycle
+  separates planning, human-only corpus freezing, and agent execution; the plan
+  authorizes none of them.
 
 Queue:
 
-1. **Next: Terra must decide whether to authorize preparation of one separately
-   scoped Phase 2B execution-authorization packet.** Preparation must follow
+1. **Next: Terra must decide whether to authorize preparation of one
+   corpus-freeze scope packet.** Preparation must follow
    [`PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md`](./PHASE2B_REPOSITORY_CLASSIFICATION_PRE_EXECUTION_PLAN.md),
-   but this decision does not authorize source access or a pilot run.
+   but this is planning-only and grants no source access, source acquisition,
+   agent execution, validation, or classification authority.
 
-The completed packet must name the frozen corpus and revisions, exact contract
-version, minimal evidence bundle, acquisition procedure, agent configuration,
-external workspace, retention policy, human roles, and exact run and stop scope.
-Preparing, reviewing, or approving that packet does not permit source access or
-agent execution.
+The packet must propose candidate public GitHub coordinates or URLs, inclusion
+rationale and the mandatory coverage matrix, permitted static evidence surfaces,
+the external workspace and retention boundary, human roles, and acquisition stop
+conditions. It does not need to claim frozen revisions.
 
-After the packet is complete and reviewed, a separate Terra actual-run go/no-go
-is required. Only that final decision may authorize acquisition of the named
-minimal evidence bundle and the one named external agent/classification run.
-Without it, source acquisition and execution remain blocked.
+After that packet is complete and reviewed, a separate Terra corpus-freeze
+go/no-go is required before limited human-only, read-only acquisition may pin the
+named sources to immutable revisions and create the approved minimal evidence
+bundle, frozen manifest, evidence inventory, and hidden references. That
+decision grants no agent, classifier, validator, or model-run authority.
+
+After freezing, a separately prepared and reviewed classification execution
+packet must name the exact contract commit, frozen inputs and integrity
+identifiers, agent configuration and containment, workspace and retention
+procedure, human roles, rubric, stop conditions, and exact scope of one initial
+pass plus one clean identical rerun. Preparing, reviewing, or approving it grants
+no execution authority.
+
+Only a final, distinct Terra classification-run go/no-go may authorize the named
+initial pass, one clean rerun, approved independent validation, and human
+adjudication. No stage silently authorizes the next one.
 
 The pre-execution plan and this queue do **not** authorize external source
 access, a pilot run, classification execution, GitHub API access, ingestion,
