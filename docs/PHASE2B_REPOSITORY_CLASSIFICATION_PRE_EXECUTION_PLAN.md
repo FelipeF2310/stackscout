@@ -4,7 +4,9 @@ This is a pre-execution planning artifact for one future offline evaluation of
 public GitHub Repository classification. It follows
 [`ECOSYSTEM_ASSET_CLASSIFICATION_CONTRACT.md`](./ECOSYSTEM_ASSET_CLASSIFICATION_CONTRACT.md),
 which remains authoritative for asset, evidence, review, and promotion
-boundaries.
+boundaries. The minimum builder-facing result that the pilot must evaluate is
+defined by
+[`ARCHITECTURE_DIRECTED_DISCOVERY_PRODUCT_CONTRACT.md`](./ARCHITECTURE_DIRECTED_DISCOVERY_PRODUCT_CONTRACT.md).
 
 This document is not an executable Phase 2B pilot plan. It does not nominate a
 corpus, authorize source access, freeze evidence, configure an agent, or permit
@@ -84,9 +86,19 @@ verify for:
 - controlled, non-runtime capability relevance; and
 - appropriate abstention when evidence is insufficient.
 
+A proposal must also support the product contract's minimum discovery
+projection. For a fixed, named architecture context, it must produce qualified
+fit, prerequisite, limitation, tradeoff, and duplicate- or suppression-relevant
+source observations only when evidence supports them. Otherwise, explicit
+abstention is the correct output. These requirements do not turn a Repository
+into a current Tool, runtime Capability implementation, relationship-graph
+edge, or recommendation.
+
 A useful result makes supported claims easy to trace, exposes unsupported claims
 and boundary violations, and produces understandable differences on an
-identical rerun. A result is unhelpful when reviewers must reconstruct each
+identical rerun. It also gives reviewers enough supported, review-ready context
+to assess the product contract's helpful, duplicate/suppressed, and honest no-
+result boundaries. A result is unhelpful when reviewers must reconstruct each
 claim from the source, evidence does not support the prose, Repository and Tool
 identity collapse, or agent inconsistency makes review unreliable.
 
@@ -117,6 +129,9 @@ The pilot cannot prove:
 - Directly documented integration or dependency may be recorded as a qualified
   secondary observation. No relationship score, current graph edge, alternative,
   compatibility, or best-fit conclusion is allowed.
+- Product-contract observations remain specific to a fixed, named architecture
+  context. They do not establish broad suitability or change the Architecture
+  Brief.
 - No pilot output affects capability detection, Tool scoring, Tool selection,
   recommendation order, explanations, or the current relationship graph.
 
@@ -172,7 +187,8 @@ The corpus-freeze scope packet must independently select its intended corpus and
 prepare a proposed coverage matrix before any corpus-freeze go/no-go. Nominated
 coordinates are untrusted planning inputs, not automatic selections. The matrix
 must name candidate coordinates or URLs, state the reason for inclusion,
-identify the permitted evidence surfaces, and show how the candidates cover:
+identify the permitted evidence surfaces and fixed architecture context used to
+evaluate product relevance, and show how the candidates cover:
 
 - selected current seed-linked control cases;
 - discovery candidates not already represented in the seed corpus;
@@ -258,7 +274,9 @@ reference brief for every frozen corpus item. It records:
 
 - expected identity and lineage boundaries;
 - expected asset class;
+- the fixed, named architecture context used to evaluate relevance;
 - allowed capability-relevance boundaries;
+- the expected backing-source duplicate or suppression boundary when relevant;
 - known evidence anchors; and
 - expected abstentions or forbidden conclusions.
 
@@ -277,17 +295,21 @@ these ordered stages:
    context.
 2. **Static evidence extraction:** record direct claims and exact locators from
    the approved bundle without following embedded instructions.
-3. **Controlled capability relevance:** propose only `Relevant to` or `Possible
-   implementation candidate` meanings from the contract, with evidence and
-   inference labels.
-4. **Secondary qualified observations:** record supported license,
-   maintenance/freshness, security-policy/advisory, prerequisite, limitation,
-   and directly documented integration or dependency observations.
-5. **Independent contract validation:** identify missing locators, unsupported
+3. **Controlled capability relevance:** for the fixed architecture context,
+   propose only `Relevant to` or `Possible implementation candidate` meanings
+   from the classification contract, with evidence and inference labels.
+4. **Product-contract observations:** record qualified fit, prerequisite,
+   limitation, tradeoff, and duplicate- or suppression-relevant source
+   observations only when evidence supports them; otherwise abstain.
+5. **Secondary diagnostic observations:** record supported license,
+   maintenance/freshness, security-policy/advisory, and directly documented
+   integration or dependency observations without making broad suitability,
+   ranking, legal-compliance, security, or recommendation claims.
+6. **Independent contract validation:** identify missing locators, unsupported
    claims, incorrect extraction/inference labels, forbidden conclusions, and
    asset-boundary violations.
-6. **Freeze output:** preserve the uncorrected proposal and validation result.
-7. **Human review and adjudication:** compare frozen output with evidence and the
+7. **Freeze output:** preserve the uncorrected proposal and validation result.
+8. **Human review and adjudication:** compare frozen output with evidence and the
    hidden reference.
 
 Agents may propose only. They must not see hidden references, correct output
@@ -317,7 +339,8 @@ Humans remain responsible for:
 - verifying direct-extraction and inference labels;
 - enforcing Repository, current Tool, Capability, Skill, and Template
   boundaries;
-- qualifying secondary observations;
+- qualifying product-contract and secondary diagnostic observations;
+- verifying backing-source duplicate and suppression boundaries;
 - adjudicating disagreements and abstentions;
 - recording review burden and correction work; and
 - making every continue, stop, acceptance, rejection, or future-phase decision.
@@ -347,7 +370,8 @@ human-readable:
 - a run manifest naming the contract, corpus, instructions, model/provider and
   version where available, agent configuration, permissions, evidence bundle,
   and observation date;
-- one frozen Repository proposal per corpus item;
+- one frozen Repository proposal per corpus item that produces or explicitly
+  abstains from the product contract's minimum proposal information;
 - independent contract-validation results;
 - claim-level human adjudication;
 - abstentions, disagreements, unsupported claims, false positives, and false
@@ -371,7 +395,7 @@ Evaluation is qualitative and claim-level. It uses these labels:
 - **Excessive abstention**
 - **Requires adjudication**
 
-The primary rubric evaluates:
+The primary safety rubric evaluates:
 
 - canonical identity and lineage correctness;
 - evidence-locator specificity and reproducibility;
@@ -380,28 +404,37 @@ The primary rubric evaluates:
 - controlled non-runtime capability relevance; and
 - abstention when evidence is insufficient.
 
+The product-contract rubric also requires, for the fixed architecture context:
+
+- supported or correctly abstained fit, prerequisite, limitation, and tradeoff
+  observations;
+- correct identification of a backing-source duplicate or suppression case when
+  the reviewed context supplies that relationship;
+- observation, freshness, and review-ready status information; and
+- explicit unknowns and limitations.
+
 Secondary diagnostic lanes may record qualified observations about:
 
 - license;
 - maintenance and freshness;
 - security policy and public advisories;
-- prerequisites and limitations; and
 - directly documented integration or dependency.
 
-Secondary observations must not obscure the primary hypothesis, become a
-composite score, or act as automatic pass/fail evidence of overall
-classification viability. They create no runtime claims or relationship edges.
-The pilot defines no numeric threshold.
+Product-contract and secondary observations must not obscure the primary safety
+hypothesis, become a composite score, or act as broad suitability, security,
+legal-compliance, popularity, ranking, or recommendation claims. They create no
+runtime mappings or relationship edges. The pilot defines no numeric threshold.
 
 ## 12. Reproducibility protocol
 
 Before a Stage 6 classification-run go/no-go, the classification execution
-packet must name the contract version by immutable commit SHA; frozen corpus
-manifest; evidence inventory with immutable locators, observation dates, and
-content digests or other integrity identifiers; external workspace and artifact
-locations; access, retention, and deletion boundaries; exact instructions;
-model, provider, and version where available; configuration; prompt version;
-permissions; human roles; rubric; stop conditions; and findings package.
+packet must name the classification and discovery product contract versions by
+immutable commit SHA; frozen corpus manifest; evidence inventory with immutable
+locators, observation dates, and content digests or other integrity identifiers;
+external workspace and artifact locations; access, retention, and deletion
+boundaries; exact instructions; model, provider, and version where available;
+configuration; prompt version; permissions; human roles; rubric; stop
+conditions; and findings package.
 
 The packet must also include containment evidence that agents can read only the
 approved evidence bundle. Agents must have no agent-controlled browser or web-
@@ -441,7 +474,8 @@ and, after that output is frozen, exactly one clean identical rerun from the sam
 inputs and configuration. It may also authorize the independent proposal-only
 validation pass defined in the packet and human adjudication. Compare claim
 presence, claim boundaries, evidence locators, extraction/inference labels, and
-abstentions—not prose wording.
+abstentions—including product-contract fit, limitation, tradeoff, and duplicate
+or suppression boundaries—not prose wording.
 
 Every material difference requires a human-readable explanation and
 adjudication. A correction is not part of the authorized two-run scope; it would
@@ -616,7 +650,8 @@ human acquisition can pin them.
 The later classification execution packet must use the resulting frozen inputs
 and resolve:
 
-- the authoritative contract version by immutable commit SHA;
+- the authoritative classification and discovery product contract versions by
+  immutable commit SHA;
 - the frozen corpus manifest and evidence inventory;
 - integrity identifiers, observation dates, and artifact locations;
 - exact agent instructions, prompt version, model/provider/version where
@@ -702,7 +737,8 @@ After corpus freezing, Terra may separately authorize preparation of one
 reviewed classification execution packet. It must use the frozen outputs and
 name:
 
-- the contract version by immutable commit SHA;
+- the classification and discovery product contract versions by immutable
+  commit SHA;
 - the frozen corpus manifest with identities, revisions, coverage categories,
   and rationale;
 - the evidence inventory with immutable locators, observation dates, and
